@@ -1,0 +1,9 @@
+{
+  "asset_name": "fools_gold",
+  "description": {
+    "color": "#bab494",
+    "translate": "trim_material.gildedglory.fools_gold"
+  },
+  "ingredient": "gildedglory:fools_gold_ingot",
+  "item_model_index": 0.0002
+}

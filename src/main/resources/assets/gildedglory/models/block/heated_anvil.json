@@ -1,0 +1,6 @@
+{
+  "parent": "gildedglory:block/template_anvil",
+  "textures": {
+    "top": "gildedglory:block/heated_anvil_top"
+  }
+}

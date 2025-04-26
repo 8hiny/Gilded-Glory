@@ -1,0 +1,17 @@
+{
+  "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "recipe_book_tab": "meals",
+  "container": {
+    "item": "minecraft:glass_bottle"
+  },
+  "result": {
+    "item": "gildedglory:liquid_gold"
+  }
+}

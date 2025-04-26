@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "gildedglory:fools_gold_block"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:fools_gold_ingot",
+    "count": 9
+  }
+}

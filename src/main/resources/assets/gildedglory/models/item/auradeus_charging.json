@@ -1,0 +1,18 @@
+{
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "gildedglory:item/auradeus"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [33.5, -60, 95],
+			"translation": [-5.5, 8.25, -0.75],
+			"scale": [1.8, 1.8, 1.6]
+		},
+		"firstperson_righthand": {
+			"rotation": [180, 180, -35],
+			"translation": [-10, 3, 2],
+			"scale": [1.1, 1.1, 1]
+		}
+	}
+}

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:fools_gold_block",
+    "count": 1
+  }
+}

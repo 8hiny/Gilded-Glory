@@ -1,0 +1,150 @@
+{
+  "item.auradeus.attack.slash": {
+    "subtitle": "sounds.gildedglory.auradeus.attack.slash",
+    "sounds": [
+      "gildedglory:item/auradeus/slash_0",
+      "gildedglory:item/auradeus/slash_1",
+      "gildedglory:item/auradeus/slash_2"
+    ]
+  },
+  "item.auradeus.attack.projectile": {
+    "subtitle": "sounds.gildedglory.auradeus.attack.projectile",
+    "sounds": [
+      "gildedglory:item/auradeus/slash_projectile_0",
+      "gildedglory:item/auradeus/slash_projectile_1",
+      "gildedglory:item/auradeus/slash_projectile_2",
+      "gildedglory:item/auradeus/slash_projectile_3",
+      "gildedglory:item/auradeus/slash_projectile_4"
+    ]
+  },
+  "item.auradeus.hum": {
+    "subtitle": "sounds.gildedglory.auradeus.hum",
+    "sounds": [
+      "gildedglory:item/auradeus/hum"
+    ]
+  },
+  "item.sickle.attack.crit": {
+    "subtitle": "sounds.gildedglory.sickle.attack.crit",
+    "sounds": [
+      "gildedglory:item/sickle/crit_0",
+      "gildedglory:item/sickle/crit_1",
+      "gildedglory:item/sickle/crit_2"
+    ]
+  },
+  "item.gilded_horn.blow": {
+    "subtitle": "sounds.gildedglory.gilded_horn.blow",
+    "sounds": [
+      "gildedglory:item/gilded_horn/blow"
+    ]
+  },
+  "item.swordspear.attack.crit": {
+    "subtitle": "sounds.gildedglory.swordspear.attack.crit",
+    "sounds": [
+      "gildedglory:item/swordspear/crit_0",
+      "gildedglory:item/swordspear/crit_1",
+      "gildedglory:item/swordspear/crit_2"
+    ]
+  },
+  "item.swordspear.attack.slash": {
+    "subtitle": "sounds.gildedglory.swordspear.attack.slash",
+    "sounds": [
+      "gildedglory:item/swordspear/slash"
+    ]
+  },
+  "item.swordspear.charge": {
+    "subtitle": "sounds.gildedglory.swordspear.charge",
+    "sounds": [
+      "gildedglory:item/swordspear/charge"
+    ]
+  },
+  "item.swordspear.fire": {
+    "subtitle": "sounds.gildedglory.swordspear.fire",
+    "sounds": [
+      "gildedglory:item/swordspear/fire"
+    ]
+  },
+  "item.swordspear.firing": {
+    "subtitle": "sounds.gildedglory.swordspear.firing",
+    "sounds": [
+      "gildedglory:item/swordspear/firing"
+    ]
+  },
+  "item.iraedeus.hum": {
+    "subtitle": "sounds.gildedglory.iraedeus.hum",
+    "sounds": [
+      "gildedglory:item/iraedeus/ambient"
+    ]
+  },
+  "item.iraedeus.attack.crit.low": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.crit",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/low/crit_0",
+      "gildedglory:item/iraedeus/attack/low/crit_1",
+      "gildedglory:item/iraedeus/attack/low/crit_2"
+    ]
+  },
+  "item.iraedeus.attack.crit.medium": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.crit",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/medium/crit_0",
+      "gildedglory:item/iraedeus/attack/medium/crit_1",
+      "gildedglory:item/iraedeus/attack/medium/crit_2"
+    ]
+  },
+  "item.iraedeus.attack.crit.high": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.crit",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/high/crit_0",
+      "gildedglory:item/iraedeus/attack/high/crit_1",
+      "gildedglory:item/iraedeus/attack/high/crit_2"
+    ]
+  },
+  "item.iraedeus.attack.sweep.low": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.sweep",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/low/sweep_0",
+      "gildedglory:item/iraedeus/attack/low/sweep_1",
+      "gildedglory:item/iraedeus/attack/low/sweep_2"
+    ]
+  },
+  "item.iraedeus.attack.sweep.medium": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.sweep",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/medium/sweep_0",
+      "gildedglory:item/iraedeus/attack/medium/sweep_1",
+      "gildedglory:item/iraedeus/attack/medium/sweep_2"
+    ]
+  },
+  "item.iraedeus.attack.sweep.high": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.sweep",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/high/sweep_0",
+      "gildedglory:item/iraedeus/attack/high/sweep_1",
+      "gildedglory:item/iraedeus/attack/high/sweep_2"
+    ]
+  },
+  "item.iraedeus.attack.knockback.low": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.knockback",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/low/knockback_0",
+      "gildedglory:item/iraedeus/attack/low/knockback_1",
+      "gildedglory:item/iraedeus/attack/low/knockback_2"
+    ]
+  },
+  "item.iraedeus.attack.knockback.medium": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.knockback",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/medium/knockback_0",
+      "gildedglory:item/iraedeus/attack/medium/knockback_1",
+      "gildedglory:item/iraedeus/attack/medium/knockback_2"
+    ]
+  },
+  "item.iraedeus.attack.knockback.high": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.knockback",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/high/knockback_0",
+      "gildedglory:item/iraedeus/attack/high/knockback_1",
+      "gildedglory:item/iraedeus/attack/high/knockback_2"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "asset_name": "twisteel",
+  "description": {
+    "color": "#cc495c",
+    "translate": "trim_material.gildedglory.twisteel"
+  },
+  "ingredient": "gildedglory:twisteel_ingot",
+  "item_model_index": 0.0001
+}

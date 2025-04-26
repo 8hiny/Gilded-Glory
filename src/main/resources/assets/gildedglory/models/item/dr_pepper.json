@@ -1,0 +1,68 @@
+{
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "gildedglory:item/dr_pepper",
+		"particle": "gildedglory:item/dr_pepper"
+	},
+	"elements": [
+		{
+			"from": [5.5, 0, 5.5],
+			"to": [10.5, 8, 10.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 4, 8]},
+			"faces": {
+				"north": {"uv": [2.5, 2.5, 5, 6.5], "texture": "#0"},
+				"east": {"uv": [0, 2.5, 2.5, 6.5], "texture": "#0"},
+				"south": {"uv": [7.5, 2.5, 10, 6.5], "texture": "#0"},
+				"west": {"uv": [5, 2.5, 7.5, 6.5], "texture": "#0"},
+				"up": {"uv": [5, 2.5, 2.5, 0], "texture": "#0"},
+				"down": {"uv": [7.5, 0, 5, 2.5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [7.5, 8, 6.5],
+			"to": [8.5, 8, 8.5],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 8, 6.5]},
+			"faces": {
+				"north": {"uv": [0.5, 2, 1, 2], "texture": "#0"},
+				"east": {"uv": [-0.5, 2, 0.5, 2], "texture": "#0"},
+				"south": {"uv": [2, 2, 2.5, 2], "texture": "#0"},
+				"west": {"uv": [1, 2, 2, 2], "texture": "#0"},
+				"up": {"uv": [1, 2, 0.5, 1], "texture": "#0"},
+				"down": {"uv": [1.5, 1, 1, 2], "texture": "#0"}
+			}
+		}
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, 45, 0],
+			"translation": [0, 3, -0.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [0, 45, 0],
+			"translation": [0, 3, -0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [-35, 80, 23],
+			"translation": [0.5, 6.25, 1.75],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-35, 80, 23],
+			"translation": [0.5, 6.25, 1.75],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"fixed": {
+			"translation": [0, 4, 0],
+			"scale": [1.5, 1.5, 1.5]
+		}
+	},
+	"groups": [
+		{
+			"name": "group",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

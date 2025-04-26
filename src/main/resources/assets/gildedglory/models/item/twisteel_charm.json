@@ -1,0 +1,14 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "gildedglory:item/twisteel_charm"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"gildedglory:has_owner": 1
+			},
+			"model": "gildedglory:item/twisteel_charm_bound"
+		}
+	]
+}

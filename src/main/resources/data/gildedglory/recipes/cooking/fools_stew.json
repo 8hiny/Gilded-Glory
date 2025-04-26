@@ -1,0 +1,23 @@
+{
+  "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredients": [
+    {
+      "item": "gildedglory:liquid_gold"
+    },
+    {
+      "item": "gildedglory:liquid_gold"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    }
+  ],
+  "recipe_book_tab": "meals",
+  "container": {
+    "item": "minecraft:bowl"
+  },
+  "result": {
+    "item": "gildedglory:fools_stew"
+  }
+}

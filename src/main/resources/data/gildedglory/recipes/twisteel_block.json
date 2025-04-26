@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:twisteel_block",
+    "count": 1
+  }
+}

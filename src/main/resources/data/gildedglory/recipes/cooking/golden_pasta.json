@@ -1,0 +1,29 @@
+{
+  "type": "farmersdelight:cooking",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredients": [
+    {
+      "tag": "c:foods/pastas"
+    },
+    {
+      "item": "gildedglory:liquid_gold"
+    },
+    {
+      "item": "farmersdelight:minced_beef"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    }
+  ],
+  "recipe_book_tab": "meals",
+  "container": {
+    "item": "minecraft:bowl"
+  },
+  "result": {
+    "item": "gildedglory:golden_pasta"
+  }
+}

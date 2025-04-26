@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "gildedglory:liquid_gold"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    },
+    {
+      "item": "minecraft:bread"
+    },
+    {
+      "item": "farmersdelight:smoked_ham"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:golden_burger",
+	"count": 3
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "sources": [
+    {
+      "type": "paletted_permutations",
+      "textures": [
+        "trims/items/leggings_trim",
+        "trims/items/chestplate_trim",
+        "trims/items/helmet_trim",
+        "trims/items/boots_trim"
+      ],
+      "palette_key": "trims/color_palettes/trim_palette",
+      "permutations": {
+        "twisteel": "gildedglory:trims/color_palettes/twisteel",
+        "fools_gold": "gildedglory:trims/color_palettes/fools_gold",
+        "gloometal": "gildedglory:trims/color_palettes/gloometal"
+      }
+    }
+  ]
+}

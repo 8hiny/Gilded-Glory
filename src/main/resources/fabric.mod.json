@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "gildedglory",
+	"version": "1.0.0",
+	"name": "Gilded Glory",
+	"description": "The metalsmith's dream",
+	"authors": [
+		"Shiny (8hiny)"
+	],
+	"license": "MIT",
+	"icon": "icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"shiny.gildedglory.GildedGlory"
+		],
+		"client": [
+			"shiny.gildedglory.GildedGloryClient"
+		],
+		"cardinal-components-entity": [
+          "shiny.gildedglory.common.registry.component.ModComponents"
+		]
+	},
+	"mixins": [
+		"gildedglory.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"custom": {
+		"cardinal-components": [
+			"gildedglory:fools_statue",
+			"gildedglory:chained",
+			"gildedglory:iraedeus"
+		],
+		"loom:injected_interfaces": {
+			"net/minecraft/class_1297": ["shiny/gildedglory/common/util/DynamicSoundSource"],
+			"net/minecraft/class_2586": ["shiny/gildedglory/common/util/DynamicSoundSource"]
+		}
+	}
+}
