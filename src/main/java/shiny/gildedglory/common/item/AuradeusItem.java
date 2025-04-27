@@ -24,7 +24,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -195,14 +194,14 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
 
     @Override
     public DefaultParticleType getAttackParticle() {
-        if (Math.random() <= 0.5) return ModParticles.ALTERNATE_SLASH;
-        return ModParticles.SLASH;
+        if (Math.random() <= 0.5) return ModParticles.TWISTEEL_SLASH;
+        return ModParticles.GOLD_SLASH;
     }
 
     @Override
     public DefaultParticleType getCritAttackParticle() {
-        if (Math.random() <= 0.5) return ModParticles.ALTERNATE_VERTICAL_SLASH;
-        return ModParticles.VERTICAL_SLASH;
+        if (Math.random() <= 0.5) return ModParticles.TWISTEEL_VERTICAL_SLASH;
+        return ModParticles.GOLD_VERTICAL_SLASH;
     }
 
     @Override

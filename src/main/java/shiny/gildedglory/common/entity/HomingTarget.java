@@ -1,13 +1,21 @@
 package shiny.gildedglory.common.entity;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.data.TrackedData;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
+/**
+ * Represents a target location; Returns a position as a Vec3d.
+ * If instantiated using an Entity, that entity should be updated in order to update its position.
+ */
 public class HomingTarget {
 
     private Entity entity;
+    private int entityId = Integer.MIN_VALUE;
     private Vec3d pos;
+    public static HomingTarget EMPTY = new HomingTarget(Vec3d.ZERO);
 
     public HomingTarget(Vec3d pos) {
         this.pos = pos;
@@ -19,6 +27,7 @@ public class HomingTarget {
 
     public HomingTarget(Entity target) {
         this.entity = target;
+        this.entityId = target.getId();
     }
 
     public HomingTarget(BlockPos pos) {
@@ -38,5 +47,27 @@ public class HomingTarget {
 
     public Entity getEntity() {
         return this.entity;
+    }
+
+    public int getEntityId() {
+        return this.entityId;
+    }
+
+    public void setEntityId(int id) {
+        this.entityId = id;
+    }
+
+    /**
+     * Updates the entity for this target. Necessary when syncing targets to the client, for example through the DataTracker.
+     * For entities which can store a HomingTarget, should be called in Entity#onTrackedDataSet().
+     * @see IraedeusEntity#onTrackedDataSet(TrackedData)
+     */
+    public void updateEntity(World world) {
+        if (this.entityId != Integer.MIN_VALUE) {
+            Entity entity = world.getEntityById(this.entityId);
+            if (entity != null) {
+                this.entity = entity;
+            }
+        }
     }
 }

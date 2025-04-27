@@ -4,6 +4,7 @@ import me.pepperbell.simplenetworking.S2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -37,8 +38,8 @@ public class GildedGloryUtil {
         return Math.abs(value - thisFloat) < Math.abs(value - thatFloat) ? thisFloat : thatFloat;
     }
 
-    public static Vec3d getThrowPos(Entity thrower, Entity projectile) {
-        return thrower.getEyePos().subtract(0, projectile.getHeight() / 2, 0);
+    public static Vec3d getThrowPos(Entity thrower, EntityType<?> entityType) {
+        return thrower.getEyePos().subtract(0, entityType.getHeight() / 2, 0);
     }
 
     /**

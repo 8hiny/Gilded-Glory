@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -25,6 +26,7 @@ import shiny.gildedglory.common.component.entity.IraedeusComponent;
 import shiny.gildedglory.common.entity.IraedeusEntity;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.item.ModItems;
+import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.registry.sound.ModSounds;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
@@ -71,13 +73,14 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
 
             if (!user.isSneaking()) {
                 IraedeusEntity iraedeus = new IraedeusEntity(world, user, slot, pos.x, pos.y, pos.z);
-                iraedeus.setItem(stack);
                 iraedeus.setVelocity(user, user.getPitch(), user.getYaw(), user.getRoll(), 1.0f, 0.0f);
+                iraedeus.setItem(stack);
                 world.spawnEntity(iraedeus);
                 component.setEntity(iraedeus.getUuid());
             }
             else {
-                component.setSummoned(stack);
+                component.setSummoned(true);
+                component.setStack(stack);
             }
         }
     }
@@ -208,5 +211,15 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
         if (f <= (float) 1 / 3) return ModSounds.IRAEDEUS_KNOCKBACK_LOW;
         else if (f <= (float) 2 / 3) return ModSounds.IRAEDEUS_KNOCKBACK_MEDIUM;
         else return ModSounds.IRAEDEUS_KNOCKBACK_HIGH;
+    }
+
+    @Override
+    public DefaultParticleType getSweepAttackParticle() {
+        return ModParticles.IRAEDEUS_SLASH;
+    }
+
+    @Override
+    public DefaultParticleType getCritAttackParticle() {
+        return ModParticles.IRAEDEUS_VERTICAL_SLASH;
     }
 }

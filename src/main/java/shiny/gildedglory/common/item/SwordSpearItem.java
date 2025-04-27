@@ -17,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -25,7 +26,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -203,6 +203,16 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
     @Override
     public BipedEntityModel.ArmPose getOffHandPose() {
         return BipedEntityModel.ArmPose.CROSSBOW_CHARGE;
+    }
+
+    @Override
+    public DefaultParticleType getSweepAttackParticle() {
+        return ModParticles.GOLD_SLASH;
+    }
+
+    @Override
+    public DefaultParticleType getCritAttackParticle() {
+        return ModParticles.GOLD_VERTICAL_SLASH;
     }
 
     @Override

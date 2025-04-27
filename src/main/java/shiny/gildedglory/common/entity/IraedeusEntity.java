@@ -1,19 +1,16 @@
 package shiny.gildedglory.common.entity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Pair;
@@ -23,7 +20,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.component.entity.IraedeusComponent;
 import shiny.gildedglory.common.item.ChargeableWeapon;
@@ -38,17 +34,12 @@ import team.lodestar.lodestone.systems.rendering.trail.TrailPointBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 //The entity for a summoned/thrown iraedeus
 //To-Do:
-//Summoned state for when the weapon is summoned and idle (not being controlled)
 //AoE damage functionality when hit block while targeting
 //Particles for: throwing, returning, targeting, parrying, block hit while targeting
 //Sounds for: throwing, returning, targeting, parrying, block hit while targeting, entity hit
-
-//Make the slot of the owner component reset when the entity dies or is removed some other way
-//Make the parry send the weapon towards its owner
 
 public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity, DynamicSoundSource {
 
@@ -67,7 +58,6 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     private int activeTicks;
     protected int inGroundTime;
     private final List<Entity> hitEntities = new ArrayList<>();
-    private HomingTarget target;
 
     public IraedeusEntity(EntityType<? extends ProjectileEntity> entityType, World world) {
         super(entityType, world);
@@ -88,7 +78,15 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         this.dataTracker.startTracking(IRAEDEUS_FLAGS, (byte) 0);
         this.dataTracker.startTracking(NO_CLIP, false);
         this.dataTracker.startTracking(CHARGE, 0);
-        this.dataTracker.startTracking(TARGET, new HomingTarget(Vec3d.ZERO));
+        this.dataTracker.startTracking(TARGET, HomingTarget.EMPTY);
+    }
+
+    @Override
+    public void onTrackedDataSet(TrackedData<?> data) {
+        super.onTrackedDataSet(data);
+        if (data.equals(TARGET)) {
+            this.dataTracker.get(TARGET).updateEntity(this.getWorld());
+        }
     }
 
     @Override
@@ -118,24 +116,20 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
 
         LivingEntity owner = (LivingEntity) this.getOwner();
         for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, getBoundingBox(), this::canHit)) {
-            if (!this.getWorld().isClient()) this.damage(owner, entity);
+            if (!this.getWorld().isClient()) this.damageEntity(owner, entity);
         }
 
-        boolean bl = ((this.targetTicks == 0 && this.inGroundTime > 0) || (this.targetTicks > 0 && this.inGroundTime >= 10));
-        if (bl || owner == null || this.getPos().distanceTo(GildedGloryUtil.getThrowPos(owner, this)) >= 48.0f) {
+        boolean bl = ((this.inGroundTime > 0 && !this.isTargeting()) || this.inGroundTime > 10);
+        if (bl || owner == null || this.getPos().distanceTo(GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS)) >= 48.0f) {
             this.setTargeting(false);
         }
 
         Pair<Boolean, Boolean> controlStatus = this.getControlStatus();
         if (this.age > 6) {
             if (controlStatus.getLeft() && !this.isParried() && owner != null) {
-                Vec3d vec1 = GildedGloryUtil.getThrowPos(owner, this).add(owner.getRotationVector().multiply(48.0));
+                Vec3d vec1 = GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS).add(owner.getRotationVector().multiply(48.0));
                 this.setTarget(this.handleTarget(owner, vec1, vec1.add(owner.getRotationVector().multiply(8.0))));
                 this.setTargeting(true);
-                this.targetTicks = 0;
-
-                vec1 = this.getTarget().pos();
-                this.getWorld().addImportantParticle(ParticleTypes.FLASH, vec1.x, vec1.y, vec1.z, 0, 0, 0);
             }
             else if (controlStatus.getRight() && !this.isReturning() && !this.isParried()) {
                 this.setTargeting(false);
@@ -143,11 +137,11 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         }
 
         if (this.hasTarget()) {
-            if (this.targetTicks < 60) {
+            if (this.targetTicks < 60 && this.getTarget() != HomingTarget.EMPTY) {
                 HomingTarget target = this.getTarget();
 
-                Vec3d vec1 = target.pos();
-                this.getWorld().addImportantParticle(ParticleTypes.FLASH, vec1.x, vec1.y, vec1.z, 0, 0, 0);
+                //Vec3d vec1 = target.pos();
+                //this.getWorld().addImportantParticle(ParticleTypes.FLASH, vec1.x, vec1.y, vec1.z, 0, 0, 0);
 
                 if (this.squaredDistanceTo(target.pos()) > 2.0f) {
                     this.moveToTarget(target, this.isParried());
@@ -166,7 +160,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         else if (this.isReturning()) {
             if (owner != null) {
                 if (owner.isAlive()) {
-                    Vec3d vec3d = GildedGloryUtil.getThrowPos(owner, this).subtract(this.getPos());
+                    Vec3d vec3d = GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS).subtract(this.getPos());
                     this.setPos(this.getX(), this.getY() + vec3d.y * 0.01, this.getZ());
                     this.setVelocity(this.getVelocity().multiply(0.95).add(vec3d.normalize().multiply(0.2 - this.getSpeed(false) * 0.015)));
                 }
@@ -228,9 +222,11 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         return hit.getType() == HitResult.Type.BLOCK && !this.getWorld().getBlockState(hit.getBlockPos()).getCollisionShape(this.getWorld(), hit.getBlockPos()).isEmpty();
     }
 
-    public void damage(LivingEntity attacker, LivingEntity target) {
+    public void damageEntity(LivingEntity attacker, LivingEntity target) {
         DamageSource damageSource = new DamageSource(this.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(ModDamageTypes.IRAEDEUS), this, attacker == null ? this : attacker);
-        target.damage(damageSource, 0.07f * this.getCharge() + 4.0f);
+        float amount = (0.07f * this.getCharge() + 4.0f) + EnchantmentHelper.getAttackDamage(this.getStack(), target.getGroup());
+        target.damage(damageSource, amount);
+
         this.hitEntities.add(target);
     }
 
@@ -269,8 +265,9 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     public void parry(Entity actor, Entity owner, float damage) {
         actor.getWorld().addImportantParticle(ParticleTypes.FLASH, actor.getX(), actor.getEyeY(), actor.getZ(), 0, 0, 0);
 
+        this.setCharge(Math.max(0, this.getCharge() - (int) (damage * 2)));
         this.addVelocity(actor.getRotationVector().multiply(damage * 0.5));
-        this.setTarget(new HomingTarget(GildedGloryUtil.getThrowPos(owner, this)));
+        this.setTarget(new HomingTarget(GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS)));
         this.setParried(true);
     }
 
@@ -283,6 +280,8 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
             if (player.getInventory().selectedSlot == component.slot) {
                 targeting = component.targeting;
                 returning = component.returning;
+
+                if (targeting) component.targetCooldown = 40;
             }
         }
         return new Pair<>(targeting, returning);

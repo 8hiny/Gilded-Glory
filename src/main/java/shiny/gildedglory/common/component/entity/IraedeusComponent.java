@@ -7,15 +7,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
-import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.entity.HomingTarget;
 import shiny.gildedglory.common.entity.IraedeusEntity;
@@ -23,6 +25,7 @@ import shiny.gildedglory.common.network.ModPackets;
 import shiny.gildedglory.common.network.UpdateTargetingC2SPacket;
 import shiny.gildedglory.common.network.UpdateReturningC2SPacket;
 import shiny.gildedglory.common.registry.component.ModComponents;
+import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
@@ -31,13 +34,15 @@ import java.util.UUID;
 public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComponent {
 
     private final PlayerEntity provider;
+    private final Inventory stackHolder = new SimpleInventory(1);
+    private UUID iraedeusId;
+    public int slot = -1;
+    private boolean summoned;
     public boolean targeting;
     public boolean returning;
     public int targetTime;
     public int returnTime;
-    public int slot = -1;
-    private ItemStack stack = ItemStack.EMPTY;
-    private UUID iraedeusId;
+    public int targetCooldown;
 
     public IraedeusComponent(PlayerEntity provider) {
         this.provider = provider;
@@ -46,13 +51,14 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
     public static void clientTick(MinecraftClient client) {
         PlayerEntity player = client.player;
         ModComponents.IRAEDEUS.maybeGet(player).ifPresent(component -> {
-            boolean targeting = GildedGloryClient.targetIraedeus.isPressed();
+            boolean targeting = GildedGloryClient.targetIraedeus.isPressed() && component.targetCooldown == 0;
             boolean returning = GildedGloryClient.returnIraedeus.isPressed();
 
             if (targeting) component.targetTime++;
             else component.targetTime = 0;
             if (returning) component.returnTime++;
             else component.returnTime = 0;
+            if (component.targetCooldown > 0) component.targetCooldown--;
 
             if (targeting != component.targeting) {
                 ModPackets.GILDED_GLORY_CHANNEL.sendToServer(new UpdateTargetingC2SPacket(targeting));
@@ -65,28 +71,38 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
         });
     }
 
-    //WHY ARE YOU REMOVING THE ITEMSTACK ON THE SERVER AFTER SETTING IT????? WHAT THE FUCK
     @Override
     public void serverTick() {
-        GildedGlory.LOGGER.info("Is summoned: " + this.isSummoned() + " stack: " + this.stack);
-        if (this.isSummoned()) {
+        if (this.isSummoned() && this.provider.getInventory().selectedSlot == this.slot) {
             if (this.targeting) {
-                GildedGlory.LOGGER.info("Setting target from summoned state!");
-                Vec3d pos = new Vec3d(this.provider.getX(), this.provider.getEyeY() - 0.25f, this.provider.getZ());
+                Vec3d pos = GildedGloryUtil.getThrowPos(this.provider, ModEntities.IRAEDEUS);
                 HomingTarget target = this.handleTarget(pos.add(this.provider.getRotationVector().multiply(48.0)));
 
                 IraedeusEntity iraedeus = new IraedeusEntity(this.provider.getWorld(), this.provider, this.slot, pos.x, pos.y, pos.z);
-                iraedeus.setItem(this.stack);
+                iraedeus.setItem(this.getStack());
+                iraedeus.setTargeting(true);
                 iraedeus.setTarget(target);
 
                 this.provider.getWorld().spawnEntity(iraedeus);
                 this.setEntity(iraedeus.getUuid());
 
-                this.setSummoned(ItemStack.EMPTY);
+                this.summoned = false;
+                this.setStack(ItemStack.EMPTY);
             }
             else if (this.returning) {
-                GildedGlory.LOGGER.info("Returning from summoned state!");
                 this.returnStack();
+            }
+        }
+
+        if (this.slot != -1) {
+            if (this.iraedeusId != null) {
+                Entity entity = GildedGloryUtil.getEntityFromUuid(this.iraedeusId, this.provider.getWorld());
+                if (!(entity instanceof IraedeusEntity)) {
+                    this.reset();
+                }
+            }
+            else {
+                this.reset();
             }
         }
     }
@@ -101,54 +117,56 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
         ModComponents.IRAEDEUS.sync(this.provider);
     }
 
+    public void setSummoned(boolean value) {
+        this.summoned = value;
+        ModComponents.IRAEDEUS.sync(this.provider);
+    }
+
+    public boolean isSummoned() {
+        return this.summoned;
+    }
+
+    public ItemStack getStack() {
+        return this.stackHolder.getStack(0);
+    }
+
+    public void setStack(ItemStack stack) {
+        this.stackHolder.setStack(0, stack);
+        ModComponents.IRAEDEUS.sync(this.provider);
+    }
+
     public void reset() {
-        GildedGlory.LOGGER.info("Resetting!");
         this.targeting = false;
         this.returning = false;
         this.slot = -1;
         this.iraedeusId = null;
-        this.stack = ItemStack.EMPTY;
+        this.summoned = false;
+        this.targetCooldown = 0;
+        this.stackHolder.removeStack(0);
         ModComponents.IRAEDEUS.sync(this.provider);
-    }
-
-    public void setSummoned(ItemStack stack) {
-        GildedGlory.LOGGER.info("Setting stack to: " + stack);
-        this.stack = stack;
-        ModComponents.IRAEDEUS.sync(this.provider);
-    }
-
-    public ItemStack getStack() {
-        return this.stack;
-    }
-
-    public boolean isSummoned() {
-        return this.stack != null && !this.stack.isEmpty();
     }
 
     @Override
     public void readFromNbt(NbtCompound tag) {
         this.slot = tag.getInt("Slot");
 
-        this.stack = ItemStack.fromNbt(tag.getCompound("Item"));
-        GildedGlory.LOGGER.info("Stack on read: " + this.stack + " is client: " + this.provider.getWorld().isClient());
+        this.stackHolder.setStack(0, ItemStack.fromNbt(tag.getCompound("Item")));
+        this.summoned = tag.getBoolean("IsSummoned");
         if (tag.contains("Entity")) this.iraedeusId = tag.getUuid("Entity");
+        this.targetCooldown = tag.getInt("TargetCooldown");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
         tag.putInt("Slot", this.slot);
 
-        GildedGlory.LOGGER.info("Stack on write: " + this.stack + " is client: " + this.provider.getWorld().isClient());
-        tag.put("Item", this.stack.writeNbt(new NbtCompound()));
+        tag.put("Item", this.stackHolder.getStack(0).copy().writeNbt(new NbtCompound()));
+        tag.putBoolean("IsSummoned", this.summoned);
         if (this.iraedeusId != null) tag.putUuid("Entity", this.iraedeusId);
-    }
 
-    public IraedeusEntity findEntity() {
-        Entity entity = GildedGloryUtil.getEntityFromUuid(this.iraedeusId, this.provider.getWorld());
-        if (entity instanceof IraedeusEntity iraedeus && iraedeus.getOwner() == this.provider) {
-            return iraedeus;
-        }
-        return null;
+        //GOD THIS STUPID ISSUE (the ItemStack inside this component SOMEHOW decided to DELETE ITSELF FOR NO REASON RIGHT HERE SO I HAVE TO RESET IT TO ITSELF)
+        this.stackHolder.setStack(0, ItemStack.fromNbt(tag.getCompound("Item")));
+        tag.putInt("TargetCooldown", this.targetCooldown);
     }
 
     public HomingTarget handleTarget(Vec3d targetPos) {
@@ -183,6 +201,14 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
         if (bl) {
             this.reset();
             this.provider.getItemCooldownManager().set(ModItems.IRAEDEUS, 20);
+        }
+    }
+
+    public void resetEntity() {
+        Entity entity = GildedGloryUtil.getEntityFromUuid(this.iraedeusId, this.provider.getWorld());
+        if (entity instanceof IraedeusEntity iraedeus) {
+            iraedeus.insertStack(this.provider);
+            iraedeus.discard();
         }
     }
 }

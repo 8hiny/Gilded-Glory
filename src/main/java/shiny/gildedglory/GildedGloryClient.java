@@ -59,10 +59,12 @@ public class GildedGloryClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(SPARKLE, SparkleParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(SWIRL, SwirlParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(ALERT, AlertParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(SLASH, SlashParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ALTERNATE_SLASH, SlashParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(VERTICAL_SLASH, SlashParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(ALTERNATE_VERTICAL_SLASH, SlashParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(GOLD_SLASH, SlashParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(TWISTEEL_SLASH, SlashParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(IRAEDEUS_SLASH, SlashParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(GOLD_VERTICAL_SLASH, SlashParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(TWISTEEL_VERTICAL_SLASH, SlashParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(IRAEDEUS_VERTICAL_SLASH, SlashParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(SQUARE, SquareParticle.Factory::new);
 
         //ParticleFactoryRegistry.getInstance().register(TEST, FlatParticle.Factory::new);

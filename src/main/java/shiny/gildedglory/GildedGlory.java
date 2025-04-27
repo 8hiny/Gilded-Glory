@@ -2,6 +2,7 @@ package shiny.gildedglory;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import shiny.gildedglory.common.network.ModPackets;
 import shiny.gildedglory.common.registry.block.ModBlocks;
 import shiny.gildedglory.common.registry.block.entity.ModBlockEntities;
+import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.enchantment.ModEnchantments;
 import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.common.registry.item.ModItemGroups;
@@ -41,16 +43,24 @@ public class GildedGlory implements ModInitializer {
 		ModParticles.registerModParticles();
 		ModSounds.registerModSounds();
 		ModPackets.registerModPackets();
+		registerCompressionRecipes();
 
+		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+			ModComponents.IRAEDEUS.get(handler.player).resetEntity();
+			ModComponents.IRAEDEUS.get(handler.player).reset();
+		});
+	}
+
+	public static Identifier id(String name) {
+		return new Identifier(MOD_ID, name);
+	}
+
+	public static void registerCompressionRecipes() {
 		HeatedAnvilRecipeHandler.addCompressionRecipe(ModItems.TWISTEEL_INGOT, new Item[] {Items.GOLD_INGOT, Items.COPPER_INGOT,  Items.IRON_INGOT, Items.NETHERITE_SCRAP});
 		HeatedAnvilRecipeHandler.addCompressionRecipe(ModItems.FOOLS_GOLD_INGOT, new Item[] {Items.IRON_INGOT, Items.GLOWSTONE_DUST});
 		HeatedAnvilRecipeHandler.addCompressionRecipe(ModItems.AURADEUS, new Item[] {Items.NETHERITE_SWORD, ModItems.TWISTEEL_INGOT,Items.GOLD_BLOCK});
 		HeatedAnvilRecipeHandler.addCompressionRecipe(ModItems.TWISTEEL_SICKLE, new Item[] {Items.NETHERITE_HOE, ModItems.TWISTEEL_INGOT});
 		HeatedAnvilRecipeHandler.addCompressionRecipe(ModItems.TWISTEEL_CHARM, new Item[] {ModItems.TWISTEEL_INGOT, ModItems.TWISTEEL_INGOT});
 		HeatedAnvilRecipeHandler.addCompressionRecipe(ModItems.GILDED_HORN, new Item[] {Items.GOAT_HORN, ModItems.FOOLS_GOLD_INGOT, Items.NETHERITE_SCRAP});
-	}
-
-	public static Identifier id(String name) {
-		return new Identifier(MOD_ID, name);
 	}
 }

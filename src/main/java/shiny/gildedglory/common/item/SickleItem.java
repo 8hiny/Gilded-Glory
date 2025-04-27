@@ -131,6 +131,6 @@ public class SickleItem extends SwordItem implements CustomAttackWeapon, CustomE
 
     @Override
     public DefaultParticleType getSweepAttackParticle() {
-        return ModParticles.ALTERNATE_SLASH;
+        return ModParticles.TWISTEEL_SLASH;
     }
 }
