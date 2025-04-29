@@ -16,9 +16,9 @@ public class ChainRenderer {
 
     public static void render(Vec3d origin, Vec3d target, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider) {
         Vec3d direction = target.subtract(origin).normalize();
-        double horizontalMagnitude = Math.sqrt(direction.x * direction.x + direction.z * direction.z);
+        double horizontalMagnitude = direction.horizontalLength();
 
-        double angle = Math.acos(direction.x / horizontalMagnitude);
+        double angle = Math.acos(direction.x / direction.horizontalLength());
         if (direction.z > 0.0) angle = (Math.PI * 2 - angle);
 
         double angle1 = Math.atan(direction.y / horizontalMagnitude);

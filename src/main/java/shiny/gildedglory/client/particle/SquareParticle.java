@@ -2,15 +2,13 @@ package shiny.gildedglory.client.particle;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
-import shiny.gildedglory.client.particle.effect.ColoredParticleEffect;
+import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 
 public class SquareParticle extends SpriteBillboardParticle {
 
     private final SpriteProvider spriteProvider;
 
-    //Try and make these REALLY glow (using some sort of bloom)
-
-    public SquareParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, ColoredParticleEffect parameters, SpriteProvider spriteProvider) {
+    public SquareParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, VectorParticleEffect parameters, SpriteProvider spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
 
         this.ascending = true;
@@ -20,9 +18,9 @@ public class SquareParticle extends SpriteBillboardParticle {
         this.velocityY = velocityY;
         this.velocityZ = velocityZ;
 
-        this.red = parameters.getColor().x();
-        this.green = parameters.getColor().y();
-        this.blue = parameters.getColor().z();
+        this.red = parameters.getVector().x();
+        this.green = parameters.getVector().y();
+        this.blue = parameters.getVector().z();
         this.scale = parameters.getScale();
 
         this.maxAge = (int) (40 + this.random.nextInt(10) * Math.max(parameters.getScale(), 1.0f));
@@ -52,7 +50,7 @@ public class SquareParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_LIT;
     }
 
-    public static class Factory implements ParticleFactory<ColoredParticleEffect> {
+    public static class Factory implements ParticleFactory<VectorParticleEffect> {
 
         private final SpriteProvider spriteProvider;
 
@@ -60,7 +58,7 @@ public class SquareParticle extends SpriteBillboardParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(ColoredParticleEffect dustParticleEffect, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(VectorParticleEffect dustParticleEffect, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
             return new SquareParticle(clientWorld, d, e, f, g, h, i, dustParticleEffect, this.spriteProvider);
         }
     }

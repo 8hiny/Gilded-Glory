@@ -5,12 +5,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -25,7 +25,6 @@ import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.component.entity.IraedeusComponent;
 import shiny.gildedglory.common.entity.IraedeusEntity;
 import shiny.gildedglory.common.registry.component.ModComponents;
-import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.registry.sound.ModSounds;
 import shiny.gildedglory.common.util.GildedGloryUtil;
@@ -77,6 +76,9 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
                 iraedeus.setItem(stack);
                 world.spawnEntity(iraedeus);
                 component.setEntity(iraedeus.getUuid());
+
+                //float pitch = GildedGloryUtil.random(0.9f, 1.1f);
+                world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.IRAEDEUS_THROW, SoundCategory.PLAYERS, 1.0f, 1.0f);
             }
             else {
                 component.setSummoned(true);
@@ -111,23 +113,10 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
             GildedGloryUtil.startLoopingSound(attacker.getWorld(), attacker, GildedGlory.id("iraedeus_hum"));
         }
         if (!attacker.getWorld().isClient()) {
-            ChargeableWeapon.addCharge(stack, (int) amount);
+            ChargeableWeapon.addCharge(stack, (int) (amount * 1.25f));
             IraedeusItem.setCooldown(stack, 80);
         }
         return new CustomAttackData(stack, attacker, target, source, amount, true);
-    }
-
-    //Unused
-    public static ItemStack getChargedIraedeus(PlayerEntity holder) {
-        PlayerInventory inventory = holder.getInventory();
-        for (int i = 0; i < inventory.size(); i++) {
-            ItemStack stack = inventory.getStack(i);
-
-            if (stack.isOf(ModItems.IRAEDEUS) && ChargeableWeapon.getCharge(stack) > 0) {
-                return stack;
-            }
-        }
-        return null;
     }
 
     public static void setCooldown(ItemStack stack, int cooldown) {

@@ -7,7 +7,7 @@ import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import shiny.gildedglory.GildedGlory;
-import shiny.gildedglory.client.particle.effect.ColoredParticleEffect;
+import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 
 public class ModParticles {
 
@@ -20,7 +20,8 @@ public class ModParticles {
     public static final DefaultParticleType GOLD_VERTICAL_SLASH = register("gold_vertical_slash", FabricParticleTypes.simple());
     public static final DefaultParticleType TWISTEEL_VERTICAL_SLASH = register("twisteel_vertical_slash", FabricParticleTypes.simple());
     public static final DefaultParticleType IRAEDEUS_VERTICAL_SLASH = register("iraedeus_vertical_slash", FabricParticleTypes.simple());
-    public static final ParticleType<ColoredParticleEffect> SQUARE = register("square", FabricParticleTypes.complex(false, ColoredParticleEffect.PARAMETERS_FACTORY));
+    public static final ParticleType<VectorParticleEffect> SQUARE = register("square", FabricParticleTypes.complex(false, VectorParticleEffect.PARAMETERS_FACTORY));
+    public static final ParticleType<VectorParticleEffect> SHOCKWAVE = register("shockwave", FabricParticleTypes.complex(false, VectorParticleEffect.PARAMETERS_FACTORY));
 
     public static DefaultParticleType register(String name, DefaultParticleType particleType) {
         return Registry.register(Registries.PARTICLE_TYPE, GildedGlory.id(name), particleType);

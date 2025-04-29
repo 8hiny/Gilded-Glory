@@ -6,6 +6,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Ownable;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -17,6 +18,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.sound.DynamicSounds;
 import shiny.gildedglory.common.network.ChargingParticleS2CPacket;
 import shiny.gildedglory.common.network.ItemUseSoundS2CPacket;
@@ -177,11 +179,17 @@ public class GildedGloryUtil {
 
                 if (optional.isPresent()) {
                     double e = optional.get().squaredDistanceTo(pos);
-
                     if (d > e) entities.add(entity);
                 }
             }
         }
         return entities;
+    }
+
+    public static LivingEntity raycastSingle(Entity origin, Predicate<LivingEntity> predicate, Vec3d direction, float margin, float distance, boolean collision) {
+        for (LivingEntity entity : raycast(origin, predicate, direction, margin, distance, collision)) {
+            return entity;
+        }
+        return null;
     }
 }

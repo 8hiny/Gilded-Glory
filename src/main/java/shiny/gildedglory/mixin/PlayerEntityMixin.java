@@ -100,7 +100,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private boolean gildedglory$handleCustomAttack(Entity target, DamageSource source, float amount, Operation<Boolean> original) {
         ItemStack stack = this.getMainHandStack();
 
-        if (this.attackCooldownProgress > 0.8f && stack.getItem() instanceof CustomAttackWeapon weapon) {
+        if (!target.isInvulnerableTo(source) && this.attackCooldownProgress > 0.8f && stack.getItem() instanceof CustomAttackWeapon weapon) {
             CustomAttackWeapon.CustomAttackData attack = weapon.onAttack(stack, this, target, source, amount);
 
             if (attack.successful()) {

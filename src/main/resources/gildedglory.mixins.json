@@ -24,6 +24,7 @@
     "client.ItemRendererAccessor",
     "client.ItemRendererMixin",
     "client.LivingEntityRendererMixin",
+    "client.MinecraftClientMixin",
     "client.ModelLoaderMixin",
     "client.PlayerEntityRendererMixin"
   ],

@@ -40,9 +40,6 @@ public class GildedGloryClient implements ClientModInitializer {
 
    @Override
    public void onInitializeClient() {
-       //ClientPlayNetworking.registerGlobalReceiver(GildedGlory.ITEM_USE_SOUND_PACKET, ItemUseSoundS2CPacket::receive);
-       //ClientPlayNetworking.registerGlobalReceiver(GildedGlory.CHARGING_PARTICLE_PACKET, ChargingParticleS2CPacket::receive);
-
        ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::clientTick);
 
        ModModelPredicateProviders.registerModelPredicateProviders();
@@ -66,8 +63,7 @@ public class GildedGloryClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(TWISTEEL_VERTICAL_SLASH, SlashParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(IRAEDEUS_VERTICAL_SLASH, SlashParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(SQUARE, SquareParticle.Factory::new);
-
-        //ParticleFactoryRegistry.getInstance().register(TEST, FlatParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(SHOCKWAVE, ShockwaveParticle.Factory::new);
     }
 
     public static void registerModRenderers() {

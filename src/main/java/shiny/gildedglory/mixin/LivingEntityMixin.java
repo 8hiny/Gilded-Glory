@@ -61,8 +61,8 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity entity = (LivingEntity) (Object) this;
 
         if (entity instanceof PlayerEntity player) {
-            //Return thrown iraedeus's to the owner
-            if (player.getInventory().selectedSlot == ModComponents.IRAEDEUS.get(player).slot) {
+            //Return thrown iraedeus's to their owners
+            if (ModComponents.IRAEDEUS.get(player).slot != -1) {
                 for (IraedeusEntity iraedeus : player.getWorld().getEntitiesByClass(IraedeusEntity.class,
                         player.getBoundingBox().expand(50.0),
                         iraedeusEntity -> iraedeusEntity.getOwner() != null && iraedeusEntity.getOwner().getUuid() == player.getUuid())

@@ -15,6 +15,7 @@ public class HomingTarget {
     private Entity entity;
     private int entityId = Integer.MIN_VALUE;
     private Vec3d pos;
+    private BlockPos blockPos;
     public static HomingTarget EMPTY = new HomingTarget(Vec3d.ZERO);
 
     public HomingTarget(Vec3d pos) {
@@ -31,12 +32,15 @@ public class HomingTarget {
     }
 
     public HomingTarget(BlockPos pos) {
-        this.pos = pos.toCenterPos();
+        this.blockPos = pos;
     }
 
-    public Vec3d pos() {
+    public Vec3d getPos() {
         if (this.hasEntity()) {
             return this.entity.getPos().add(0, this.entity.getHeight() / 2, 0);
+        }
+        if (this.hasBlock()) {
+            return this.blockPos.toCenterPos();
         }
         return this.pos;
     }
@@ -55,6 +59,14 @@ public class HomingTarget {
 
     public void setEntityId(int id) {
         this.entityId = id;
+    }
+
+    public boolean hasBlock() {
+        return this.blockPos != null;
+    }
+
+    public BlockPos getBlockPos() {
+        return blockPos;
     }
 
     /**

@@ -4,20 +4,14 @@ import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Ownable;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
+import net.minecraft.world.event.PositionSource;
 import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.entity.HomingTarget;
 import shiny.gildedglory.common.entity.IraedeusEntity;
@@ -73,19 +67,18 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
 
     @Override
     public void serverTick() {
-        if (this.isSummoned() && this.provider.getInventory().selectedSlot == this.slot) {
+        if (this.isSummoned()) {
             if (this.targeting) {
                 Vec3d pos = GildedGloryUtil.getThrowPos(this.provider, ModEntities.IRAEDEUS);
-                HomingTarget target = this.handleTarget(pos.add(this.provider.getRotationVector().multiply(48.0)));
-
                 IraedeusEntity iraedeus = new IraedeusEntity(this.provider.getWorld(), this.provider, this.slot, pos.x, pos.y, pos.z);
                 iraedeus.setItem(this.getStack());
+                this.provider.getWorld().spawnEntity(iraedeus);
+
+                HomingTarget target = iraedeus.handleTarget(this.provider, pos.add(this.provider.getRotationVector().multiply(48.0)));
                 iraedeus.setTargeting(true);
                 iraedeus.setTarget(target);
 
-                this.provider.getWorld().spawnEntity(iraedeus);
                 this.setEntity(iraedeus.getUuid());
-
                 this.summoned = false;
                 this.setStack(ItemStack.EMPTY);
             }
@@ -94,7 +87,7 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
             }
         }
 
-        if (this.slot != -1) {
+        if (!this.isSummoned() && this.slot != -1) {
             if (this.iraedeusId != null) {
                 Entity entity = GildedGloryUtil.getEntityFromUuid(this.iraedeusId, this.provider.getWorld());
                 if (!(entity instanceof IraedeusEntity)) {
@@ -169,26 +162,6 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
         tag.putInt("TargetCooldown", this.targetCooldown);
     }
 
-    public HomingTarget handleTarget(Vec3d targetPos) {
-        Vec3d direction = targetPos.subtract(this.provider.getEyePos());
-        Box box = this.provider.getBoundingBox().stretch(direction).expand(1.0, 1.0, 1.0);
-
-        EntityHitResult entityHit = ProjectileUtil.raycast(this.provider, this.provider.getEyePos(), targetPos, box, entity -> entity instanceof LivingEntity && entity != this.provider, direction.lengthSquared());
-        BlockHitResult blockHit = this.provider.getWorld().raycast(new RaycastContext(this.provider.getEyePos(), targetPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this.provider));
-
-        if (entityHit == null) {
-            if (blockHit.getType() == HitResult.Type.MISS) {
-                return new HomingTarget(blockHit.getPos());
-            }
-            else {
-                return new HomingTarget(blockHit.getBlockPos().toCenterPos().add(Vec3d.of(blockHit.getSide().getVector())));
-            }
-        }
-        else {
-            return new HomingTarget(entityHit.getEntity());
-        }
-    }
-
     public void returnStack() {
         boolean bl;
         if (this.provider.getInventory().getStack(this.slot).isEmpty()) {
@@ -210,5 +183,18 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
             iraedeus.insertStack(this.provider);
             iraedeus.discard();
         }
+    }
+
+    public Entity getTargetedEntity() {
+        if (this.targetCooldown == 0 && !this.targeting) {
+            Entity entity = GildedGloryUtil.getEntityFromUuid(this.iraedeusId, this.provider.getWorld());
+            if (entity instanceof IraedeusEntity || this.isSummoned()) {
+                return GildedGloryUtil.raycastSingle(this.provider,
+                        livingEntity -> livingEntity != this.provider
+                                && !(livingEntity instanceof Ownable ownable && ownable.getOwner() == this.provider),
+                        this.provider.getRotationVector(), 0.6f, 48, true);
+            }
+        }
+        return null;
     }
 }

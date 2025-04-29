@@ -72,7 +72,13 @@
   "item.iraedeus.hum": {
     "subtitle": "sounds.gildedglory.iraedeus.hum",
     "sounds": [
-      "gildedglory:item/iraedeus/ambient"
+      "gildedglory:item/iraedeus/hum"
+    ]
+  },
+  "item.iraedeus.spin": {
+    "subtitle": "sounds.gildedglory.iraedeus.spin",
+    "sounds": [
+      "gildedglory:item/iraedeus/spin"
     ]
   },
   "item.iraedeus.attack.crit.low": {
@@ -145,6 +151,34 @@
       "gildedglory:item/iraedeus/attack/high/knockback_0",
       "gildedglory:item/iraedeus/attack/high/knockback_1",
       "gildedglory:item/iraedeus/attack/high/knockback_2"
+    ]
+  },
+  "item.iraedeus.attack.slash": {
+    "subtitle": "sounds.gildedglory.iraedeus.attack.slash",
+    "sounds": [
+      "gildedglory:item/iraedeus/attack/slash_0",
+      "gildedglory:item/iraedeus/attack/slash_1",
+      "gildedglory:item/iraedeus/attack/slash_2"
+    ]
+  },
+  "item.iraedeus.throw": {
+    "subtitle": "sounds.gildedglory.iraedeus.throw",
+    "sounds": [
+      "gildedglory:item/iraedeus/throw_0",
+      "gildedglory:item/iraedeus/throw_1",
+      "gildedglory:item/iraedeus/throw_2"
+    ]
+  },
+  "item.iraedeus.hit": {
+    "subtitle": "sounds.gildedglory.iraedeus.hit",
+    "sounds": [
+      "gildedglory:item/iraedeus/hit"
+    ]
+  },
+  "item.iraedeus.parry": {
+    "subtitle": "sounds.gildedglory.iraedeus.parry",
+    "sounds": [
+      "gildedglory:item/iraedeus/parry"
     ]
   }
 }

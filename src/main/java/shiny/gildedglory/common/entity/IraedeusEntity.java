@@ -8,25 +8,33 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import net.minecraft.world.event.BlockPositionSource;
+import net.minecraft.world.event.EntityPositionSource;
+import net.minecraft.world.event.PositionSource;
+import net.minecraft.world.event.PositionSourceType;
 import shiny.gildedglory.GildedGlory;
+import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 import shiny.gildedglory.common.component.entity.IraedeusComponent;
 import shiny.gildedglory.common.item.ChargeableWeapon;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.damage_type.ModDamageTypes;
 import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.common.registry.item.ModItems;
+import shiny.gildedglory.common.registry.particle.ModParticles;
+import shiny.gildedglory.common.registry.sound.ModSounds;
 import shiny.gildedglory.common.util.DynamicSoundSource;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 import team.lodestar.lodestone.systems.rendering.trail.TrailPoint;
@@ -37,9 +45,8 @@ import java.util.List;
 
 //The entity for a summoned/thrown iraedeus
 //To-Do:
-//AoE damage functionality when hit block while targeting
-//Particles for: throwing, returning, targeting, parrying, block hit while targeting
-//Sounds for: throwing, returning, targeting, parrying, block hit while targeting, entity hit
+//Particles for: (throwing), returning, targeting
+//Sounds for: (returning), targeting, block hit while targeting
 
 public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity, DynamicSoundSource {
 
@@ -85,7 +92,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     public void onTrackedDataSet(TrackedData<?> data) {
         super.onTrackedDataSet(data);
         if (data.equals(TARGET)) {
-            this.dataTracker.get(TARGET).updateEntity(this.getWorld());
+            this.getTarget().updateEntity(this.getWorld());
         }
     }
 
@@ -114,39 +121,70 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
             this.prevPitch = this.getPitch();
         }
 
+        boolean bl = false;
         LivingEntity owner = (LivingEntity) this.getOwner();
-        for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, getBoundingBox(), this::canHit)) {
-            if (!this.getWorld().isClient()) this.damageEntity(owner, entity);
+        for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox(), this::canHit)) {
+            if (!this.getWorld().isClient() && this.damageEntity(owner, entity)) bl = true;
+        }
+        if (bl) {
+            ((ServerWorld) this.getWorld()).spawnParticles(ModParticles.IRAEDEUS_SLASH, this.getX(), this.getY(), this.getZ(), 0, 0, 0, 0, 0);
+            this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.IRAEDEUS_SLASH, SoundCategory.PLAYERS, 1.0f, 1.0f);
         }
 
-        boolean bl = ((this.inGroundTime > 0 && !this.isTargeting()) || this.inGroundTime > 10);
-        if (bl || owner == null || this.getPos().distanceTo(GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS)) >= 48.0f) {
-            this.setTargeting(false);
+        boolean bl1 = ((this.inGroundTime > 0 && !this.isTargeting()) || this.inGroundTime > 10);
+        if (bl1 || owner == null || this.getPos().distanceTo(GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS)) >= 48.0f) {
+            if (!this.isReturning()) {
+                float pitch = GildedGloryUtil.random(0.9f, 1.1f);
+                this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.IRAEDEUS_HIT, SoundCategory.PLAYERS, 1.0f, pitch);
+
+                this.spawnShockwaveParticle(this);
+                this.setTargeting(false);
+                this.hitEntities.clear();
+            }
         }
 
         Pair<Boolean, Boolean> controlStatus = this.getControlStatus();
         if (this.age > 6) {
             if (controlStatus.getLeft() && !this.isParried() && owner != null) {
                 Vec3d vec1 = GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS).add(owner.getRotationVector().multiply(48.0));
-                this.setTarget(this.handleTarget(owner, vec1, vec1.add(owner.getRotationVector().multiply(8.0))));
+                this.setTarget(this.handleTarget(owner, vec1));
                 this.setTargeting(true);
+                this.hitEntities.clear();
             }
             else if (controlStatus.getRight() && !this.isReturning() && !this.isParried()) {
+                this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_TRIDENT_RETURN, SoundCategory.PLAYERS, 2.0f, 1.0f);
                 this.setTargeting(false);
+                this.hitEntities.clear();
             }
         }
 
         if (this.hasTarget()) {
-            if (this.targetTicks < 60 && this.getTarget() != HomingTarget.EMPTY) {
+
+            if (this.getTarget() == null) {
+                GildedGlory.LOGGER.info("Target is null! Is client: " + this.getWorld().isClient());
+            }
+
+            if (this.targetTicks < 60 && this.getTarget() != null) {
                 HomingTarget target = this.getTarget();
 
-                //Vec3d vec1 = target.pos();
-                //this.getWorld().addImportantParticle(ParticleTypes.FLASH, vec1.x, vec1.y, vec1.z, 0, 0, 0);
+                Vec3d vec1 = target.getPos();
+                if (!this.getWorld().isClient()) {
+                    ((ServerWorld) this.getWorld()).spawnParticles(ParticleTypes.ENCHANTED_HIT, vec1.x, vec1.y, vec1.z, 1, 0.5, 1, 0.5, 0.02);
+                }
 
-                if (this.squaredDistanceTo(target.pos()) > 2.0f) {
-                    this.moveToTarget(target, this.isParried());
+                if (this.squaredDistanceTo(vec1) > 2.0f) {
+                    this.moveToTarget(vec1, this.isParried());
                 }
                 else {
+                    if (target.hasBlock()) {
+                        for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(5.0f, 5.5f, 5.0f), this::canHit)) {
+                            if (!this.getWorld().isClient() && this.damageEntity(owner, entity));
+                        }
+
+                        float pitch = GildedGloryUtil.random(0.9f, 1.1f);
+                        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.IRAEDEUS_HIT, SoundCategory.PLAYERS, 1.0f, pitch);
+                        this.spawnShockwaveParticle(this);
+                    }
                     this.setTargeting(false);
                     this.setParried(false);
                 }
@@ -162,7 +200,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
                 if (owner.isAlive()) {
                     Vec3d vec3d = GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS).subtract(this.getPos());
                     this.setPos(this.getX(), this.getY() + vec3d.y * 0.01, this.getZ());
-                    this.setVelocity(this.getVelocity().multiply(0.95).add(vec3d.normalize().multiply(0.2 - this.getSpeed(false) * 0.015)));
+                    this.setVelocity(this.getVelocity().multiply(0.8).add(vec3d.normalize().multiply(0.2 - this.getSpeed(false) * 0.01)));
                 }
                 else if (owner instanceof PlayerEntity player) {
                     this.insertStack(player);
@@ -222,52 +260,47 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         return hit.getType() == HitResult.Type.BLOCK && !this.getWorld().getBlockState(hit.getBlockPos()).getCollisionShape(this.getWorld(), hit.getBlockPos()).isEmpty();
     }
 
-    public void damageEntity(LivingEntity attacker, LivingEntity target) {
+    public boolean damageEntity(LivingEntity attacker, LivingEntity target) {
         DamageSource damageSource = new DamageSource(this.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(ModDamageTypes.IRAEDEUS), this, attacker == null ? this : attacker);
-        float amount = (0.07f * this.getCharge() + 4.0f) + EnchantmentHelper.getAttackDamage(this.getStack(), target.getGroup());
-        target.damage(damageSource, amount);
-
+        float amount = (0.05f * this.getCharge() + 7.0f) + EnchantmentHelper.getAttackDamage(this.getStack(), target.getGroup());
         this.hitEntities.add(target);
+        return target.damage(damageSource, amount);
     }
 
-    public HomingTarget handleTarget(Entity entity, Vec3d targetPos, Vec3d fallback) {
-        Vec3d direction = targetPos.subtract(entity.getEyePos());
-        Box box = entity.getBoundingBox().stretch(direction).expand(1.0, 1.0, 1.0);
-
-        EntityHitResult entityHit = ProjectileUtil.raycast(entity, entity.getEyePos(), targetPos, box, entity1 -> entity1 != this && entity1 != entity, direction.lengthSquared());
+    public HomingTarget handleTarget(Entity entity, Vec3d targetPos) {
         BlockHitResult blockHit = this.getWorld().raycast(new RaycastContext(entity.getEyePos(), targetPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
+        LivingEntity target = GildedGloryUtil.raycastSingle(entity, this::canHit, entity.getRotationVector(), 0.6f, 48, true);
 
-        if (entityHit == null) {
+        if (target == null || !this.canHit(target)) {
             if (blockHit.getType() == HitResult.Type.MISS) {
-                return new HomingTarget(fallback);
+                return new HomingTarget(blockHit.getBlockPos());
             }
             else {
-                return new HomingTarget(
-                        blockHit.getBlockPos().toCenterPos().add(Vec3d.of(blockHit.getSide().getVector()))
-                );
+                return new HomingTarget(blockHit.getBlockPos().add(blockHit.getSide().getVector()));
             }
         }
         else {
-            return new HomingTarget(entityHit.getEntity());
+            return new HomingTarget(target);
         }
     }
 
-    public void moveToTarget(HomingTarget target, boolean invert) {
+    public void moveToTarget(Vec3d targetPos, boolean invert) {
         Vec3d pos = this.getPos();
-        Vec3d targetPos = target.pos();
 
         double accuracy = (1 / (Math.sqrt(pos.squaredDistanceTo(targetPos)) * 0.5)) * this.getAccuracy(invert);
-        Vec3d direction = target.pos().subtract(pos).multiply(accuracy);
+        Vec3d direction = targetPos.subtract(pos).multiply(accuracy);
 
-        this.setVelocity(this.getVelocity().add(direction).normalize().multiply(this.getSpeed(invert)));
+        this.setVelocity(this.getVelocity().multiply(this.getAccuracy(true) - 0.3).add(direction).normalize().multiply(this.getSpeed(invert) * 0.85));
     }
 
     public void parry(Entity actor, Entity owner, float damage) {
-        actor.getWorld().addImportantParticle(ParticleTypes.FLASH, actor.getX(), actor.getEyeY(), actor.getZ(), 0, 0, 0);
+        this.spawnShockwaveParticle(actor);
+        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.IRAEDEUS_PARRY, SoundCategory.PLAYERS, 2.0f, 1.0f);
 
         this.setCharge(Math.max(0, this.getCharge() - (int) (damage * 2)));
         this.addVelocity(actor.getRotationVector().multiply(damage * 0.5));
-        this.setTarget(new HomingTarget(GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS)));
+
+        this.setTarget(new HomingTarget(owner));
         this.setParried(true);
     }
 
@@ -277,22 +310,28 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
 
         if (this.getOwner() instanceof PlayerEntity player) {
             IraedeusComponent component = ModComponents.IRAEDEUS.get(player);
-            if (player.getInventory().selectedSlot == component.slot) {
                 targeting = component.targeting;
                 returning = component.returning;
-
                 if (targeting) component.targetCooldown = 40;
-            }
         }
         return new Pair<>(targeting, returning);
     }
 
     public float getSpeed(boolean invert) {
-        return invert ? -0.0125f * this.getCharge() + 2 : 0.0125f * this.getCharge() + 0.75f;
+        return invert ? -0.01f * this.getCharge() + 2 : 0.01f * this.getCharge() + 1.0f;
     }
 
     public float getAccuracy(boolean invert) {
-        return invert ? -0.007f * this.getCharge() + 0.85f : 0.007f * this.getCharge() + 0.15f;
+        return invert ? -0.007f * this.getCharge() + 1.0f : 0.007f * this.getCharge() + 0.3f;
+    }
+
+    public void spawnShockwaveParticle(Entity from) {
+        Vec3d rotation = from.getRotationVector();
+        if (from == this) {
+            rotation = this.getVelocity().normalize();
+        }
+        from.getWorld().addImportantParticle(new VectorParticleEffect(ModParticles.SHOCKWAVE, rotation.toVector3f(), 3.5f, 10),
+                true, from.getX(), from.getEyeY(), from.getZ(), 0, 0, 0);
     }
 
     @Override
@@ -358,8 +397,6 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     public void setReturning(boolean returning) {
         this.setIraedeusFlag(RETURNING_FLAG, returning);
         this.setNoClip(returning);
-
-        if (returning) this.hitEntities.clear();
     }
 
     public void setTargeting(boolean targeting) {

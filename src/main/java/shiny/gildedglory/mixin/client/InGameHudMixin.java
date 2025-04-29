@@ -91,14 +91,15 @@ public abstract class InGameHudMixin {
         tickCounter++;
     }
 
-    @Inject(method = "render", at = @At(value = "TAIL"))
-    private void gildedglory$applyIraedeusOverlay(DrawContext context, float tickDelta, CallbackInfo ci) {
-        ClientPlayerEntity player = client.player;
-        if (player != null) {
-            IraedeusComponent component = ModComponents.IRAEDEUS.get(player);
-            if (component.slot == player.getInventory().selectedSlot) {
-                OverlayRenderer.renderIraedeusOverlay(context, client.options.attackKey.isPressed() || client.options.useKey.isPressed());
-            }
-        }
-    }
+    //Unused since keybind change
+//    @Inject(method = "render", at = @At(value = "TAIL"))
+//    private void gildedglory$applyIraedeusOverlay(DrawContext context, float tickDelta, CallbackInfo ci) {
+//        ClientPlayerEntity player = client.player;
+//        if (player != null) {
+//            IraedeusComponent component = ModComponents.IRAEDEUS.get(player);
+//            if (component.slot == player.getInventory().selectedSlot) {
+//                OverlayRenderer.renderIraedeusOverlay(context, client.options.attackKey.isPressed() || client.options.useKey.isPressed());
+//            }
+//        }
+//    }
 }

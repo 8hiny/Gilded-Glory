@@ -33,7 +33,7 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
     private static final EntityDimensions HORIZONTAL_DIMENSIONS = new EntityDimensions(2.4f, 0.5f, true);
     private static final EntityDimensions VERTICAL_DIMENSIONS = new EntityDimensions(2.4f, 1.0f, true);
     private final TrailPointBuilder builder = TrailPointBuilder.create(4);
-    public final List<LivingEntity> hitEntities = new ArrayList<>();
+    public final List<Entity> hitEntities = new ArrayList<>();
     private float damage = 9.0f;
     private int life = 0;
 
@@ -78,25 +78,27 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
         }
         if (this.life >= 5) this.discard();
 
-        LivingEntity attacker = (LivingEntity) this.getOwner();
-        boolean bl = attacker instanceof PlayerEntity player && CharmItem.hasOwnedCharm(player);
+        LivingEntity owner = (LivingEntity) this.getOwner();
+        boolean bl = owner instanceof PlayerEntity player && CharmItem.hasOwnedCharm(player);
 
         float damage = this.isVertical() ? this.damage : this.damage / 2;
         if (!this.getWorld().isClient()) {
-            for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, getBoundingBox().expand(0.25), livingEntity -> (attacker != livingEntity))) {
-                if (!this.hitEntities.contains(entity)) {
+            for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, getBoundingBox().expand(0.25), this::canHit)) {
+                boolean bl1 = entity instanceof PlayerEntity player && CharmItem.hasOwnedCharm(player);
+                if (!bl || !bl1) {
+                    DamageSource damageSource = new DamageSource(this.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(ModDamageTypes.SLASH), this, owner == null ? this : owner);
 
-                    boolean bl1 = entity instanceof PlayerEntity player && CharmItem.hasOwnedCharm(player);
-                    if (!bl || !bl1) {
-                        DamageSource damageSource = new DamageSource(this.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(ModDamageTypes.SLASH), this, attacker == null ? this : attacker);
-
-                        entity.damage(damageSource, damage);
-                        if (attacker != null && this.canChain()) tryApplyChained(attacker, entity, damage);
-                        this.hitEntities.add(entity);
-                    }
+                    entity.damage(damageSource, damage);
+                    if (owner != null && this.canChain()) tryApplyChained(owner, entity, damage);
+                    this.hitEntities.add(entity);
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean canHit(Entity entity) {
+        return super.canHit(entity) && entity != this.getOwner() && (this.hitEntities.isEmpty() || !this.hitEntities.contains(entity));
     }
 
     @Override

@@ -51,17 +51,17 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
                 && !this.isFallFlying()));
     }
 
-    @Inject(method = "tick", at = @At(value = "TAIL"))
-    private void gildedglory$addCosmeticPlayerParticles(CallbackInfo ci) {
-        ClientWorld world = (ClientWorld) this.getWorld();
-        PlayerEntity shiny = world.getPlayerByUuid(GildedGlory.SHINY_UUID);
-
-        double offsetX = this.random.nextGaussian() * 0.35;
-        double offsetY = this.random.nextGaussian() * 0.4;
-        double offsetZ = this.random.nextGaussian() * 0.35;
-
-        if (Math.random() < 0.175 && shiny != null) {
-            GildedGloryUtil.addPersonalParticles(shiny, ModParticles.SPARKLE, shiny.getX() + offsetX, shiny.getBodyY(0.5) + offsetY, shiny.getZ() + offsetZ, 0, 0, 0);
-        }
-    }
+//    @Inject(method = "tick", at = @At(value = "TAIL"))
+//    private void gildedglory$addCosmeticPlayerParticles(CallbackInfo ci) {
+//        ClientWorld world = (ClientWorld) this.getWorld();
+//        PlayerEntity shiny = world.getPlayerByUuid(GildedGlory.SHINY_UUID);
+//
+//        double offsetX = this.random.nextGaussian() * 0.35;
+//        double offsetY = this.random.nextGaussian() * 0.4;
+//        double offsetZ = this.random.nextGaussian() * 0.35;
+//
+//        if (Math.random() < 0.175 && shiny != null) {
+//            GildedGloryUtil.addPersonalParticles(shiny, ModParticles.SPARKLE, shiny.getX() + offsetX, shiny.getBodyY(0.5) + offsetY, shiny.getZ() + offsetZ, 0, 0, 0);
+//        }
+//    }
 }
