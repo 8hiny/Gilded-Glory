@@ -38,6 +38,7 @@ public abstract class AnvilBlockMixin extends FallingBlock {
             world.setBlockState(pos, heatedState);
 
             world.playSound(null, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS);
+            world.playSound(null, pos, SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.BLOCKS);
 
             stack.decrement(1);
             cir.setReturnValue(ActionResult.SUCCESS);

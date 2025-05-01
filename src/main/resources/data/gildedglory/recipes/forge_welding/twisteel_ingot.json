@@ -1,0 +1,21 @@
+{
+  "type": "gildedglory:forge_welding",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "minecraft:netherite_scrap"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:twisteel_ingot",
+    "count": 1
+  }
+}

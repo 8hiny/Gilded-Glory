@@ -76,5 +76,4 @@ public class BeamRenderer {
         matrices.multiply(RotationAxis.POSITIVE_Z.rotation(-rightAngle));
         matrices.translate(-size / 2, 0, 0);
     }
-
 }

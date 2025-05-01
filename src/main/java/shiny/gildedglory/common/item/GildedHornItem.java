@@ -53,7 +53,7 @@ public class GildedHornItem extends Item {
         }
 
         if (success || (user.getHealth() >= user.getMaxHealth())) {
-            world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.GILDED_HORN, user.getSoundCategory(), 1.0f, 1.0f);
+            world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.GILDED_HORN, user.getSoundCategory(), 16.0f, 1.0f);
 
             user.setCurrentHand(hand);
             user.getItemCooldownManager().set(this, success ? 600 : 140);

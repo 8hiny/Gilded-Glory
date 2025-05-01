@@ -46,7 +46,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(method = "attack", at = @At(value = "HEAD"))
     private void gildedglory$defaultAttackSound(Entity target, CallbackInfo ci) {
         ItemStack stack = this.getMainHandStack();
-        if (stack.getItem() instanceof CustomEffectsWeapon weapon && weapon.getDefaultAttackSound(stack) != null && (weapon.alwaysPlayDefaultAttackSound() || this.attackCooldownProgress > 0.8f)) {
+        if (stack.getItem() instanceof CustomEffectsWeapon weapon && weapon.getDefaultAttackSound(stack) != null && (weapon.alwaysPlayDefaultAttackSound(stack) || this.attackCooldownProgress > 0.8f)) {
             this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), weapon.getDefaultAttackSound(stack), this.getSoundCategory(), 1.0f, GildedGloryUtil.random(0.9f, 1.1f));
         }
     }
@@ -56,12 +56,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         double d = -MathHelper.sin(this.getYaw() * (float) (Math.PI / 180.0));
         double e = MathHelper.cos(this.getYaw() * (float) (Math.PI / 180.0));
 
+        ItemStack stack = this.getMainHandStack();
         if (!this.getWorld().isClient() && this.getMainHandStack().getItem() instanceof CustomEffectsWeapon weapon) {
-            if (weapon.getCritAttackParticle() != null && args.get(4) == SoundEvents.ENTITY_PLAYER_ATTACK_CRIT) {
-                ((ServerWorld) this.getWorld()).spawnParticles(weapon.getCritAttackParticle(), this.getX() + d, this.getBodyY(0.5), this.getZ() + e, 0, d, 0.0, e, 0.0);
+            if (weapon.getCritAttackParticle(stack) != null && args.get(4) == SoundEvents.ENTITY_PLAYER_ATTACK_CRIT) {
+                ((ServerWorld) this.getWorld()).spawnParticles(weapon.getCritAttackParticle(stack), this.getX() + d, this.getBodyY(0.5), this.getZ() + e, 0, d, 0.0, e, 0.0);
             }
-            else if (weapon.getAttackParticle() != null && args.get(4) != SoundEvents.ENTITY_PLAYER_ATTACK_WEAK && args.get(4) != SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE) {
-                ((ServerWorld) this.getWorld()).spawnParticles(weapon.getAttackParticle(), this.getX() + d, this.getBodyY(0.5), this.getZ() + e, 0, d, 0.0, e, 0.0);
+            else if (weapon.getAttackParticle(stack) != null && args.get(4) != SoundEvents.ENTITY_PLAYER_ATTACK_WEAK && args.get(4) != SoundEvents.ENTITY_PLAYER_ATTACK_NODAMAGE) {
+                ((ServerWorld) this.getWorld()).spawnParticles(weapon.getAttackParticle(stack), this.getX() + d, this.getBodyY(0.5), this.getZ() + e, 0, d, 0.0, e, 0.0);
             }
         }
     }
@@ -91,8 +92,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @ModifyArgs(method = "spawnSweepAttackParticles", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;spawnParticles(Lnet/minecraft/particle/ParticleEffect;DDDIDDDD)I"))
     private void gildedglory$customSweepParticle(Args args) {
-        if (this.getMainHandStack().getItem() instanceof CustomEffectsWeapon weapon && weapon.getSweepAttackParticle() != null) {
-            args.set(0, weapon.getSweepAttackParticle());
+        ItemStack stack = this.getMainHandStack();
+        if (this.getMainHandStack().getItem() instanceof CustomEffectsWeapon weapon && weapon.getSweepAttackParticle(stack) != null) {
+            args.set(0, weapon.getSweepAttackParticle(stack));
         }
     }
 

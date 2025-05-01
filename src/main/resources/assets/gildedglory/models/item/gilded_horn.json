@@ -30,7 +30,7 @@
             "predicate": {
                 "gildedglory:tooting": 1
             },
-            "model": "gildedglory:item/tooting_gilded_horn"
+            "model": "gildedglory:item/gilded_horn_tooting"
         }
     ]
 }

@@ -14,7 +14,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -43,18 +42,13 @@ import team.lodestar.lodestone.systems.rendering.trail.TrailPointBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-//The entity for a summoned/thrown iraedeus
-//To-Do:
-//Particles for: (throwing), returning, targeting
-//Sounds for: (returning), targeting, block hit while targeting
-
 public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity, DynamicSoundSource {
 
     private static final TrackedData<ItemStack> ITEM = DataTracker.registerData(IraedeusEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
     private static final TrackedData<Byte> IRAEDEUS_FLAGS = DataTracker.registerData(IraedeusEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Boolean> NO_CLIP = DataTracker.registerData(IraedeusEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> CHARGE = DataTracker.registerData(IraedeusEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<HomingTarget> TARGET = DataTracker.registerData(IraedeusEntity.class, ExtraTrackedData.TARGET);
+    private static final TrackedData<PositionSource> TARGET = DataTracker.registerData(IraedeusEntity.class, ExtraTrackedData.POSITION_SOURCE);
     private static final int RETURNING_FLAG = 1;
     private static final int TARGETING_FLAG = 2;
     private static final int PARRIED_FLAG = 4;
@@ -85,15 +79,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         this.dataTracker.startTracking(IRAEDEUS_FLAGS, (byte) 0);
         this.dataTracker.startTracking(NO_CLIP, false);
         this.dataTracker.startTracking(CHARGE, 0);
-        this.dataTracker.startTracking(TARGET, HomingTarget.EMPTY);
-    }
-
-    @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
-        super.onTrackedDataSet(data);
-        if (data.equals(TARGET)) {
-            this.getTarget().updateEntity(this.getWorld());
-        }
+        this.dataTracker.startTracking(TARGET, new BlockPositionSource(new BlockPos(0, 0, 0)));
     }
 
     @Override
@@ -108,6 +94,10 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     @Override
     public void tick() {
         super.tick();
+
+        if (this.activeTicks == 0) {
+            GildedGloryUtil.startLoopingSound(this.getWorld(), this, GildedGlory.id("iraedeus_spin"));
+        }
 
         if (this.checkGroundCollision()) this.inGroundTime++;
         else this.inGroundTime = 0;
@@ -152,7 +142,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
                 this.hitEntities.clear();
             }
             else if (controlStatus.getRight() && !this.isReturning() && !this.isParried()) {
-                this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_TRIDENT_RETURN, SoundCategory.PLAYERS, 2.0f, 1.0f);
+                this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.IRAEDEUS_RETURN, SoundCategory.PLAYERS, 2.0f, 1.0f);
                 this.setTargeting(false);
                 this.hitEntities.clear();
             }
@@ -165,18 +155,22 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
             }
 
             if (this.targetTicks < 60 && this.getTarget() != null) {
-                HomingTarget target = this.getTarget();
+                PositionSource source = this.getTarget();
 
-                Vec3d vec1 = target.getPos();
-                if (!this.getWorld().isClient()) {
-                    ((ServerWorld) this.getWorld()).spawnParticles(ParticleTypes.ENCHANTED_HIT, vec1.x, vec1.y, vec1.z, 1, 0.5, 1, 0.5, 0.02);
+                Vec3d target = owner.getPos();
+                if (source.getPos(this.getWorld()).isPresent()) {
+                    target = source.getPos(this.getWorld()).get();
+
+                    if (!this.getWorld().isClient()) {
+                        ((ServerWorld) this.getWorld()).spawnParticles(ParticleTypes.ENCHANTED_HIT, target.x, target.y, target.z, 1, 0.5, 1, 0.5, 0.02);
+                    }
                 }
 
-                if (this.squaredDistanceTo(vec1) > 2.0f) {
-                    this.moveToTarget(vec1, this.isParried());
+                if (this.squaredDistanceTo(target) > 2.0f) {
+                    this.moveToTarget(target, this.isParried());
                 }
                 else {
-                    if (target.hasBlock()) {
+                    if (source.getType() == PositionSourceType.BLOCK) {
                         for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(5.0f, 5.5f, 5.0f), this::canHit)) {
                             if (!this.getWorld().isClient() && this.damageEntity(owner, entity));
                         }
@@ -201,10 +195,6 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
                     Vec3d vec3d = GildedGloryUtil.getThrowPos(owner, ModEntities.IRAEDEUS).subtract(this.getPos());
                     this.setPos(this.getX(), this.getY() + vec3d.y * 0.01, this.getZ());
                     this.setVelocity(this.getVelocity().multiply(0.8).add(vec3d.normalize().multiply(0.2 - this.getSpeed(false) * 0.01)));
-                }
-                else if (owner instanceof PlayerEntity player) {
-                    this.insertStack(player);
-                    this.discard();
                 }
                 else {
                     this.dropStack(this.getStack());
@@ -267,20 +257,20 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         return target.damage(damageSource, amount);
     }
 
-    public HomingTarget handleTarget(Entity entity, Vec3d targetPos) {
+    public PositionSource handleTarget(Entity entity, Vec3d targetPos) {
         BlockHitResult blockHit = this.getWorld().raycast(new RaycastContext(entity.getEyePos(), targetPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
         LivingEntity target = GildedGloryUtil.raycastSingle(entity, this::canHit, entity.getRotationVector(), 0.6f, 48, true);
 
         if (target == null || !this.canHit(target)) {
             if (blockHit.getType() == HitResult.Type.MISS) {
-                return new HomingTarget(blockHit.getBlockPos());
+                return new BlockPositionSource(blockHit.getBlockPos());
             }
             else {
-                return new HomingTarget(blockHit.getBlockPos().add(blockHit.getSide().getVector()));
+                return new BlockPositionSource(blockHit.getBlockPos().add(blockHit.getSide().getVector()));
             }
         }
         else {
-            return new HomingTarget(target);
+            return new EntityPositionSource(target, target.getHeight() / 2);
         }
     }
 
@@ -300,7 +290,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         this.setCharge(Math.max(0, this.getCharge() - (int) (damage * 2)));
         this.addVelocity(actor.getRotationVector().multiply(damage * 0.5));
 
-        this.setTarget(new HomingTarget(owner));
+        this.setTarget(new EntityPositionSource(owner, owner.getStandingEyeHeight()));
         this.setParried(true);
     }
 
@@ -435,17 +425,17 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         this.dataTracker.set(CHARGE, charge);
     }
 
-    public HomingTarget getTarget() {
+    public PositionSource getTarget() {
         return this.dataTracker.get(TARGET);
     }
 
-    public void setTarget(HomingTarget target) {
-        this.dataTracker.set(TARGET, target);
+    public void setTarget(PositionSource source) {
+        this.dataTracker.set(TARGET, source);
     }
 
     public boolean insertStack(PlayerEntity player) {
         boolean bl;
-        if (player.getInventory().getStack(this.originalSlot).isEmpty()) {
+        if (this.originalSlot != -1 && player.getInventory().getStack(this.originalSlot).isEmpty()) {
             bl = player.getInventory().insertStack(this.originalSlot, this.getStack());
         }
         else {
@@ -456,7 +446,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
             ModComponents.IRAEDEUS.get(player).reset();
             player.getItemCooldownManager().set(ModItems.IRAEDEUS, (int) Math.max(20, this.activeTicks * 0.25f));
             if (this.getCharge() > 0) {
-                GildedGloryUtil.startLoopingSound(player.getWorld(), player, GildedGlory.id("iraedeus_hum"));
+                GildedGloryUtil.sendSoundPackets(player.getWorld(), player, null, GildedGlory.id("iraedeus_hum"));
             }
         }
         return bl;
@@ -519,7 +509,6 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         return this.getPos();
     }
 
-    //This should be used to play a resonating and spinning sound when the entity swooshes by the listener
     @Override
     public boolean canPlay() {
         return !this.isRemoved();

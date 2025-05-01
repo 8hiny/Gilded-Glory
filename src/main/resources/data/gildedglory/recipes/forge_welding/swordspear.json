@@ -1,0 +1,21 @@
+{
+  "type": "gildedglory:forge_welding",
+  "ingredients": [
+    {
+      "item": "minecraft:netherite_sword"
+    },
+    {
+      "item": "minecraft:gold_block"
+    },
+    {
+      "item": "minecraft:ender_eye"
+    },
+    {
+      "item": "minecraft:blaze_rod"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:swordspear",
+    "count": 1
+  }
+}

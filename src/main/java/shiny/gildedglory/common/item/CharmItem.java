@@ -59,8 +59,8 @@ public class CharmItem extends Item {
         NbtCompound nbt = stack.getOrCreateNbt();
         NbtCompound owner = new NbtCompound();
 
-        owner.putString("name", name);
-        owner.putUuid("uuid", uuid);
+        owner.putString("Name", name);
+        owner.putUuid("Uuid", uuid);
         nbt.put(OWNER_KEY, owner);
         stack.setNbt(nbt);
     }
@@ -70,8 +70,8 @@ public class CharmItem extends Item {
         if (nbt != null) {
             NbtCompound nbtCompound = nbt.getCompound(OWNER_KEY);
 
-            nbtCompound.remove("name");
-            nbtCompound.remove("uuid");
+            nbtCompound.remove("Name");
+            nbtCompound.remove("Uuid");
             stack.setNbt(nbtCompound);
         }
     }
@@ -81,20 +81,20 @@ public class CharmItem extends Item {
     }
 
     public static boolean isOwner(ItemStack stack, Entity entity) {
-        return stack.getNbt() != null && hasOwner(stack) && getOwnerUUID(stack).equals(entity.getUuid());
+        return stack.getNbt() != null && hasOwner(stack) && getOwnerUUID(stack) != null && entity.getUuid().equals(getOwnerUUID(stack));
         //if the above stops working again, remove the hasOwner check, but fix the crash it involves
     }
 
     public static UUID getOwnerUUID(ItemStack stack) {
-        if (hasOwner(stack)) return stack.getNbt().getCompound(OWNER_KEY).getUuid("uuid");
-        else return null;
+        if (stack.getNbt() == null || !hasOwner(stack)) return null;
+        return stack.getNbt().getCompound(OWNER_KEY).getUuid("Uuid");
     }
 
     public static String getOwnerName(ItemStack stack) {
         NbtCompound nbt = stack.getNbt();
         if (nbt != null) {
             NbtCompound owner = nbt.getCompound(OWNER_KEY);
-            return owner.getString("name");
+            return owner.getString("Name");
         }
         else return "";
     }

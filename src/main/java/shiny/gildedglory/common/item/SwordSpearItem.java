@@ -42,10 +42,6 @@ import java.util.UUID;
 
 public class SwordSpearItem extends SwordItem implements ChargeableWeapon, CustomEffectsWeapon, SprintUsableItem {
 
-    //To-Do:
-    //Add a custom crit particle
-    //(Add a golden screen overlay which is applied while firing)
-
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
     private final float attackDamage;
 
@@ -131,9 +127,13 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
                 }
                 ChargeableWeapon.tickCharge(stack);
             }
-            else if (charge > 0) {
-                if (entity instanceof PlayerEntity player && !player.getItemCooldownManager().isCoolingDown(this)) {
-                    player.getItemCooldownManager().set(this, Math.max(40, charge));
+            else if (charge > 0 && !world.isClient()) {
+                if (entity instanceof PlayerEntity player) {
+                    int cooldown = charge;
+                    if (player.getItemCooldownManager().isCoolingDown(this)) {
+                        cooldown /= 2;
+                    }
+                    player.getItemCooldownManager().set(this, Math.max(40, cooldown));
                 }
                 ChargeableWeapon.setCharge(stack, 0);
             }
@@ -191,32 +191,17 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
     }
 
     @Override
-    public SoundEvent getKnockbackAttackSound(ItemStack stack) {
-        return ModSounds.SWORDSPEAR_CRIT;
-    }
-
-    @Override
-    public BipedEntityModel.ArmPose getMainHandPose() {
-        return BipedEntityModel.ArmPose.BLOCK;
-    }
-
-    @Override
-    public BipedEntityModel.ArmPose getOffHandPose() {
-        return BipedEntityModel.ArmPose.CROSSBOW_CHARGE;
-    }
-
-    @Override
-    public DefaultParticleType getSweepAttackParticle() {
+    public DefaultParticleType getSweepAttackParticle(ItemStack stack) {
         return ModParticles.GOLD_SLASH;
     }
 
     @Override
-    public DefaultParticleType getCritAttackParticle() {
+    public DefaultParticleType getCritAttackParticle(ItemStack stack) {
         return ModParticles.GOLD_VERTICAL_SLASH;
     }
 
     @Override
-    public boolean isTwoHanded() {
+    public boolean isTwoHanded(ItemStack stack) {
         return true;
     }
 

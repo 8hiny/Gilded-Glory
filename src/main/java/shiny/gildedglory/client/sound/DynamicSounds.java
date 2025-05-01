@@ -5,6 +5,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
 import shiny.gildedglory.GildedGlory;
+import shiny.gildedglory.common.entity.IraedeusEntity;
 import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.registry.sound.ModSounds;
 import shiny.gildedglory.common.util.DynamicSoundManager;
@@ -18,6 +19,7 @@ public class DynamicSounds {
     private final static PredicatedLoopingSoundInstance.Builder SWORDSPEAR_CHARGING;
     private final static PredicatedLoopingSoundInstance.Builder SWORDSPEAR_FIRING;
     private final static PredicatedLoopingSoundInstance.Builder IRAEDEUS_HUM;
+    private final static PredicatedLoopingSoundInstance.Builder IRAEDEUS_SPIN;
 
     static {
         AURADEUS_HUM = new PredicatedLoopingSoundInstance.Builder(
@@ -68,11 +70,24 @@ public class DynamicSounds {
                 true, source -> source.getCharge() > 0 && source.isHolding(ModItems.IRAEDEUS, false),
                 DynamicSoundManager.getInstance()
         );
+        IRAEDEUS_SPIN = new PredicatedLoopingSoundInstance.Builder(
+                GildedGlory.id("iraedeus_spin"),
+                ModSounds.IRAEDEUS_SPIN,
+                SoundCategory.PLAYERS,
+                1.0f, 1.0f,
+                0.0f, 1.0f,
+                1.0f, 1.0f,
+                0, 4,
+                false, false,
+                false, source -> source instanceof IraedeusEntity,
+                DynamicSoundManager.getInstance()
+        );
 
         sounds.add(AURADEUS_HUM);
         sounds.add(SWORDSPEAR_CHARGING);
         sounds.add(SWORDSPEAR_FIRING);
         sounds.add(IRAEDEUS_HUM);
+        sounds.add(IRAEDEUS_SPIN);
     }
 
     public static DynamicSoundInstance get(Identifier id, @NotNull DynamicSoundSource source) {

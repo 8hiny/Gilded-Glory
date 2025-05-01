@@ -1,0 +1,15 @@
+{
+  "type": "gildedglory:forge_welding",
+  "ingredients": [
+    {
+      "item": "gildedglory:twisteel_ingot"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:twisteel_charm",
+    "count": 1
+  }
+}

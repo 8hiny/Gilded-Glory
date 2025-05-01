@@ -6,7 +6,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Ownable;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -18,7 +18,6 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.sound.DynamicSounds;
 import shiny.gildedglory.common.network.ChargingParticleS2CPacket;
 import shiny.gildedglory.common.network.ItemUseSoundS2CPacket;
@@ -89,12 +88,12 @@ public class GildedGloryUtil {
      * @param user The entity from which the sound is played
      * @param sound The looping sound to be played
      */
-    public static void startLoopingSound(World world, LivingEntity user, Identifier sound) {
-        if (world.isClient()) {
+    public static void startLoopingSound(World world, Entity user, Identifier sound) {
+        if (world.isClient() && user instanceof PlayerEntity) {
             DynamicSoundManager.getInstance().play(DynamicSounds.get(sound, (DynamicSoundSource) user));
         }
         else {
-            sendSoundPackets(world, user, sound);
+            sendSoundPackets(world, user, user, sound);
         }
     }
 
@@ -103,9 +102,9 @@ public class GildedGloryUtil {
      * @param user The entity from which the sound is played
      * @param sound The looping sound to be played
      */
-    public static void sendSoundPackets(World world, LivingEntity user, Identifier sound) {
+    public static void sendSoundPackets(World world, Entity user, Entity exclude, Identifier sound) {
         ItemUseSoundS2CPacket packet = new ItemUseSoundS2CPacket(user.getId(), sound);
-        sendPackets(packet, world, user, user);
+        sendPackets(packet, world, user, exclude);
     }
 
     /**

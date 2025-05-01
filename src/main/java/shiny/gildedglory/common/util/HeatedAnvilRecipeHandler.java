@@ -1,79 +1,97 @@
 package shiny.gildedglory.common.util;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.util.Pair;
+import net.minecraft.inventory.RecipeInputInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import shiny.gildedglory.common.recipe.ForgeWeldingRecipe;
+import shiny.gildedglory.common.recipe.SimpleRecipeInventory;
+import shiny.gildedglory.common.registry.recipe.ModRecipeTypes;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Optional;
 
 public class HeatedAnvilRecipeHandler {
 
-    private static final Comparator<Item> comparator = Comparator.comparing(a -> a.getName().getString());
-    public static final DefaultedList<Pair<DefaultedList<Item>, Item>> COMPRESSION_RECIPES = DefaultedList.of();
-
-    public static void addCompressionRecipe(Item output, Item... input) {
-        DefaultedList<Item> items = DefaultedList.of();
-
-        items.addAll(List.of(input));
-        COMPRESSION_RECIPES.add(new Pair<>(items, output));
-    }
-
     public static boolean compress(DefaultedList<ItemEntity> items, World world, BlockPos pos) {
-        DefaultedList<Item> ingredients = DefaultedList.of();
+        if (!world.isClient()) {
+            items = merge(items);
 
-        int maxCount = 64;
-        for (ItemEntity entity : items) {
-            ingredients.add(entity.getStack().getItem());
-            maxCount = Math.min(maxCount, entity.getStack().getCount());
-        }
-
-        int remainder = 0;
-        boolean success = false;
-        boolean singleStack = ingredients.size() == 1 && maxCount > 1;
-
-        ingredients.sort(comparator);
-
-        for (Pair<DefaultedList<Item>, Item> pair : COMPRESSION_RECIPES) {
-            DefaultedList<Item> recipe = pair.getLeft();
-            recipe.sort(comparator);
-
-            if (singleStack && recipe.contains(ingredients.get(0)) && ingredients.containsAll(recipe)) {
-                Item ingredientItem = ingredients.get(0);
-
-                int requiredCount = countElements(recipe, ingredientItem);
-                int ingredientCount = maxCount;
-                maxCount = ingredientCount / requiredCount;
-                remainder = ingredientCount % requiredCount;
-
-                success = maxCount > 0;
-            }
-
-            if (recipe.equals(ingredients) || success) {
-                ItemEntity result = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), pair.getRight().getDefaultStack());
-                result.getStack().setCount(maxCount);
-                world.spawnEntity(result);
-                success = true;
-                break;
-            }
-        }
-
-        if (success) {
+            DefaultedList<ItemStack> ingredients = DefaultedList.of();
+            int maxCount = 64;
             for (ItemEntity entity : items) {
-                entity.getStack().setCount(singleStack ? remainder : entity.getStack().getCount() - maxCount);
+                if (!entity.getStack().isEmpty()) {
+                    ingredients.add(entity.getStack());
+                    maxCount = Math.min(maxCount, entity.getStack().getCount());
+                }
+            }
+
+            if (maxCount > 0) {
+                SimpleRecipeInventory input = new SimpleRecipeInventory(ingredients);
+                ForgeWeldingRecipe recipe = getMatchingRecipe(world, input);
+
+                if (recipe != null) {
+                    for (ItemEntity entity : items) {
+                        ItemStack stack = entity.getStack();
+                        int requiredCount = recipe.requiredCount(stack);
+                        if (requiredCount > 0)  maxCount = Math.min(maxCount, stack.getCount() / requiredCount);
+                        int remainder = stack.getCount() - (maxCount * requiredCount);
+
+                        stack.setCount(remainder);
+                        entity.setStack(stack);
+                    }
+                    ItemEntity result = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), recipe.craft(input, world.getRegistryManager()), 0, 0, 0);
+                    result.getStack().setCount(maxCount);
+                    world.spawnEntity(result);
+                    return true;
+                }
             }
         }
-        return success;
+        return false;
     }
 
-    public static int countElements(DefaultedList<Item> list, Item item) {
-        int matches = 0;
-        for (Item item1 : list) {
-            if (item.equals(item1)) matches++;
+    public static DefaultedList<ItemEntity> merge(DefaultedList<ItemEntity> items) {
+        DefaultedList<ItemEntity> merged = DefaultedList.of();
+
+        if (!items.isEmpty()) {
+            for (Iterator<ItemEntity> iterator = items.iterator(); iterator.hasNext(); ) {
+                ItemEntity entity = iterator.next();
+
+                if (!entity.isRemoved() && !entity.getStack().isEmpty()) {
+                    int count = count(items, entity);
+
+                    entity.getStack().setCount(count);
+                    merged.add(entity);
+                }
+            }
         }
-        return matches;
+        return merged;
+    }
+
+    public static int count(DefaultedList<ItemEntity> items, ItemEntity entity) {
+        int i = 0;
+        DefaultedList<ItemEntity> toRemove = DefaultedList.of();
+
+        for (ItemEntity entity1 : items) {
+
+
+            if (ItemStack.canCombine(entity.getStack(), entity1.getStack())) {
+                i += entity.getStack().getCount();
+
+                if (entity != entity1) toRemove.add(entity1);
+            }
+        }
+
+        items.removeAll(toRemove);
+        toRemove.forEach(Entity::discard);
+        return i;
+    }
+
+    public static ForgeWeldingRecipe getMatchingRecipe(World world, RecipeInputInventory inventory) {
+        Optional<ForgeWeldingRecipe> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.FORGE_WELDING, inventory, world);
+        return optional.orElse(null);
     }
 }

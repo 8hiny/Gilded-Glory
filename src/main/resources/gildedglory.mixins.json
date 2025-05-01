@@ -5,7 +5,7 @@
   "mixins": [
     "AnvilBlockMixin",
     "EnchantmentHelperMixin",
-    "EnchantmentTargetMixin",
+    "EnchantmentMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "PistonBlockEntityMixin",

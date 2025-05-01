@@ -36,6 +36,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class SickleItem extends SwordItem implements CustomAttackWeapon, CustomEffectsWeapon {
+
     protected final float miningSpeed;
     protected static final Map<Block, Pair<Predicate<ItemUsageContext>, Consumer<ItemUsageContext>>> TILLING_ACTIONS = Maps.newHashMap(
             ImmutableMap.of(
@@ -130,7 +131,7 @@ public class SickleItem extends SwordItem implements CustomAttackWeapon, CustomE
     }
 
     @Override
-    public DefaultParticleType getSweepAttackParticle() {
+    public DefaultParticleType getSweepAttackParticle(ItemStack stack) {
         return ModParticles.TWISTEEL_SLASH;
     }
 }

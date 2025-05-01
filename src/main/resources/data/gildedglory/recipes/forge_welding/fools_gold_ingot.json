@@ -1,0 +1,15 @@
+{
+  "type": "gildedglory:forge_welding",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:fools_gold_ingot",
+    "count": 1
+  }
+}

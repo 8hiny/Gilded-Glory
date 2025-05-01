@@ -14,7 +14,7 @@ import shiny.gildedglory.common.item.AuradeusItem;
 import shiny.gildedglory.common.item.SickleItem;
 
 @Mixin(Enchantment.class)
-public abstract class EnchantmentTargetMixin {
+public abstract class EnchantmentMixin {
 
     @Shadow @Final public EnchantmentTarget target;
 
@@ -25,8 +25,6 @@ public abstract class EnchantmentTargetMixin {
         if (!cir.getReturnValue()) {
             if (item instanceof AuradeusItem) cir.setReturnValue(this.target == EnchantmentTarget.WEAPON || this.target == EnchantmentTarget.DIGGER);
         }
-        else {
-            if (item instanceof SickleItem) cir.setReturnValue(this.target == EnchantmentTarget.DIGGER);
-        }
+        if (item instanceof SickleItem) cir.setReturnValue(this.target == EnchantmentTarget.DIGGER);
     }
 }

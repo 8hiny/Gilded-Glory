@@ -27,8 +27,8 @@ public interface ChargeableWeapon {
             charge = Math.max(weapon.getMinCharge(), Math.min(charge, weapon.getMaxCharge()));
 
             NbtCompound tag = stack.getOrCreateNbt();
-            if (charge > weapon.getMinCharge()) tag.putInt("Charge", charge);
-            else tag.remove("Charge");
+            if (charge > weapon.getMinCharge()) tag.putInt("gildedglory:charge", charge);
+            else tag.remove("gildedglory:charge");
         }
     }
 
@@ -38,7 +38,7 @@ public interface ChargeableWeapon {
 
     static int getCharge(ItemStack stack) {
         NbtCompound tag = stack.getNbt();
-        return tag != null ? tag.getInt("Charge") : 0;
+        return tag != null ? tag.getInt("gildedglory:charge") : 0;
     }
 
     /**

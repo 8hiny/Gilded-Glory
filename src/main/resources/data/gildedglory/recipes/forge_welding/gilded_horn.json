@@ -1,0 +1,18 @@
+{
+  "type": "gildedglory:forge_welding",
+  "ingredients": [
+    {
+      "item": "minecraft:goat_horn"
+    },
+    {
+      "item": "minecraft:netherite_scrap"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:gilded_horn",
+    "count": 1
+  }
+}

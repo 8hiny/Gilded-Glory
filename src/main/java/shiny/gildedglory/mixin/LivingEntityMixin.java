@@ -67,8 +67,10 @@ public abstract class LivingEntityMixin extends Entity {
                         player.getBoundingBox().expand(50.0),
                         iraedeusEntity -> iraedeusEntity.getOwner() != null && iraedeusEntity.getOwner().getUuid() == player.getUuid())
                 ) {
-                    iraedeus.insertStack(player);
-                    iraedeus.discard();
+                    if (!player.getWorld().isClient()) {
+                        iraedeus.insertStack(player);
+                        iraedeus.discard();
+                    }
                 }
             }
             //Break chains (necessary because of doImmediateRespawn; a ticking method can't catch this effectively enough)

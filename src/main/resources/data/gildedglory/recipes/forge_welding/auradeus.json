@@ -1,0 +1,18 @@
+{
+  "type": "gildedglory:forge_welding",
+  "ingredients": [
+    {
+      "item": "minecraft:netherite_sword"
+    },
+    {
+      "item": "minecraft:gold_block"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:auradeus",
+    "count": 1
+  }
+}

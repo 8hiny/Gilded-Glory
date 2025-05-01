@@ -36,6 +36,7 @@ public class ModSounds {
     public static final SoundEvent IRAEDEUS_THROW = register("item.iraedeus.throw");
     public static final SoundEvent IRAEDEUS_HIT = register("item.iraedeus.hit");
     public static final SoundEvent IRAEDEUS_PARRY = register("item.iraedeus.parry");
+    public static final SoundEvent IRAEDEUS_RETURN = register("item.iraedeus.return");
 
     private static SoundEvent register(String name) {
         Identifier id = GildedGlory.id(name);

@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FoolsArmorItem extends ArmorItem {
+
     public FoolsArmorItem(ArmorMaterial material, Type type, Settings settings) {
         super(material, type, settings);
     }

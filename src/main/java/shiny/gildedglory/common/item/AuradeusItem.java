@@ -33,6 +33,7 @@ import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.component.entity.ChainedComponent;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.enchantment.ModEnchantments;
+import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 import shiny.gildedglory.common.entity.SlashProjectileEntity;
@@ -91,7 +92,8 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
         f += g;
 
         if (!world.isClient()) {
-            SlashProjectileEntity slashEntity = new SlashProjectileEntity(world, user, user.getX(), user.getEyeY() - 0.3f, user.getZ(), f, bl, EnchantmentHelper.getLevel(ModEnchantments.CHAINED, stack) > 0);
+            Vec3d pos = GildedGloryUtil.getThrowPos(user, ModEntities.SLASH_PROJECTILE);
+            SlashProjectileEntity slashEntity = new SlashProjectileEntity(world, user, pos.x, pos.y, pos.z, f, bl, EnchantmentHelper.getLevel(ModEnchantments.CHAINED, stack) > 0);
             slashEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, bl ? 3.0f : 2.3f, 0.0f);
             world.spawnEntity(slashEntity);
 
@@ -193,13 +195,13 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     }
 
     @Override
-    public DefaultParticleType getAttackParticle() {
+    public DefaultParticleType getAttackParticle(ItemStack stack) {
         if (Math.random() <= 0.5) return ModParticles.TWISTEEL_SLASH;
         return ModParticles.GOLD_SLASH;
     }
 
     @Override
-    public DefaultParticleType getCritAttackParticle() {
+    public DefaultParticleType getCritAttackParticle(ItemStack stack) {
         if (Math.random() <= 0.5) return ModParticles.TWISTEEL_VERTICAL_SLASH;
         return ModParticles.GOLD_VERTICAL_SLASH;
     }

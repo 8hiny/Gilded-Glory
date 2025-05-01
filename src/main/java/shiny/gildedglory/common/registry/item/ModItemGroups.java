@@ -34,6 +34,7 @@ public class ModItemGroups {
                         entries.add(ModItems.GOLDEN_BURGER);
                         entries.add(ModItems.GOLDEN_PASTA);
                         entries.add(ModItems.DR_PEPPER);
+                        entries.add(ModItems.GLOOMETAL_INGOT);
                         entries.add(ModItems.IRAEDEUS);
 
             }).build());

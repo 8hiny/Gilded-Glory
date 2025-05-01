@@ -4,7 +4,9 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.*;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
+import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,6 +26,8 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 
     @Shadow protected abstract Arm getPreferredArm(T entity);
     @Shadow protected abstract ModelPart getArm(Arm arm);
+
+    @Shadow @Final public ModelPart body;
 
     @WrapWithCondition(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/BipedEntityModel;animateArms(Lnet/minecraft/entity/LivingEntity;F)V"))
     private boolean gildedglory$customArmPose(BipedEntityModel model, T entity, float animationProgress) {
@@ -72,12 +76,19 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 
     @Inject(method = "animateArms", at = @At(value = "TAIL"))
     private void gildedglory$twoHandedAttack(T entity, float animationProgress, CallbackInfo ci) {
-        if (entity.getMainHandStack().getItem() instanceof CustomEffectsWeapon weapon && weapon.isTwoHanded()) {
-            ModelPart mainArm = this.getArm(this.getPreferredArm(entity));
-            ModelPart otherArm = this.getArm(this.getPreferredArm(entity).getOpposite());
+        ItemStack stack = entity.getMainHandStack();
+        if (stack.getItem() instanceof CustomEffectsWeapon weapon && weapon.isTwoHanded(stack) && this.handSwingProgress > 0.0f) {
+            ModelPart arm = this.getArm(this.getPreferredArm(entity).getOpposite());
 
-            otherArm.pitch = mainArm.pitch;
-            otherArm.yaw = mainArm.yaw / 2;
+            float f = 1.0f - this.handSwingProgress;
+            f *= f;
+            f *= f;
+            f = 1.0f - f;
+            float g = MathHelper.sin(f * (float) Math.PI);
+            float h = MathHelper.sin(this.handSwingProgress * (float) Math.PI) * -(this.head.pitch - 0.7f) * 0.75f;
+            arm.pitch -= g * 1.2f + h;
+            arm.yaw = arm.yaw + this.body.yaw * 2.0f;
+            arm.roll = arm.roll + MathHelper.sin(this.handSwingProgress * (float) Math.PI) * -0.4f;
         }
     }
 }

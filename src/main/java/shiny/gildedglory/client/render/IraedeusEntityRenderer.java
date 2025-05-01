@@ -15,13 +15,6 @@ import shiny.gildedglory.common.entity.IraedeusEntity;
 
 import java.awt.*;
 
-//The renderer for a summoned/thrown iraedeus
-//To-Do:
-//Different poses for when following the owner or flying
-//Particles when poses are switched
-//Maybe other visual effects
-//Some day make this super smooth...
-
 public class IraedeusEntityRenderer extends EntityRenderer<IraedeusEntity> {
 
     private final ItemRenderer itemRenderer;
@@ -33,7 +26,7 @@ public class IraedeusEntityRenderer extends EntityRenderer<IraedeusEntity> {
 
     @Override
     public void render(IraedeusEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        float rotation = (entity.age + tickDelta) * 60;
+        float rotation = (entity.age + tickDelta) * 75;
 
         matrices.push();
         matrices.scale(1.25f, 1.25f, 1.25f);

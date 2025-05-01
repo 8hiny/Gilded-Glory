@@ -18,8 +18,8 @@ public abstract class PlayerEntityRendererMixin {
     private static void gildedglory$setCustomArmPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
         ItemStack stack = player.getMainHandStack();
         if (stack.getItem() instanceof CustomEffectsWeapon weapon && !weapon.overrideHandPoses(player, stack)) {
-            if (hand == Hand.MAIN_HAND && weapon.getMainHandPose() != null) cir.setReturnValue(weapon.getMainHandPose());
-            else if (weapon.getOffHandPose() != null) cir.setReturnValue(weapon.getOffHandPose());
+            if (hand == Hand.MAIN_HAND && weapon.getMainHandPose(stack) != null) cir.setReturnValue(weapon.getMainHandPose(stack));
+            else if (weapon.getOffHandPose(stack) != null) cir.setReturnValue(weapon.getOffHandPose(stack));
         }
     }
 }

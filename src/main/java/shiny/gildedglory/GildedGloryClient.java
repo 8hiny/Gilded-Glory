@@ -24,6 +24,8 @@ import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.client.render.FramedChestBlockEntityRenderer;
 import shiny.gildedglory.client.render.SlashEntityRenderer;
 
+import java.util.UUID;
+
 import static shiny.gildedglory.common.registry.particle.ModParticles.*;
 
 public class GildedGloryClient implements ClientModInitializer {
@@ -37,6 +39,9 @@ public class GildedGloryClient implements ClientModInitializer {
     //Custom keybinds
     public static KeyBinding returnIraedeus;
     public static KeyBinding targetIraedeus;
+
+    //UUID'S for cosmetic particle spawning
+    public static final UUID SHINY_UUID = UUID.fromString("a9bcfe9b-bb80-463d-848e-11e0b03f2b6e");
 
    @Override
    public void onInitializeClient() {

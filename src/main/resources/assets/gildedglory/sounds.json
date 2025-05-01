@@ -48,7 +48,9 @@
   "item.swordspear.attack.slash": {
     "subtitle": "sounds.gildedglory.swordspear.attack.slash",
     "sounds": [
-      "gildedglory:item/swordspear/slash"
+      "gildedglory:item/swordspear/slash_0",
+      "gildedglory:item/swordspear/slash_1"
+
     ]
   },
   "item.swordspear.charge": {
@@ -179,6 +181,12 @@
     "subtitle": "sounds.gildedglory.iraedeus.parry",
     "sounds": [
       "gildedglory:item/iraedeus/parry"
+    ]
+  },
+  "item.iraedeus.return": {
+    "subtitle": "sounds.gildedglory.iraedeus.return",
+    "sounds": [
+      "gildedglory:item/iraedeus/return"
     ]
   }
 }

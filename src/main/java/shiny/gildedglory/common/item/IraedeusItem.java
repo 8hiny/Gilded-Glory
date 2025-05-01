@@ -25,6 +25,7 @@ import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.component.entity.IraedeusComponent;
 import shiny.gildedglory.common.entity.IraedeusEntity;
 import shiny.gildedglory.common.registry.component.ModComponents;
+import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.registry.sound.ModSounds;
 import shiny.gildedglory.common.util.GildedGloryUtil;
@@ -58,8 +59,6 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
 
     public void spawnIraedeus(World world, PlayerEntity user, ItemStack stack) {
         if (!world.isClient()) {
-            Vec3d pos = new Vec3d(user.getX(), user.getEyeY() - 0.25f, user.getZ());
-
             int slot = -1;
             for (int i = 0; i < user.getInventory().size(); i++) {
                 if (user.getInventory().getStack(i) == stack) {
@@ -70,20 +69,22 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
             IraedeusComponent component = ModComponents.IRAEDEUS.get(user);
             component.setSlot(slot);
 
-            if (!user.isSneaking()) {
-                IraedeusEntity iraedeus = new IraedeusEntity(world, user, slot, pos.x, pos.y, pos.z);
-                iraedeus.setVelocity(user, user.getPitch(), user.getYaw(), user.getRoll(), 1.0f, 0.0f);
-                iraedeus.setItem(stack);
-                world.spawnEntity(iraedeus);
-                component.setEntity(iraedeus.getUuid());
+            //Commented out cause unsure about summoning feature
+            //if (!user.isSneaking()) {
+            Vec3d pos = GildedGloryUtil.getThrowPos(user, ModEntities.IRAEDEUS);
+            IraedeusEntity iraedeus = new IraedeusEntity(world, user, slot, pos.x, pos.y, pos.z);
+            iraedeus.setVelocity(user, user.getPitch(), user.getYaw(), user.getRoll(), 1.0f, 0.0f);
+            iraedeus.setItem(stack);
+            world.spawnEntity(iraedeus);
+            component.setEntity(iraedeus.getUuid());
 
-                //float pitch = GildedGloryUtil.random(0.9f, 1.1f);
-                world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.IRAEDEUS_THROW, SoundCategory.PLAYERS, 1.0f, 1.0f);
-            }
-            else {
-                component.setSummoned(true);
-                component.setStack(stack);
-            }
+            float pitch = GildedGloryUtil.random(0.95f, 1.05f);
+            world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.IRAEDEUS_THROW, SoundCategory.PLAYERS, 1.0f, pitch);
+            //}
+            //else {
+                //component.setSummoned(true);
+                //component.setStack(stack);
+            //}
         }
     }
 
@@ -92,7 +93,7 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
         if (getCooldown(stack) > 0) setCooldown(stack, getCooldown(stack) - 1);
         else ChargeableWeapon.tickCharge(stack);
 
-        if (entity instanceof LivingEntity && ChargeableWeapon.getCharge(stack) > 0 && world.getTime() % 4 == 0) {
+        if (entity instanceof LivingEntity livingEntity && livingEntity.getMainHandStack() == stack && ChargeableWeapon.getCharge(stack) > 0 && world.getTime() % 4 == 0) {
             this.addChargeParticles(world, entity, ChargeableWeapon.getChargePercentage(stack));
         }
     }
@@ -138,6 +139,10 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         tooltip.add(Text.translatable("tooltip.gildedglory.iraedeus").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("tooltip.gildedglory.iraedeus_0",
+                Text.keybind("keybind.gildedglory.iraedeus_return").setStyle(Style.EMPTY.withColor(0x4A626A))).formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("tooltip.gildedglory.iraedeus_1",
+                Text.keybind("keybind.gildedglory.iraedeus_target").setStyle(Style.EMPTY.withColor(0x4A626A))).formatted(Formatting.GRAY));
     }
 
     @Override
@@ -203,12 +208,12 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
     }
 
     @Override
-    public DefaultParticleType getSweepAttackParticle() {
+    public DefaultParticleType getSweepAttackParticle(ItemStack stack) {
         return ModParticles.IRAEDEUS_SLASH;
     }
 
     @Override
-    public DefaultParticleType getCritAttackParticle() {
+    public DefaultParticleType getCritAttackParticle(ItemStack stack) {
         return ModParticles.IRAEDEUS_VERTICAL_SLASH;
     }
 }

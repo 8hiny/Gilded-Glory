@@ -51,13 +51,13 @@ public class HeatedAnvilBlock extends BlockWithEntity {
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
 
-        spawnParticles(world, pos);
+        this.spawnParticles(world, pos, random);
         if (random.nextInt(24) == 0) {
             world.playSoundAtBlockCenter(pos, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0f + random.nextFloat(), random.nextFloat() * 0.7f + 0.3f, false);
         }
     }
 
-    public void spawnParticles(World world, BlockPos pos) {
+    public void spawnParticles(World world, BlockPos pos, Random random) {
         double d = GildedGloryUtil.random(-0.5f, 0.5f);
         double e = GildedGloryUtil.random(-0.5f, 0.5f);
         double f = GildedGloryUtil.random(-0.05f, 0.05f);
@@ -65,6 +65,7 @@ public class HeatedAnvilBlock extends BlockWithEntity {
         double h = GildedGloryUtil.random(-0.05f, 0.05f);
 
         world.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5 + d, pos.getY() + 1, pos.getZ() + 0.5 + e, f, g, h);
+        if (random.nextInt(20) == 0) world.addParticle(ParticleTypes.FLAME, pos.getX() + 0.5 + d, pos.getY() + 1, pos.getZ() + 0.5 + e, f, g, h);
     }
 
     @Override

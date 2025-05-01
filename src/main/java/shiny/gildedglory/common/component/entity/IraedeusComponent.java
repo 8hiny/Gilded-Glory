@@ -13,7 +13,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.event.PositionSource;
 import shiny.gildedglory.GildedGloryClient;
-import shiny.gildedglory.common.entity.HomingTarget;
 import shiny.gildedglory.common.entity.IraedeusEntity;
 import shiny.gildedglory.common.network.ModPackets;
 import shiny.gildedglory.common.network.UpdateTargetingC2SPacket;
@@ -74,9 +73,9 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
                 iraedeus.setItem(this.getStack());
                 this.provider.getWorld().spawnEntity(iraedeus);
 
-                HomingTarget target = iraedeus.handleTarget(this.provider, pos.add(this.provider.getRotationVector().multiply(48.0)));
+                PositionSource source = iraedeus.handleTarget(this.provider, pos.add(this.provider.getRotationVector().multiply(48.0)));
                 iraedeus.setTargeting(true);
-                iraedeus.setTarget(target);
+                iraedeus.setTarget(source);
 
                 this.setEntity(iraedeus.getUuid());
                 this.summoned = false;

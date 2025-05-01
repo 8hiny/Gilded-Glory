@@ -1,0 +1,15 @@
+{
+  "type": "gildedglory:forge_welding",
+  "ingredients": [
+    {
+      "item": "minecraft:netherite_hoe"
+    },
+    {
+      "item": "gildedglory:twisteel_ingot"
+    }
+  ],
+  "result": {
+    "item": "gildedglory:twisteel_sickle",
+    "count": 1
+  }
+}
