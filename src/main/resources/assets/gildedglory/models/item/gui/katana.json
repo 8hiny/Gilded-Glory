@@ -1,0 +1,14 @@
+{
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "gildedglory:item/gui/katana"
+	},
+	"overrides": [
+	{
+		"predicate": {
+			"gildedglory:off_hand": 1.0
+		}, 
+		"model": "gildedglory:item/gui/katana_sheathed"
+	}
+	]
+}

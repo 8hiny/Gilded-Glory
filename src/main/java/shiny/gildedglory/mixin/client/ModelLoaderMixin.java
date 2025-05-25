@@ -27,6 +27,7 @@ public abstract class ModelLoaderMixin {
         this.addModel(GildedGloryClient.AURADEUS_GUI);
         this.addModel(GildedGloryClient.SWORDSPEAR_GUI);
         this.addModel(GildedGloryClient.IRAEDEUS_GUI);
+        this.addModel(GildedGloryClient.KATANA_GUI);
         this.addModel(GildedGloryClient.DR_PEPPER_GUI);
     }
 }

@@ -17,6 +17,7 @@ public class ModPackets {
         //S2C packets
         GILDED_GLORY_CHANNEL.registerS2CPacket(ItemUseSoundS2CPacket.class, index++);
         GILDED_GLORY_CHANNEL.registerS2CPacket(ChargingParticleS2CPacket.class, index++);
+        GILDED_GLORY_CHANNEL.registerS2CPacket(TestRenderS2CPacket.class, index++);
 
         //C2S packets
         GILDED_GLORY_CHANNEL.registerC2SPacket(UpdateTargetingC2SPacket.class, index++);

@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.registry.block.ModBlocks;
 
@@ -36,6 +35,7 @@ public class ModItemGroups {
                         entries.add(ModItems.DR_PEPPER);
                         entries.add(ModItems.GLOOMETAL_INGOT);
                         entries.add(ModItems.IRAEDEUS);
+                        entries.add(ModItems.KATANA);
 
             }).build());
 

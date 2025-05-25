@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.Identifier;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.block.FramedChestBlock;
 import shiny.gildedglory.common.block.HeatedAnvilBlock;

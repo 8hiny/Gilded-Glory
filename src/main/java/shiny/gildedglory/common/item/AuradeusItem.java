@@ -55,16 +55,16 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
         this.miningSpeed = toolMaterial.getMiningSpeedMultiplier();
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(
-                ReachEntityAttributes.ATTACK_RANGE,
-                new EntityAttributeModifier(UUID.fromString("e7f37295-a925-4b70-ba00-0e25f60ea8f9"), "Weapon modifier", 0.5, EntityAttributeModifier.Operation.ADDITION)
-        );
-        builder.put(
                 EntityAttributes.GENERIC_ATTACK_DAMAGE,
                 new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", this.attackDamage, EntityAttributeModifier.Operation.ADDITION)
         );
         builder.put(
                 EntityAttributes.GENERIC_ATTACK_SPEED,
                 new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION)
+        );
+        builder.put(
+                ReachEntityAttributes.ATTACK_RANGE,
+                new EntityAttributeModifier(UUID.fromString("e7f37295-a925-4b70-ba00-0e25f60ea8f9"), "Weapon modifier", 0.5, EntityAttributeModifier.Operation.ADDITION)
         );
         this.attributeModifiers = builder.build();
     }

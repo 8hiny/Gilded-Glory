@@ -19,6 +19,7 @@
     "client.BipedEntityModelMixin",
     "client.ClientPlayerEntityAccessor",
     "client.ClientPlayerEntityMixin",
+    "client.HandledScreenMixin",
     "client.HeldItemRendererMixin",
     "client.InGameHudMixin",
     "client.ItemRendererAccessor",

@@ -4,20 +4,15 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.entity.EntityType;
 import shiny.gildedglory.client.ModModelPredicateProviders;
 import shiny.gildedglory.client.events.ClientEvents;
 import shiny.gildedglory.client.particle.*;
 import shiny.gildedglory.client.render.IraedeusEntityRenderer;
-import shiny.gildedglory.client.render.SummonedIraedeusFeatureRenderer;
 import shiny.gildedglory.common.registry.block.ModBlocks;
 import shiny.gildedglory.common.registry.block.entity.ModBlockEntities;
 import shiny.gildedglory.common.registry.entity.ModEntities;
@@ -35,6 +30,7 @@ public class GildedGloryClient implements ClientModInitializer {
     public static final ModelIdentifier SWORDSPEAR_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/swordspear", "inventory");
     public static final ModelIdentifier IRAEDEUS_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/iraedeus", "inventory");
     public static final ModelIdentifier DR_PEPPER_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/dr_pepper", "inventory");
+    public static final ModelIdentifier KATANA_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/katana", "inventory");
 
     //Custom keybinds
     public static KeyBinding returnIraedeus;
@@ -75,11 +71,15 @@ public class GildedGloryClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.SLASH_PROJECTILE, SlashEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.IRAEDEUS, IraedeusEntityRenderer::new);
 
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-            if (entityType == EntityType.PLAYER) {
-                registrationHelper.register(new SummonedIraedeusFeatureRenderer(entityRenderer, context.getItemRenderer()));
-            }
-        });
+        //Scrapped feature
+//        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+//            if (entityType == EntityType.PLAYER) {
+//                registrationHelper.register(new SummonedIraedeusFeatureRenderer(entityRenderer, context.getItemRenderer()));
+//            }
+//        });
+
+        //Try rendering custom objects at specified positions
+        //WorldRenderEvents.AFTER_ENTITIES.register(TestManager::tick);
 
         BlockEntityRendererFactories.register(ModBlockEntities.FRAMED_CHEST, FramedChestBlockEntityRenderer::new);
 
@@ -89,7 +89,7 @@ public class GildedGloryClient implements ClientModInitializer {
     }
 
     public static void registerKeybinds() {
-       returnIraedeus = KeyBindingHelper.registerKeyBinding(new KeyBinding("keybind.gildedglory.iraedeus_return", InputUtil.UNKNOWN_KEY.getCode(), KeyBinding.MULTIPLAYER_CATEGORY));
-        targetIraedeus = KeyBindingHelper.registerKeyBinding(new KeyBinding("keybind.gildedglory.iraedeus_target", InputUtil.UNKNOWN_KEY.getCode(), KeyBinding.MULTIPLAYER_CATEGORY));
+       returnIraedeus = KeyBindingHelper.registerKeyBinding(new KeyBinding("keybind.gildedglory.iraedeus_return", InputUtil.UNKNOWN_KEY.getCode(), "key.categories.gildedglory"));
+        targetIraedeus = KeyBindingHelper.registerKeyBinding(new KeyBinding("keybind.gildedglory.iraedeus_target", InputUtil.UNKNOWN_KEY.getCode(), "key.categories.gildedglory"));
     }
 }

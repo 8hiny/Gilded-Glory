@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.item.*;
 import shiny.gildedglory.common.item.compat.CompatConsumableItem;
@@ -22,6 +21,7 @@ public class ModItems {
     public static final Item GILDED_HORN = register("gilded_horn", new GildedHornItem(new FabricItemSettings().maxCount(1)));
     public static final Item SWORDSPEAR = register("swordspear", new SwordSpearItem(ModToolMaterials.SWORDSPEAR, 4, -2.9f, new FabricItemSettings()));
     public static final Item IRAEDEUS = register("iraedeus", new IraedeusItem(ModToolMaterials.GLOOMETAL, 3, -2.4f, new FabricItemSettings()));
+    public static final Item KATANA = register("katana", new SwordItem(ToolMaterials.NETHERITE, 4, -2.6f, new FabricItemSettings().fireproof()));
 
     public static final Item FOOLS_GOLD_HELMET = register("fools_gold_helmet", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.HELMET, new FabricItemSettings()));
     public static final Item FOOLS_GOLD_CHESTPLATE = register("fools_gold_chestplate", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.CHESTPLATE, new FabricItemSettings()));
@@ -54,6 +54,7 @@ public class ModItems {
         entries.addAfter(Items.TRIDENT, GILDED_HORN);
         entries.addAfter(Items.TRIDENT, SWORDSPEAR);
         entries.addAfter(Items.TRIDENT, IRAEDEUS);
+        entries.addAfter(Items.TRIDENT, KATANA);
         entries.addAfter(Items.TURTLE_HELMET, FOOLS_GOLD_BOOTS);
         entries.addAfter(Items.TURTLE_HELMET, FOOLS_GOLD_LEGGINGS);
         entries.addAfter(Items.TURTLE_HELMET, FOOLS_GOLD_CHESTPLATE);

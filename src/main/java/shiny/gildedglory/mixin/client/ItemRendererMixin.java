@@ -33,6 +33,9 @@ public abstract class ItemRendererMixin {
             if (stack.isOf(ModItems.IRAEDEUS)) {
                 value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.IRAEDEUS_GUI);
             }
+            if (stack.isOf(ModItems.KATANA)) {
+                value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.KATANA_GUI);
+            }
             if (stack.isOf(ModItems.DR_PEPPER)) {
                 value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.DR_PEPPER_GUI);
             }

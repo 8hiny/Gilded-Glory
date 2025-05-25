@@ -7,6 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import shiny.gildedglory.common.command.TestRenderObjectCommand;
 import shiny.gildedglory.common.network.ModPackets;
 import shiny.gildedglory.common.registry.block.ModBlocks;
 import shiny.gildedglory.common.registry.block.entity.ModBlockEntities;
@@ -39,6 +40,8 @@ public class GildedGlory implements ModInitializer {
 		ModPackets.registerModPackets();
 		ModRecipes.registerModRecipes();
 		ModRecipeTypes.registerModRecipeTypes();
+
+		TestRenderObjectCommand.init();
 
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
 			ModComponents.IRAEDEUS.get(handler.player).resetEntity();
