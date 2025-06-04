@@ -1,5 +1,6 @@
 package shiny.gildedglory.common.entity;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -13,14 +14,15 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
+import shiny.gildedglory.client.particle.effect.ColoredEntityParticleEffect;
+import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.util.DynamicSoundSource;
 import shiny.gildedglory.common.component.entity.ChainedComponent;
 import shiny.gildedglory.common.item.CharmItem;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.damage_type.ModDamageTypes;
 import shiny.gildedglory.common.registry.entity.ModEntities;
-import team.lodestar.lodestone.systems.rendering.trail.TrailPoint;
-import team.lodestar.lodestone.systems.rendering.trail.TrailPointBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,6 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(SlashProjectileEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final EntityDimensions HORIZONTAL_DIMENSIONS = new EntityDimensions(2.4f, 0.5f, true);
     private static final EntityDimensions VERTICAL_DIMENSIONS = new EntityDimensions(2.4f, 1.0f, true);
-    private final TrailPointBuilder builder = TrailPointBuilder.create(4);
     public final List<Entity> hitEntities = new ArrayList<>();
     private float damage = 9.0f;
     private int life = 0;
@@ -70,8 +71,14 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
     public void tick() {
         super.tick();
 
-        builder.addTrailPoint(this.getPos());
-        builder.tickTrailPoints();
+        if (this.age == 1 && this.getWorld().isClient()) {
+            Vector3f color = this.getVariant() == 0 ? new Vector3f(0.96f, 0.77f, 0.19f) : new Vector3f(0.8f, 0.29f, 0.36f);
+            MinecraftClient.getInstance().particleManager.addParticle(
+                    new ColoredEntityParticleEffect(ModParticles.SHINE_ANIMATED, color, this.getId(), 1.5f, Integer.MAX_VALUE),
+                    this.getX(), this.getY() + this.getHeight() / 2, this.getZ(),
+                    0, 0, 0
+            );
+        }
 
         if (this.inGround || this.age > 20) {
             this.life++;
@@ -118,10 +125,6 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
                 targetComponent.setAttacker(false);
             }
         }
-    }
-
-    public List<TrailPoint> getTrailPoints() {
-        return this.builder.getTrailPoints();
     }
 
     public boolean isVertical() {

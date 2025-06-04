@@ -21,7 +21,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-import shiny.gildedglory.common.item.*;
+import shiny.gildedglory.common.item.custom.CustomAttackWeapon;
+import shiny.gildedglory.common.item.custom.CustomEffectsWeapon;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 

@@ -5,7 +5,8 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import shiny.gildedglory.GildedGlory;
-import shiny.gildedglory.common.item.ChargeableWeapon;
+import shiny.gildedglory.client.util.StupidSheathedInventoryModelPredicateHelper;
+import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.item.CharmItem;
 import shiny.gildedglory.common.registry.item.ModItems;
 

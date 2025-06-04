@@ -11,14 +11,14 @@ import java.util.List;
 
 public class TestManager {
 
-    public static TestManager INSTANCE;
+    public static TestManager instance;
     private final List<TestRenderingObject> objects = new ArrayList<>();
 
     public static TestManager getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new TestManager();
+        if (instance == null) {
+            instance = new TestManager();
         }
-        return INSTANCE;
+        return instance;
     }
 
     public static void tick(WorldRenderContext ctx) {

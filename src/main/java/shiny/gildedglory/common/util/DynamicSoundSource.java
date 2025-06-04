@@ -3,7 +3,7 @@ package shiny.gildedglory.common.util;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
-import shiny.gildedglory.common.item.ChargeableWeapon;
+import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 
 public interface DynamicSoundSource {
 

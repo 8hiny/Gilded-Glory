@@ -44,15 +44,13 @@ public class GildedGloryUtil {
         }
     }
 
-    public static void addTrail(MatrixStack matrices, List<TrailPoint> points, Entity entity, Color color, float alpha, float size, float tickDelta) {
+    public static void addTrail(MatrixStack matrices, List<TrailPoint> points, Entity entity, Color color, float alpha, float size) {
         matrices.push();
         VFXBuilders.WorldVFXBuilder builder = VFXBuilders.createWorld().setRenderType(TRAIL);
 
-        float x = (float) MathHelper.lerp(tickDelta, entity.prevX, entity.getX());
-        float y = (float) MathHelper.lerp(tickDelta, entity.prevY, entity.getY());
-        float z = (float) MathHelper.lerp(tickDelta, entity.prevZ, entity.getZ());
+        Vec3d camPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
 
-        matrices.translate(-x, -y, -z);
+        matrices.translate(-camPos.x, -camPos.y, -camPos.z);
         matrices.translate(0.0f, entity.getHeight() / 2, 0.0f);
         builder.setColor(color)
                 .setAlpha(1.0f)

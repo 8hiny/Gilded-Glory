@@ -27,7 +27,7 @@ import net.minecraft.world.event.PositionSourceType;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 import shiny.gildedglory.common.component.entity.IraedeusComponent;
-import shiny.gildedglory.common.item.ChargeableWeapon;
+import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.damage_type.ModDamageTypes;
 import shiny.gildedglory.common.registry.entity.ModEntities;

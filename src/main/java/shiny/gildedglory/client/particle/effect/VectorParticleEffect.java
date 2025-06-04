@@ -16,16 +16,16 @@ import java.util.Locale;
 public class VectorParticleEffect implements ParticleEffect {
 
     public static final ParticleEffect.Factory<VectorParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<>() {
-        public VectorParticleEffect read(ParticleType<VectorParticleEffect> particleType, StringReader stringReader) throws CommandSyntaxException {
-            Vector3f vector3f = readColor(stringReader);
-            stringReader.expect(' ');
-            float scale = stringReader.readFloat();
-            stringReader.expect(' ');
-            int duration = stringReader.readInt();
-            return new VectorParticleEffect(particleType, vector3f, scale, duration);
+        public VectorParticleEffect read(ParticleType<VectorParticleEffect> type, StringReader reader) throws CommandSyntaxException {
+            Vector3f vector3f = readColor(reader);
+            reader.expect(' ');
+            float scale = reader.readFloat();
+            reader.expect(' ');
+            int duration = reader.readInt();
+            return new VectorParticleEffect(type, vector3f, scale, duration);
         }
-        public VectorParticleEffect read(ParticleType<VectorParticleEffect> particleType, PacketByteBuf packetByteBuf) {
-            return new VectorParticleEffect(particleType, readColor(packetByteBuf), packetByteBuf.readFloat(), packetByteBuf.readInt());
+        public VectorParticleEffect read(ParticleType<VectorParticleEffect> type, PacketByteBuf buf) {
+            return new VectorParticleEffect(type, readColor(buf), buf.readFloat(), buf.readInt());
         }
     };
 
@@ -85,7 +85,7 @@ public class VectorParticleEffect implements ParticleEffect {
     public String asString() {
         return String.format(Locale.ROOT,
                 "%s %.2f %.2f %.2f %.2f %d",
-                Registries.PARTICLE_TYPE.getId(this.getType()),
+                Registries.PARTICLE_TYPE.getId(this.type),
                 this.vector.x(),
                 this.vector.y(),
                 this.vector.z(),

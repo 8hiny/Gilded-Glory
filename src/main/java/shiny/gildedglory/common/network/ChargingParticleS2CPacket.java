@@ -60,7 +60,7 @@ public class ChargingParticleS2CPacket implements S2CPacket {
             Entity entity = client.world.getEntityById(this.id);
 
             if (entity != null && (!client.options.getPerspective().isFirstPerson() || player != entity) && !entity.isInvisibleTo(player)) {
-                VectorParticleEffect particle = new VectorParticleEffect(ModParticles.SQUARE, new Vector3f(this.red, this.green, this.blue), GildedGloryUtil.random(0.2f, 0.5f), 0);
+                VectorParticleEffect particle = new VectorParticleEffect(ModParticles.SQUARE, new Vector3f(this.red, this.green, this.blue), GildedGloryUtil.random(0.2f, 0.5f), 40);
                 client.particleManager.addParticle(particle, this.x, this.y, this.z, this.dx, this.dy, this.dz);
             }
         }

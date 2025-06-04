@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -30,6 +31,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import shiny.gildedglory.GildedGlory;
+import shiny.gildedglory.client.pose.ArmPose;
+import shiny.gildedglory.client.pose.CustomArmPose;
+import shiny.gildedglory.client.pose.CustomArmPoses;
+import shiny.gildedglory.common.item.custom.ChargeableWeapon;
+import shiny.gildedglory.common.item.custom.CustomEffectsWeapon;
+import shiny.gildedglory.common.item.custom.SprintUsableItem;
 import shiny.gildedglory.common.registry.damage_type.ModDamageTypes;
 import shiny.gildedglory.common.registry.enchantment.ModEnchantments;
 import shiny.gildedglory.common.registry.particle.ModParticles;
@@ -175,6 +182,11 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
     }
 
     @Override
+    public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+        return !canLoseCharge(newStack);
+    }
+
+    @Override
     public int getMaxCharge() {
         return 100;
     }
@@ -200,17 +212,16 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
     }
 
     @Override
-    public boolean isTwoHanded(ItemStack stack) {
-        return true;
+    public ArmPose getMainHandPose(LivingEntity holder, ItemStack stack) {
+        if (holder.getActiveItem() == stack) return CustomArmPoses.FORWARDS_CHARGING;
+        else if (ChargeableWeapon.hasCharge(stack)) return CustomArmPoses.FORWARDS_AIMING;
+        return holder.getMainHandStack() == stack ? CustomArmPoses.TWO_HANDED_HOLDING : BipedEntityModel.ArmPose.EMPTY;
     }
 
     @Override
-    public boolean overrideHandPoses(LivingEntity holder, ItemStack stack) {
-        return this.canLoseCharge(stack) || holder.getActiveItem() == stack;
-    }
-
-    @Override
-    public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
-        return !canLoseCharge(newStack);
+    public ArmPose getOffHandPose(LivingEntity holder, ItemStack stack) {
+        if (holder.getActiveItem() == stack) return CustomArmPoses.FORWARDS_CHARGING;
+        else if (ChargeableWeapon.hasCharge(stack)) return CustomArmPoses.FORWARDS_AIMING;
+        return holder.getMainHandStack() == stack ? CustomArmPoses.TWO_HANDED_HOLDING : BipedEntityModel.ArmPose.EMPTY;
     }
 }

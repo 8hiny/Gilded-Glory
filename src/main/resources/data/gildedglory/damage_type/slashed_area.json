@@ -1,0 +1,5 @@
+{
+  "exhaustion": 0.1,
+  "message_id": "slashed_area",
+  "scaling": "when_caused_by_living_non_player"
+}

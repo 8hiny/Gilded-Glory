@@ -51,6 +51,9 @@ dependencies {
 	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}")
 	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-world:${project.cca_version}")
 
+	//Satin
+	modImplementation "io.github.ladysnake:satin:${satin_version}"
+
 	modImplementation("dev.emi:trinkets:${project.trinkets_version}")
 	for (String module in port_lib_modules.split(",")) {
 		modImplementation("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version")

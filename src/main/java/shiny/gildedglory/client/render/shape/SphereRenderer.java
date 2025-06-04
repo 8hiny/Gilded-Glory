@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import shiny.gildedglory.GildedGlory;
-import shiny.gildedglory.common.registry.render.ModRenderLayers;
+import shiny.gildedglory.client.render.ModRenderLayers;
 
 public class SphereRenderer {
 

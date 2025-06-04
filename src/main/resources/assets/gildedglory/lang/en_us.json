@@ -13,6 +13,8 @@
 	"death.attack.beam.item": "%1$s was annihilated by the divine light emitted from %2$s's %3$s",
 	"death.attack.iraedeus": "%1$s was ripped apart by %2$s",
 	"death.attack.iraedeus.item": "%1$s was ripped apart by %2$s wielding %3$s",
+	"death.attack.slashed_area": "%1$s was no match for %2$s divine slashes",
+	"death.attack.slashed_area.item": "%1$s was no match for the divine slashes of %2$s's %3$s",
 	"enchantment.gildedglory.enma": "Enma",
 	"enchantment.gildedglory.enma.desc": "Causes repeated attacks to bind the attacker and target in divine chains.",
 	"enchantment.gildedglory.solar_flare": "Solar Flare",

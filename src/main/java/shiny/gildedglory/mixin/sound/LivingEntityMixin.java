@@ -3,7 +3,7 @@ package shiny.gildedglory.mixin.sound;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import shiny.gildedglory.common.item.ChargeableWeapon;
+import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.registry.item.ModItems;
 
 @Mixin(LivingEntity.class)

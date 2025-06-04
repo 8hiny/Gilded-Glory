@@ -2,47 +2,13 @@ package shiny.gildedglory.client.particle;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
+import shiny.gildedglory.client.particle.custom.SimpleColoredParticle;
 import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 
-public class SquareParticle extends SpriteBillboardParticle {
-
-    private final SpriteProvider spriteProvider;
+public class SquareParticle extends SimpleColoredParticle {
 
     public SquareParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, VectorParticleEffect parameters, SpriteProvider spriteProvider) {
-        super(world, x, y, z, velocityX, velocityY, velocityZ);
-
-        this.ascending = true;
-        this.spriteProvider = spriteProvider;
-
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
-        this.velocityZ = velocityZ;
-
-        this.red = parameters.getVector().x();
-        this.green = parameters.getVector().y();
-        this.blue = parameters.getVector().z();
-        this.scale = parameters.getScale();
-
-        this.maxAge = (int) (40 + this.random.nextInt(10) * Math.max(parameters.getScale(), 1.0f));
-
-        this.setSpriteForAge(spriteProvider);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        this.setSpriteForAge(this.spriteProvider);
-    }
-
-    @Override
-    public void move(double dx, double dy, double dz) {
-        this.setBoundingBox(this.getBoundingBox().offset(dx, dy, dz));
-        this.repositionFromBoundingBox();
-    }
-
-    @Override
-    public int getBrightness(float tint) {
-        return 15728880;
+        super(world, x, y, z, velocityX, velocityY, velocityZ, parameters, spriteProvider);
     }
 
     @Override

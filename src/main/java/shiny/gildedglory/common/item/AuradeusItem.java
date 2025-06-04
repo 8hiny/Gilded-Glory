@@ -30,7 +30,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import shiny.gildedglory.GildedGlory;
+import shiny.gildedglory.client.pose.ArmPose;
+import shiny.gildedglory.client.pose.CustomArmPoses;
 import shiny.gildedglory.common.component.entity.ChainedComponent;
+import shiny.gildedglory.common.item.custom.CustomAttackWeapon;
+import shiny.gildedglory.common.item.custom.CustomEffectsWeapon;
+import shiny.gildedglory.common.item.custom.SprintUsableItem;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.enchantment.ModEnchantments;
 import shiny.gildedglory.common.registry.entity.ModEntities;
@@ -209,5 +214,15 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     @Override
     public SoundEvent getDefaultAttackSound(ItemStack stack) {
         return ModSounds.AURADEUS_SLASH;
+    }
+
+    @Override
+    public ArmPose getMainHandPose(LivingEntity holder, ItemStack stack) {
+        return holder.getActiveItem() == stack ? CustomArmPoses.SIDEWAYS_CHARGING : CustomEffectsWeapon.super.getMainHandPose(holder, stack);
+    }
+
+    @Override
+    public ArmPose getOffHandPose(LivingEntity holder, ItemStack stack) {
+        return holder.getActiveItem() == stack ? CustomArmPoses.SIDEWAYS_CHARGING : CustomEffectsWeapon.super.getOffHandPose(holder, stack);
     }
 }

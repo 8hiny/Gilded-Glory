@@ -5,6 +5,7 @@ import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
+import shiny.gildedglory.client.particle.custom.DirectionalParticle;
 import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 
 public class ShockwaveParticle extends DirectionalParticle {

@@ -16,10 +16,12 @@
     "sound.LivingEntityMixin"
   ],
   "client": [
+    "client.BipedArmPoseMixin",
     "client.BipedEntityModelMixin",
     "client.ClientPlayerEntityAccessor",
     "client.ClientPlayerEntityMixin",
     "client.HandledScreenMixin",
+    "client.HeldItemFeatureRendererMixin",
     "client.HeldItemRendererMixin",
     "client.InGameHudMixin",
     "client.ItemRendererAccessor",
