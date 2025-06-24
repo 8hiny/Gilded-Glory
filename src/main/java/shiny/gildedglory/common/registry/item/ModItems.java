@@ -1,13 +1,16 @@
 package shiny.gildedglory.common.registry.item;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
 import shiny.gildedglory.GildedGlory;
+import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.item.*;
 import shiny.gildedglory.common.item.compat.CompatConsumableItem;
 
@@ -16,21 +19,22 @@ public class ModItems {
     public static final Item TWISTEEL_INGOT = register("twisteel_ingot", new Item(new FabricItemSettings().fireproof()));
     public static final Item GLOOMETAL_INGOT = register("gloometal_ingot", new Item(new FabricItemSettings().fireproof()));
     public static final Item FOOLS_GOLD_INGOT = register("fools_gold_ingot", new Item(new FabricItemSettings()));
-    public static final Item AURADEUS = register("auradeus", new AuradeusItem(ModToolMaterials.TWISTEEL, 2.5f, -2.6f, new FabricItemSettings().fireproof()));
     public static final Item TWISTEEL_SICKLE = register("twisteel_sickle", new SickleItem(ModToolMaterials.TWISTEEL, 2, -2.3f, new FabricItemSettings().fireproof()));
     public static final Item TWISTEEL_CHARM = register("twisteel_charm", new CharmItem(new FabricItemSettings().maxCount(1).fireproof()));
     public static final Item GILDED_HORN = register("gilded_horn", new GildedHornItem(new FabricItemSettings().maxCount(1)));
-    public static final Item SWORDSPEAR = register("swordspear", new SwordSpearItem(ModToolMaterials.SWORDSPEAR, 4, -2.9f, new FabricItemSettings()));
-    public static final Item IRAEDEUS = register("iraedeus", new IraedeusItem(ModToolMaterials.GLOOMETAL, 3, -2.4f, new FabricItemSettings()));
-    public static final Item KATANA = register("katana", new KatanaItem(ToolMaterials.NETHERITE, 3, -2.7f, new FabricItemSettings().fireproof()));
     public static final Item KATANA_SHEATH = register("katana_sheath", new Item(new FabricItemSettings()));
+
+    public static final Item AURADEUS = registerWithGui("auradeus", new AuradeusItem(ModToolMaterials.TWISTEEL, 2.5f, -2.6f, new FabricItemSettings().fireproof()));
+    public static final Item SWORDSPEAR = registerWithGui("swordspear", new SwordSpearItem(ModToolMaterials.SWORDSPEAR, 4, -2.9f, new FabricItemSettings()));
+    public static final Item IRAEDEUS = registerWithGui("iraedeus", new IraedeusItem(ModToolMaterials.GLOOMETAL, 3, -2.4f, new FabricItemSettings()));
+    public static final Item KATANA = registerWithGui("katana", new KatanaItem(ToolMaterials.NETHERITE, 3, -2.7f, new FabricItemSettings().fireproof()));
 
     public static final Item FOOLS_GOLD_HELMET = register("fools_gold_helmet", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.HELMET, new FabricItemSettings()));
     public static final Item FOOLS_GOLD_CHESTPLATE = register("fools_gold_chestplate", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.CHESTPLATE, new FabricItemSettings()));
     public static final Item FOOLS_GOLD_LEGGINGS = register("fools_gold_leggings", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.LEGGINGS, new FabricItemSettings()));
     public static final Item FOOLS_GOLD_BOOTS = register("fools_gold_boots", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.BOOTS, new FabricItemSettings()));
 
-    public static final Item DR_PEPPER = register("dr_pepper", new CompatConsumableItem(new FabricItemSettings().maxCount(16).recipeRemainder(Items.GLASS_BOTTLE)
+    public static final Item DR_PEPPER = registerWithGui("dr_pepper", new CompatConsumableItem(new FabricItemSettings().maxCount(16).recipeRemainder(Items.GLASS_BOTTLE)
             .food(FoodValues.DR_PEPPER),
             32, Items.GLASS_BOTTLE
     ));
@@ -70,6 +74,13 @@ public class ModItems {
     }
 
     private static Item register(String name, Item item) {
+        return Registry.register(Registries.ITEM, GildedGlory.id(name), item);
+    }
+
+    private static Item registerWithGui(String name, Item item) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            GildedGloryClient.guiModels.putIfAbsent(item, new ModelIdentifier(GildedGlory.MOD_ID,"gui/" + name, "inventory"));
+        }
         return Registry.register(Registries.ITEM, GildedGlory.id(name), item);
     }
 

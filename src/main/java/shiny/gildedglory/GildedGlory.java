@@ -44,8 +44,6 @@ public class GildedGlory implements ModInitializer {
 		ModPackets.registerModPackets();
 		ModRecipes.registerModRecipes();
 		ModRecipeTypes.registerModRecipeTypes();
-		CustomArmPoses.registerCustomArmPoses();
-		DynamicSounds.registerDynamicSounds();
 
 		TestRenderObjectCommand.init();
 

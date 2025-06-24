@@ -9,7 +9,9 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.item.Item;
 import shiny.gildedglory.client.ModModelPredicateProviders;
+import shiny.gildedglory.client.pose.CustomArmPoses;
 import shiny.gildedglory.client.render.ModShaders;
 import shiny.gildedglory.client.event.ClientEvents;
 import shiny.gildedglory.client.particle.*;
@@ -17,12 +19,15 @@ import shiny.gildedglory.client.particle.custom.SimpleColoredParticle;
 import shiny.gildedglory.client.render.ModShaderPrograms;
 import shiny.gildedglory.client.render.entity.IraedeusEntityRenderer;
 import shiny.gildedglory.client.slashed_area.SlashedAreaManager;
+import shiny.gildedglory.client.sound.DynamicSounds;
 import shiny.gildedglory.common.registry.block.ModBlocks;
 import shiny.gildedglory.common.registry.block.entity.ModBlockEntities;
 import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.client.render.blockentity.FramedChestBlockEntityRenderer;
 import shiny.gildedglory.client.render.entity.SlashEntityRenderer;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static shiny.gildedglory.common.registry.particle.ModParticles.*;
@@ -30,11 +35,7 @@ import static shiny.gildedglory.common.registry.particle.ModParticles.*;
 public class GildedGloryClient implements ClientModInitializer {
 
     //ModelIdentifiers for items with seperate models
-    public static final ModelIdentifier AURADEUS_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/auradeus", "inventory");
-    public static final ModelIdentifier SWORDSPEAR_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/swordspear", "inventory");
-    public static final ModelIdentifier IRAEDEUS_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/iraedeus", "inventory");
-    public static final ModelIdentifier DR_PEPPER_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/dr_pepper", "inventory");
-    public static final ModelIdentifier KATANA_GUI = new ModelIdentifier(GildedGlory.MOD_ID, "gui/katana", "inventory");
+    public static final Map<Item, ModelIdentifier> guiModels = new HashMap<>();
 
     //Custom keybinds
     public static KeyBinding returnIraedeus;
@@ -56,6 +57,8 @@ public class GildedGloryClient implements ClientModInitializer {
        registerModKeybinds();
        registerCustomRenderers();
        ModShaders.getInstance().init();
+       CustomArmPoses.registerCustomArmPoses();
+       DynamicSounds.registerDynamicSounds();
 
        ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::clientTick);
    }

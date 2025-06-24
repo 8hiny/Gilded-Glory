@@ -24,10 +24,8 @@ public abstract class ModelLoaderMixin {
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;addModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 3, shift = At.Shift.AFTER))
     public void gildedglory$addGuiModel(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<ModelLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
-        this.addModel(GildedGloryClient.AURADEUS_GUI);
-        this.addModel(GildedGloryClient.SWORDSPEAR_GUI);
-        this.addModel(GildedGloryClient.IRAEDEUS_GUI);
-        this.addModel(GildedGloryClient.KATANA_GUI);
-        this.addModel(GildedGloryClient.DR_PEPPER_GUI);
+        for (ModelIdentifier id : GildedGloryClient.guiModels.values()) {
+            this.addModel(id);
+        }
     }
 }

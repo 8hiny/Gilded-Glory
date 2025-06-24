@@ -7,6 +7,8 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,21 +25,8 @@ public abstract class ItemRendererMixin {
     @ModifyVariable(method = "renderItem", at = @At(value = "HEAD"), argsOnly = true)
     public BakedModel gildedglory$useGuiModel(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (renderMode == ModelTransformationMode.GUI || renderMode == ModelTransformationMode.GROUND) {
-
-            if (stack.isOf(ModItems.AURADEUS)) {
-                value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.AURADEUS_GUI);
-            }
-            if (stack.isOf(ModItems.SWORDSPEAR)) {
-                value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.SWORDSPEAR_GUI);
-            }
-            if (stack.isOf(ModItems.IRAEDEUS)) {
-                value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.IRAEDEUS_GUI);
-            }
-            if (stack.isOf(ModItems.KATANA)) {
-                value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.KATANA_GUI);
-            }
-            if (stack.isOf(ModItems.DR_PEPPER)) {
-                value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.DR_PEPPER_GUI);
+            if (GildedGloryClient.guiModels.containsKey(stack.getItem())) {
+                value = ((ItemRendererAccessor) this).gildedglory$getModels().getModelManager().getModel(GildedGloryClient.guiModels.get(stack.getItem()));
             }
 
             if (this.client.world != null && this.client.player != null) {
