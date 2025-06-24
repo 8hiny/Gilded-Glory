@@ -2,7 +2,6 @@ package shiny.gildedglory.client.sound;
 
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
 import shiny.gildedglory.common.util.DynamicSoundSource;
 import shiny.gildedglory.common.util.SoundInstanceCallback;
 
@@ -18,7 +17,6 @@ public class PredicatedLoopingSoundInstance extends DynamicSoundInstance {
      * @param predicate The predicate for this sound instance to play. Accepts a DynamicSoundSource.
      */
     public PredicatedLoopingSoundInstance(
-            Identifier id,
             SoundEvent sound, SoundCategory category,
             float baseVolume, float basePitch,
             float minVolume, float minPitch,
@@ -27,9 +25,9 @@ public class PredicatedLoopingSoundInstance extends DynamicSoundInstance {
             boolean interpolate, boolean affectPitch,
             boolean remain,
             Predicate<DynamicSoundSource> predicate,
-            DynamicSoundSource source, SoundInstanceCallback callback
+            SoundInstanceCallback callback
     ) {
-        super(id, sound, category, baseVolume, basePitch, minVolume, minPitch, maxVolume, maxPitch, startDuration, endDuration, interpolate, affectPitch, source, callback);
+        super(sound, category, baseVolume, basePitch, minVolume, minPitch, maxVolume, maxPitch, startDuration, endDuration, interpolate, affectPitch, callback);
 
         this.predicate = predicate.and(DynamicSoundSource::canPlay);
         this.remain = remain;
@@ -54,7 +52,7 @@ public class PredicatedLoopingSoundInstance extends DynamicSoundInstance {
     }
 
     public boolean canContinue() {
-        return this.predicate.test(this.getSource());
+        return this.getSource() != null && this.predicate.test(this.getSource());
     }
 
     @Override
@@ -63,31 +61,17 @@ public class PredicatedLoopingSoundInstance extends DynamicSoundInstance {
         this.remain = false;
     }
 
-    public static class Builder extends DynamicSoundInstance.Builder {
-
-        private final Predicate<DynamicSoundSource> predicate;
-        private final boolean remain;
-
-        public Builder(
-                Identifier id,
-                SoundEvent sound, SoundCategory category,
-                float baseVolume, float basePitch,
-                float minVolume, float minPitch,
-                float maxVolume, float maxPitch,
-                int startDuration, int endDuration,
-                boolean interpolate, boolean affectPitch,
-                boolean remain,
-                Predicate<DynamicSoundSource> predicate,
-                SoundInstanceCallback callback
-        ) {
-            super(id, sound, category, baseVolume, basePitch, minVolume, minPitch, maxVolume, maxPitch, startDuration, endDuration, interpolate, affectPitch, callback);
-
-            this.predicate = predicate;
-            this.remain = remain;
-        }
-
-        public PredicatedLoopingSoundInstance build(DynamicSoundSource source) {
-            return new PredicatedLoopingSoundInstance(this.id, this.sound, this.category, this.baseVolume, this.basePitch, this.minVolume, this.minPitch, this.maxVolume, this.maxPitch, this.startDuration, this.endDuration, this.interpolate, this.affectPitch, this.remain, this.predicate, source, this.callback);
-        }
+    @Override
+    public PredicatedLoopingSoundInstance copy() {
+        return new PredicatedLoopingSoundInstance(
+                this.soundEvent, this.category,
+                this.baseVolume, this.basePitch,
+                this.minVolume, this.minPitch,
+                this.maxVolume, this.maxPitch,
+                this.startDuration, this.endDuration,
+                this.interpolate, this.affectPitch,
+                this.remain, this.predicate,
+                this.callback
+        );
     }
 }

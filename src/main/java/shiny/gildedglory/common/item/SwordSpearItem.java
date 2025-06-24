@@ -32,7 +32,6 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.pose.ArmPose;
-import shiny.gildedglory.client.pose.CustomArmPose;
 import shiny.gildedglory.client.pose.CustomArmPoses;
 import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.item.custom.CustomEffectsWeapon;
@@ -80,7 +79,7 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
         }
         else {
             user.setCurrentHand(hand);
-            GildedGloryUtil.startLoopingSound(world, user, GildedGlory.id("swordspear_charging"));
+            GildedGloryUtil.playLoopingSound(world, user, GildedGlory.id("swordspear_charging"));
             return TypedActionResult.consume(stack);
         }
     }
@@ -111,7 +110,7 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
             float pitch = GildedGloryUtil.random(0.9f, 1.3f);
             world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.SWORDSPEAR_FIRE, SoundCategory.PLAYERS, 1.0f, pitch);
         }
-        if (charge > 4) GildedGloryUtil.startLoopingSound(world, user, GildedGlory.id("swordspear_firing"));
+        if (charge > 4) GildedGloryUtil.playLoopingSound(world, user, GildedGlory.id("swordspear_firing"));
     }
 
     @Override

@@ -2,19 +2,16 @@ package shiny.gildedglory;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import shiny.gildedglory.client.pose.CustomArmPoses;
-import shiny.gildedglory.client.pose.CustomArmPose;
+import shiny.gildedglory.client.sound.DynamicSounds;
 import shiny.gildedglory.common.command.TestRenderObjectCommand;
 import shiny.gildedglory.common.network.ModPackets;
+import shiny.gildedglory.common.registry.ModRegistries;
 import shiny.gildedglory.common.registry.block.ModBlocks;
 import shiny.gildedglory.common.registry.block.entity.ModBlockEntities;
 import shiny.gildedglory.common.registry.component.ModComponents;
@@ -33,14 +30,9 @@ public class GildedGlory implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final boolean FARMERS_DELIGHT_INSTALLED = FabricLoader.getInstance().isModLoaded("farmersdelight");
 
-	//Custom Registries
-	public static final RegistryKey<Registry<CustomArmPose>> registryKey = RegistryKey.ofRegistry(id("custom_arm_pose"));
-	public static final Registry<CustomArmPose> CUSTOM_ARM_POSE = FabricRegistryBuilder.createSimple(registryKey)
-			.attribute(RegistryAttribute.SYNCED)
-			.buildAndRegister();
-
 	@Override
 	public void onInitialize() {
+		ModRegistries.init();
 		ModItems.registerModItems();
 		ModItemGroups.registerModItemGroups();
 		ModBlocks.registerModBlocks();
@@ -53,6 +45,7 @@ public class GildedGlory implements ModInitializer {
 		ModRecipes.registerModRecipes();
 		ModRecipeTypes.registerModRecipeTypes();
 		CustomArmPoses.registerCustomArmPoses();
+		DynamicSounds.registerDynamicSounds();
 
 		TestRenderObjectCommand.init();
 

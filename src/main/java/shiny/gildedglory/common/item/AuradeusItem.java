@@ -83,7 +83,7 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
         }
         else {
             user.setCurrentHand(hand);
-            GildedGloryUtil.startLoopingSound(world, user, GildedGlory.id("auradeus_hum"));
+            GildedGloryUtil.playLoopingSound(world, user, GildedGlory.id("auradeus_hum"));
             return TypedActionResult.consume(stack);
         }
     }

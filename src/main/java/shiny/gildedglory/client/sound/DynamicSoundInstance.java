@@ -4,7 +4,6 @@ import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.MathHelper;
 import shiny.gildedglory.common.util.DynamicSoundSource;
@@ -12,17 +11,20 @@ import shiny.gildedglory.common.util.SoundInstanceCallback;
 
 public class DynamicSoundInstance extends MovingSoundInstance {
 
-    private final Identifier id;
-    private final SoundInstanceCallback callback;
-    private final DynamicSoundSource source;
+    protected final SoundInstanceCallback callback;
+    private DynamicSoundSource source;
     private State state;
     private State lastState;
+    private boolean playing;
+    protected final SoundEvent soundEvent;
     protected final int startDuration;
     protected final int endDuration;
+    protected final float baseVolume;
+    protected final float basePitch;
     protected final float minVolume;
     protected final float minPitch;
-    protected float maxVolume;
-    protected float maxPitch;
+    protected final float maxVolume;
+    protected final float maxPitch;
     protected float lastVolume;
     protected float lastPitch;
     protected float lastStress;
@@ -37,7 +39,6 @@ public class DynamicSoundInstance extends MovingSoundInstance {
      * A looping sound instance which can be attached to a DynamicSoundSource.
      * Volume and pitch of the sound instance are interpolated between their min and max values during their start and end phases, preventing an abrupt start or end of the sound.
      * Sound instances extending this class should define a condition to prevent the sound from playing indefinitely.
-     * @param id The identifier of the sound. Used to send sound instances with packets.
      * @param baseVolume The volume of the sound when it starts playing
      * @param basePitch The pitch of the sound when it starts playing
      * @param minVolume The minimum volume of the sound. Should not be lower then 0
@@ -46,20 +47,19 @@ public class DynamicSoundInstance extends MovingSoundInstance {
      * @param endDuration The duration during which the sound approaches its minimum volume and pitch when ending
      * @param interpolate Whether the sound should interpolate its volume and pitch between state changes
      * @param affectPitch Whether the pitch should be modulated
-     * @param source The source of the sound, usually an entity
      */
     protected DynamicSoundInstance(
-            Identifier id,
             SoundEvent sound, SoundCategory category,
             float baseVolume, float basePitch,
             float minVolume, float minPitch,
             float maxVolume, float maxPitch,
             int startDuration, int endDuration,
             boolean interpolate, boolean affectPitch,
-            DynamicSoundSource source, SoundInstanceCallback callback
+            SoundInstanceCallback callback
     ) {
         super(sound, category, SoundInstance.createRandom());
-        this.id = id;
+        this.soundEvent = sound;
+        this.playing = false;
 
         this.repeat = true;
         this.repeatDelay = 0;
@@ -67,13 +67,14 @@ public class DynamicSoundInstance extends MovingSoundInstance {
         this.interpolate = interpolate;
         this.affectPitch = affectPitch;
 
+        this.baseVolume = baseVolume;
+        this.basePitch = basePitch;
         this.volume = baseVolume;
         this.pitch = basePitch;
         this.lastVolume = baseVolume;
         this.lastPitch = basePitch;
 
         this.callback = callback;
-        this.source = source;
         this.state = State.STARTING;
         this.lastState = this.state;
         this.startDuration = startDuration;
@@ -95,7 +96,7 @@ public class DynamicSoundInstance extends MovingSoundInstance {
 
     @Override
     public void tick() {
-        if (!this.isDone()) {
+        if (this.playing && !this.isDone()) {
             this.setPos();
             this.tickState();
             if (this.state != this.lastState) {
@@ -276,86 +277,39 @@ public class DynamicSoundInstance extends MovingSoundInstance {
         return 0.0f;
     }
 
-    public Identifier getId() {
-        return this.id;
-    }
-
     @Override
     public boolean shouldAlwaysPlay() {
         return true;
     }
 
-    public enum State {
-
-        STARTING(0),
-        PLAYING(1),
-        STOPPING(2),
-        STOPPED(3);
-
-        private final int id;
-
-        State(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return this.id;
-        }
+    /** Returns a copy of this sound instance. Used to retrieve new DynamicSoundInstance objects without modifying those registered in the registry.
+     * Subclasses should override this so return themselves.
+     * @see PredicatedLoopingSoundInstance#copy()
+     */
+    public DynamicSoundInstance copy() {
+        return new DynamicSoundInstance(
+                this.soundEvent, this.category,
+                this.baseVolume, this.basePitch,
+                this.minVolume, this.minPitch,
+                this.maxVolume, this.maxPitch,
+                this.startDuration, this.endDuration,
+                this.interpolate, this.affectPitch,
+                this.callback
+        );
     }
 
-    public static class Builder {
+    /// Builds this sound instance with the specified DynamicSoundSource.
+    public DynamicSoundInstance build(DynamicSoundSource source) {
+        DynamicSoundInstance sound = this.copy();
+        sound.source = source;
+        sound.playing = true;
+        return sound;
+    }
 
-        protected final Identifier id;
-        protected final SoundInstanceCallback callback;
-        protected final int startDuration;
-        protected final int endDuration;
-        protected final float baseVolume;
-        protected final float basePitch;
-        protected final float minVolume;
-        protected final float minPitch;
-        protected final float maxVolume;
-        protected final float maxPitch;
-        protected final SoundEvent sound;
-        protected final SoundCategory category;
-        protected final boolean interpolate;
-        protected final boolean affectPitch;
-
-        public Builder(
-                Identifier id,
-                SoundEvent sound, SoundCategory category,
-                float baseVolume, float basePitch,
-                float minVolume, float minPitch,
-                float maxVolume, float maxPitch,
-                int startDuration, int endDuration,
-                boolean interpolate, boolean affectPitch,
-                SoundInstanceCallback callback
-        ) {
-            this.id = id;
-            this.callback = callback;
-            this.startDuration = startDuration;
-            this.endDuration = endDuration;
-            this.baseVolume = baseVolume;
-            this.basePitch = basePitch;
-            this.minVolume = minVolume;
-            this.minPitch = minPitch;
-            this.maxVolume = maxVolume;
-            this.maxPitch = maxPitch;
-            this.sound = sound;
-            this.category = category;
-            this.interpolate = interpolate;
-            this.affectPitch = affectPitch;
-        }
-
-        public DynamicSoundInstance build(DynamicSoundSource source) {
-            return new DynamicSoundInstance(
-                    this.id, this.sound, this.category, this.baseVolume, this.basePitch,
-                    this.minVolume, this.minPitch, this.maxVolume, this.maxPitch, this.startDuration,
-                    this.endDuration, this.interpolate, this.affectPitch, source, this.callback
-            );
-        }
-
-        public Identifier getId() {
-            return this.id;
-        }
+    public enum State {
+        STARTING(),
+        PLAYING(),
+        STOPPING(),
+        STOPPED()
     }
 }

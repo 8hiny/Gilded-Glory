@@ -96,7 +96,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         super.tick();
 
         if (this.activeTicks == 0) {
-            GildedGloryUtil.startLoopingSound(this.getWorld(), this, GildedGlory.id("iraedeus_spin"));
+            GildedGloryUtil.playLoopingSound(this.getWorld(), this, GildedGlory.id("iraedeus_spin"));
         }
 
         if (this.checkGroundCollision()) this.inGroundTime++;

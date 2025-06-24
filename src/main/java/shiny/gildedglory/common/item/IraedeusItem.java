@@ -114,7 +114,7 @@ public class IraedeusItem extends SwordItem implements CustomAttackWeapon, Custo
     @Override
     public CustomAttackData onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount) {
         if (ChargeableWeapon.getCharge(stack) == 0) {
-            GildedGloryUtil.startLoopingSound(attacker.getWorld(), attacker, GildedGlory.id("iraedeus_hum"));
+            GildedGloryUtil.playLoopingSound(attacker.getWorld(), attacker, GildedGlory.id("iraedeus_hum"));
         }
         if (!attacker.getWorld().isClient()) {
             ChargeableWeapon.addCharge(stack, (int) (amount * 1.25f));

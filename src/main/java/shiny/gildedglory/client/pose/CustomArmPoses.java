@@ -2,10 +2,11 @@ package shiny.gildedglory.client.pose;
 
 import net.minecraft.registry.Registry;
 import shiny.gildedglory.GildedGlory;
+import shiny.gildedglory.common.registry.ModRegistries;
 
 public class CustomArmPoses {
 
-    public static CustomArmPose TWO_HANDED_HOLDING = register(new CustomArmPose(
+    public static CustomArmPose TWO_HANDED_HOLDING = register("two_handed_holding", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.yaw = 0.8f;
                 leftArm.pitch = -0.97079635f;
@@ -15,8 +16,8 @@ public class CustomArmPoses {
                 rightArm.pitch = -0.97079635f;
             },
             false
-    ), "two_handed_holding");
-    public static CustomArmPose SIDEWAYS_CHARGING = register(new CustomArmPose(
+    ));
+    public static CustomArmPose SIDEWAYS_CHARGING = register("sideways_charging", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.yaw = -0.55f;
                 leftArm.pitch = ctx.entity().isSneaking() ? -1.1f : -0.7f;
@@ -27,8 +28,8 @@ public class CustomArmPoses {
                 rightArm.roll = 1.2f;
             },
             false
-    ), "sideways_charging");
-    public static CustomArmPose FORWARDS_CHARGING = register(new CustomArmPose(
+    ));
+    public static CustomArmPose FORWARDS_CHARGING = register("forwards_charging", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.pitch = Math.min(ctx.headPitch() + 80.0f, 80.77f);
             },
@@ -36,8 +37,8 @@ public class CustomArmPoses {
                 rightArm.pitch = Math.min(ctx.headPitch() + 80.0f, 80.77f);
             },
             false
-    ), "forwards_charging");
-    public static CustomArmPose BACKWARDS_HOLDING = register(new CustomArmPose(
+    ));
+    public static CustomArmPose BACKWARDS_HOLDING = register("backwards_holding", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.yaw = 0.3f;
                 leftArm.pitch = ctx.entity().isSneaking() ? -1.0f : -0.6f;
@@ -49,8 +50,8 @@ public class CustomArmPoses {
                 rightArm.roll = 0.3f;
             },
             false
-    ), "backwards_holding");
-    public static CustomArmPose FORWARDS_AIMING = register(new CustomArmPose(
+    ));
+    public static CustomArmPose FORWARDS_AIMING = register("forwards_aiming", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.yaw = 0.4f;
                 leftArm.pitch = (float) (-Math.PI / 2) + ctx.headPitch();
@@ -62,10 +63,10 @@ public class CustomArmPoses {
                 rightArm.roll = 0.0f;
             },
             true
-    ), "forwards_aiming");
+    ));
 
-    public static CustomArmPose register(CustomArmPose pose, String name) {
-        return Registry.register(GildedGlory.CUSTOM_ARM_POSE, GildedGlory.id(name), pose);
+    public static CustomArmPose register(String name, CustomArmPose pose) {
+        return Registry.register(ModRegistries.CUSTOM_ARM_POSE, GildedGlory.id(name), pose);
     }
 
     public static void registerCustomArmPoses() {

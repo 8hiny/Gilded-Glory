@@ -92,7 +92,7 @@ public class GildedGloryUtil {
      * @param user The entity from which the sound is played
      * @param sound The looping sound to be played
      */
-    public static void startLoopingSound(World world, Entity user, Identifier sound) {
+    public static void playLoopingSound(World world, Entity user, Identifier sound) {
         if (world.isClient() && user instanceof PlayerEntity) {
             DynamicSoundManager.getInstance().play(DynamicSounds.get(sound, (DynamicSoundSource) user));
         }
@@ -134,7 +134,7 @@ public class GildedGloryUtil {
 
     /**
      * Sends packets from an entity to any players currently tracking that entity.
-     * @param exclude The entity to exclude from receiving the packet
+     * @param exclude The entity to exclude from receiving the packet if it is a player
      */
     public static <T extends S2CPacket> void sendPackets(T packet, World world, Entity sender, @Nullable Entity exclude) {
         if (!world.isClient()) {
