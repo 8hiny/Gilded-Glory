@@ -7,8 +7,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import shiny.gildedglory.client.pose.CustomArmPoses;
-import shiny.gildedglory.client.sound.DynamicSounds;
 import shiny.gildedglory.common.command.TestRenderObjectCommand;
 import shiny.gildedglory.common.network.ModPackets;
 import shiny.gildedglory.common.registry.ModRegistries;
