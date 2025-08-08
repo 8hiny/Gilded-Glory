@@ -24,6 +24,8 @@ import shiny.gildedglory.common.registry.sound.ModSounds;
 
 public class GildedGlory implements ModInitializer {
 
+	//TODO Port to 1.21 before adding new content (such as new katana stuff)
+
 	public static final String MOD_ID = "gildedglory";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final boolean FARMERS_DELIGHT_INSTALLED = FabricLoader.getInstance().isModLoaded("farmersdelight");

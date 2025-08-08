@@ -3,7 +3,6 @@ package shiny.gildedglory.common.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -33,6 +32,12 @@ import shiny.gildedglory.common.util.GildedGloryUtil;
 import java.util.UUID;
 
 public class KatanaItem extends SwordItem implements CustomEffectsWeapon, SprintUsableItem {
+
+    //TODO Make sheathing mechanic (with sheathing and unsheathing sound & particles)
+    //TODO Make sheathing animation for first & third person
+    //TODO Add golden puddles
+    //TODO Add different slash types
+    //TODO Fix refractive post shader
 
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
     private final float attackDamage;

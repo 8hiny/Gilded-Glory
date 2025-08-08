@@ -7,12 +7,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -43,10 +45,21 @@ public class GildedGloryUtil {
         return Math.abs(value - thisFloat) < Math.abs(value - thatFloat) ? thisFloat : thatFloat;
     }
 
+    public static Vec3d getRotationVector(float pitch, float yaw) {
+        float f = pitch * (float) (Math.PI / 180.0);
+        float g = -yaw * (float) (Math.PI / 180.0);
+        float h = MathHelper.cos(g);
+        float i = MathHelper.sin(g);
+        float j = MathHelper.cos(f);
+        float k = MathHelper.sin(f);
+        return new Vec3d(i * j, -k, h * j);
+    }
+
     public static Vec3d getThrowPos(Entity thrower, EntityType<?> entityType) {
         return thrower.getEyePos().subtract(0, entityType.getHeight() / 2, 0);
     }
 
+    //TODO prevent this method from infinitely accelerating two entities towards eachother (chains bug)
     /**
      * Limits a vector such that it does not point more than a certain amount away from a position.
      * If the vector's origin position is outside the allowed range, the vector points towards the target position, multiplied by the distance to it.
@@ -163,7 +176,7 @@ public class GildedGloryUtil {
         Vec3d pos = origin.getEyePos();
         Vec3d ray = direction.multiply(distance);
         Vec3d max = pos.add(ray);
-        Box range = origin.getBoundingBox().stretch(ray).expand(1.0);
+        Box range = origin.getBoundingBox().stretch(ray).expand(1.0 + margin);
 
         double d = max.squaredDistanceTo(pos);
         if (collision) {
@@ -194,5 +207,29 @@ public class GildedGloryUtil {
             return entity;
         }
         return null;
+    }
+
+    public static void areaCast(Entity entity, float height, float width, float distance, boolean collision) {
+        World world = entity.getWorld();
+
+        float pitch = MathHelper.clamp(entity.getPitch(), -89.9f, 89.9f);
+        Vec3d rotation = getRotationVector(pitch, entity.getYaw());
+
+        Vec3d horizontal = rotation.crossProduct(new Vec3d(0, 1, 0)).normalize().multiply(width);
+        Vec3d vertical = rotation.crossProduct(horizontal).normalize().multiply(height);
+
+        Vec3d center = entity.getEyePos();
+        Vec3d max = center.add(rotation.multiply(distance));
+
+        Vec3d a = max.add(vertical).add(horizontal);
+        Vec3d b = max.add(vertical).subtract(horizontal);
+        Vec3d c = max.subtract(vertical).add(horizontal);
+        Vec3d d = max.subtract(vertical).subtract(horizontal);
+
+
+        world.addImportantParticle(ParticleTypes.END_ROD, a.x, a.y, a.z, 0, 0, 0);
+        world.addImportantParticle(ParticleTypes.END_ROD, b.x, b.y, b.z, 0, 0, 0);
+        world.addImportantParticle(ParticleTypes.END_ROD, c.x, c.y, c.z, 0, 0, 0);
+        world.addImportantParticle(ParticleTypes.END_ROD, d.x, d.y, d.z, 0, 0, 0);
     }
 }

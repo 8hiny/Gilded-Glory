@@ -8,6 +8,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
@@ -29,6 +30,12 @@ public class FoolsArmorItem extends ArmorItem {
             livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 2, 0));
             livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 2, 1));
         }
+    }
+
+    //Currently usused because mid
+    @Override
+    public boolean isEnabled(FeatureSet enabledFeatures) {
+        return false;
     }
 
     public static boolean hasFullSet(Entity entity) {

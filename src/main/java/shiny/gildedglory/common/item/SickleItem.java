@@ -39,6 +39,8 @@ import java.util.function.Predicate;
 
 public class SickleItem extends SwordItem implements CustomAttackWeapon, CustomEffectsWeapon {
 
+    //TODO Rework or remove this
+
     protected final float miningSpeed;
     protected static final Map<Block, Pair<Predicate<ItemUsageContext>, Consumer<ItemUsageContext>>> TILLING_ACTIONS = Maps.newHashMap(
             ImmutableMap.of(

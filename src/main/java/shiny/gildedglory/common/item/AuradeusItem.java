@@ -28,7 +28,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.pose.ArmPose;
 import shiny.gildedglory.client.pose.CustomArmPoses;
@@ -190,7 +189,7 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         tooltip.add(Text.translatable("tooltip.gildedglory.auradeus").formatted(Formatting.GRAY));
     }
 

@@ -32,6 +32,9 @@ public abstract class InGameHudMixin {
     @Unique private int tickCounter = 0;
     @Unique private boolean overrideAttackIndicator = false;
 
+    //TODO Potentially redo crosshair additions
+    //TODO Fix the charge bar not hiding the attack cooldown bar underneath the crosshair
+
     @Inject(method = "renderCrosshair", at = @At(value = "HEAD"))
     private void gildedglory$renderCrosshairHud(DrawContext context, CallbackInfo ci) {
         GameOptions gameOptions = this.client.options;

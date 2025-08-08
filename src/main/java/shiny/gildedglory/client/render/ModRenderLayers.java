@@ -12,7 +12,7 @@ import java.util.function.BiFunction;
 public class ModRenderLayers extends RenderLayer {
 
     //Shader Programs
-    public static RenderPhase.ShaderProgram MIRROR_PROGRAM = new ShaderProgram(ModShaderPrograms::getMirror);
+    public static final RenderPhase.ShaderProgram MIRROR_PROGRAM = new ShaderProgram(ModShaderPrograms::getMirror);
 
     //RenderLayers
     private static final BiFunction<Identifier, Boolean, RenderLayer> BEAM = Util.memoize(

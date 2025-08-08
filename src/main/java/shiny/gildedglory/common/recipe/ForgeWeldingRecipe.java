@@ -21,6 +21,8 @@ import java.util.List;
 
 public class ForgeWeldingRecipe implements Recipe<RecipeInputInventory> {
 
+    //TODO Add a REI plugin for the recipes
+
     private final Identifier id;
     private final ItemStack output;
     private final DefaultedList<Ingredient> input;

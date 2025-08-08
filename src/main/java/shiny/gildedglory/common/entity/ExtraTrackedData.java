@@ -10,6 +10,7 @@ import net.minecraft.world.event.PositionSourceType;
 
 public class ExtraTrackedData {
 
+    //Unused, since PositionSource exists
     public static final TrackedDataHandler<HomingTarget> TARGET = new TrackedDataHandler.ImmutableHandler<>() {
         public void write(PacketByteBuf buf, HomingTarget target) {
             if (target.hasEntity()) {

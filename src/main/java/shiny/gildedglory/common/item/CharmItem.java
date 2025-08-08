@@ -22,6 +22,8 @@ import java.util.UUID;
 
 public class CharmItem extends Item {
 
+    //TODO Add more uses for this
+
     private static final String OWNER_KEY = "gildedglory:owner";
 
     public CharmItem(Settings settings) {

@@ -166,13 +166,18 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
                     }
                 }
 
+                //The issue where the iraedeus bounces around occurs due to server-client desync
+                //In this case, the iraedeus only tries to move towards its target on the client and not on the server
+                //TODO fix this ^
+
                 if (this.squaredDistanceTo(target) > 2.0f) {
+                    GildedGlory.LOGGER.info("Moving to target! Is client: " + this.getWorld().isClient());
                     this.moveToTarget(target, this.isParried());
                 }
                 else {
                     if (source.getType() == PositionSourceType.BLOCK) {
                         for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(5.0f, 5.5f, 5.0f), this::canHit)) {
-                            if (!this.getWorld().isClient() && this.damageEntity(owner, entity));
+                            if (!this.getWorld().isClient()) this.damageEntity(owner, entity);
                         }
 
                         float pitch = GildedGloryUtil.random(0.9f, 1.1f);
@@ -237,7 +242,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         this.setPosition(d, e, f);
         this.checkBlockCollision();
 
-        builder.addTrailPoint(this.getPos());
+        builder.addTrailPoint(this.getPos().add(0, this.getHeight(), 0));
         builder.tickTrailPoints();
 
         if (!this.isReturning()) this.activeTicks++;
@@ -300,9 +305,9 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
 
         if (this.getOwner() instanceof PlayerEntity player) {
             IraedeusComponent component = ModComponents.IRAEDEUS.get(player);
-                targeting = component.targeting;
-                returning = component.returning;
-                if (targeting) component.targetCooldown = 40;
+            targeting = component.targeting;
+            returning = component.returning;
+            if (targeting) component.targetCooldown = 40;
         }
         return new Pair<>(targeting, returning);
     }

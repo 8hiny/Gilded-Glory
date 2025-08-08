@@ -51,7 +51,7 @@ public class GildedGloryUtil {
         Vec3d camPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
 
         matrices.translate(-camPos.x, -camPos.y, -camPos.z);
-        matrices.translate(0.0f, entity.getHeight() / 2, 0.0f);
+        matrices.translate(0.0f, 0.0f, 0.0f);
         builder.setColor(color)
                 .setAlpha(1.0f)
                 .renderTrail(matrices,

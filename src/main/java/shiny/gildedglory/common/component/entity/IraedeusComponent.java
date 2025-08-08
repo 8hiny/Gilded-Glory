@@ -10,15 +10,12 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.event.PositionSource;
 import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.entity.IraedeusEntity;
 import shiny.gildedglory.common.network.ModPackets;
 import shiny.gildedglory.common.network.UpdateTargetingC2SPacket;
 import shiny.gildedglory.common.network.UpdateReturningC2SPacket;
 import shiny.gildedglory.common.registry.component.ModComponents;
-import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
@@ -66,25 +63,26 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
 
     @Override
     public void serverTick() {
-        if (this.isSummoned()) {
-            if (this.targeting) {
-                Vec3d pos = GildedGloryUtil.getThrowPos(this.provider, ModEntities.IRAEDEUS);
-                IraedeusEntity iraedeus = new IraedeusEntity(this.provider.getWorld(), this.provider, this.slot, pos.x, pos.y, pos.z);
-                iraedeus.setItem(this.getStack());
-                this.provider.getWorld().spawnEntity(iraedeus);
-
-                PositionSource source = iraedeus.handleTarget(this.provider, pos.add(this.provider.getRotationVector().multiply(48.0)));
-                iraedeus.setTargeting(true);
-                iraedeus.setTarget(source);
-
-                this.setEntity(iraedeus.getUuid());
-                this.summoned = false;
-                this.setStack(ItemStack.EMPTY);
-            }
-            else if (this.returning) {
-                this.returnStack();
-            }
-        }
+        //Currently unused feature (Summoning)
+//        if (this.isSummoned()) {
+//            if (this.targeting) {
+//                Vec3d pos = GildedGloryUtil.getThrowPos(this.provider, ModEntities.IRAEDEUS);
+//                IraedeusEntity iraedeus = new IraedeusEntity(this.provider.getWorld(), this.provider, this.slot, pos.x, pos.y, pos.z);
+//                iraedeus.setItem(this.getStack());
+//                this.provider.getWorld().spawnEntity(iraedeus);
+//
+//                PositionSource source = iraedeus.handleTarget(this.provider, pos.add(this.provider.getRotationVector().multiply(48.0)));
+//                iraedeus.setTargeting(true);
+//                iraedeus.setTarget(source);
+//
+//                this.setEntity(iraedeus.getUuid());
+//                this.summoned = false;
+//                this.setStack(ItemStack.EMPTY);
+//            }
+//            else if (this.returning) {
+//                this.returnStack();
+//            }
+//        }
 
         if (!this.isSummoned() && this.slot != -1) {
             if (this.iraedeusId != null) {

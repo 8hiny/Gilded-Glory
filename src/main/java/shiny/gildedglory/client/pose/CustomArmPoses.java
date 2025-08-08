@@ -51,14 +51,16 @@ public class CustomArmPoses {
             },
             false
     ));
+
+    //TODO Fix the below pose aiming the arms outwards when facing up or down (looks especially bad with the beam cause it's so long)
     public static CustomArmPose FORWARDS_AIMING = register("forwards_aiming", new CustomArmPose(
             (leftArm, ctx) -> {
-                leftArm.yaw = 0.4f;
+                leftArm.yaw = 0.4f - ctx.headPitch();
                 leftArm.pitch = (float) (-Math.PI / 2) + ctx.headPitch();
                 leftArm.roll = 0.0f;
             },
             (rightArm, ctx) -> {
-                rightArm.yaw = -0.4f;
+                rightArm.yaw = -0.4f - ctx.headPitch();
                 rightArm.pitch = (float) (-Math.PI / 2) + ctx.headPitch();
                 rightArm.roll = 0.0f;
             },

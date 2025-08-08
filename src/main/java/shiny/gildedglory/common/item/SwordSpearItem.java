@@ -123,7 +123,10 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
                 if (!world.isClient()) {
                     for (LivingEntity target : GildedGloryUtil.raycast(user, target -> target.isPartOfGame() && target.getRootVehicle() != user.getRootVehicle(), user.getRotationVec(1.0f), 0.35f, 34.0f, true)) {
                         DamageSource damageSource = new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(ModDamageTypes.BEAM), user);
-                        target.damage(damageSource, bl ? 0.1f : 0.2f);
+                        float amount = bl ? 0.1f : 0.2f;
+                        if (ChargeableWeapon.getChargePercentage(stack) < 0.5f) amount *= 2.0f;
+
+                        target.damage(damageSource, amount);
                     }
                 }
                 else if (bl) {

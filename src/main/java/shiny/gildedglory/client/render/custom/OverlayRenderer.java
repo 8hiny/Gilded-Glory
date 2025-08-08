@@ -10,6 +10,8 @@ import java.awt.*;
 
 public class OverlayRenderer {
 
+    //TODO Move this to the HudRenderCallback
+
     public static final Identifier CROSSHAIR = GildedGlory.id("textures/gui/crosshair.png");
     public static final Identifier CHAINED_OVERLAY = GildedGlory.id("textures/misc/chained_overlay.png");
     public static final Identifier LINES_OVERLAY = GildedGlory.id("textures/misc/lines_vignette.png");
