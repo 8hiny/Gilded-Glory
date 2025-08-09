@@ -10,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.mixin.client.ClientPlayerEntityAccessor;
@@ -84,8 +83,8 @@ public class GildedGloryUtil {
             int alpha,
             int light
     ) {
-        Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
-        Matrix3f normalMatrix = matrices.peek().getNormalMatrix();
+        MatrixStack.Entry entry = matrices.peek();
+        Matrix4f positionMatrix = entry.getPositionMatrix();
         if (frame < 1) frame = 1;
 
         float xOffset = width / 2;
@@ -99,28 +98,24 @@ public class GildedGloryUtil {
                 .texture(0, vOffset * (frame - 1))
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(light)
-                .normal(normalMatrix, 0, 1, 0)
-                .next();
+                .normal(entry, 0, 1, 0);
         vertexConsumer.vertex(positionMatrix,(float) (xOffset + offset.x), (float) offset.y, (float) (-zOffset + offset.z))
                 .color(255, 255, 255, alpha)
                 .texture(uOffset, vOffset * (frame - 1))
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(light)
-                .normal(normalMatrix, 0, 1, 0)
-                .next();
+                .normal(entry, 0, 1, 0);
         vertexConsumer.vertex(positionMatrix,(float) (xOffset + offset.x), (float) offset.y,(float) (zOffset + offset.z))
                 .color(255, 255, 255, alpha)
                 .texture(uOffset, vOffset * frame)
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(light)
-                .normal(normalMatrix, 0, 1, 0)
-                .next();
+                .normal(entry, 0, 1, 0);
         vertexConsumer.vertex(positionMatrix, (float) (-xOffset + offset.x),  (float) offset.y, (float) (zOffset + offset.z))
                 .color(255, 255, 255, alpha)
                 .texture(0, vOffset * frame)
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(light)
-                .normal(normalMatrix, 0, 1, 0)
-                .next();
+                .normal(entry, 0, 1, 0);
     }
 }

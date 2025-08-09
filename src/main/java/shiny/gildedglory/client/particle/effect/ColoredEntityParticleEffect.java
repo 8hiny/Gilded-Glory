@@ -14,7 +14,7 @@ public class ColoredEntityParticleEffect implements ParticleEffect {
 
     public static final ParticleEffect.Factory<ColoredEntityParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<>() {
         public ColoredEntityParticleEffect read(ParticleType<ColoredEntityParticleEffect> type, StringReader reader) throws CommandSyntaxException {
-            Vector3f color = VectorParticleEffect.readColor(reader);
+            Vector3f color = oldVectorParticleEffect.readColor(reader);
             reader.expect(' ');
             float scale = reader.readFloat();
             reader.expect(' ');
@@ -24,7 +24,7 @@ public class ColoredEntityParticleEffect implements ParticleEffect {
             return new ColoredEntityParticleEffect(type, color, entityId, scale, duration);
         }
         public ColoredEntityParticleEffect read(ParticleType<ColoredEntityParticleEffect> type, PacketByteBuf buf) {
-            return new ColoredEntityParticleEffect(type, VectorParticleEffect.readColor(buf), buf.readInt(), buf.readFloat(), buf.readInt());
+            return new ColoredEntityParticleEffect(type, oldVectorParticleEffect.readColor(buf), buf.readInt(), buf.readFloat(), buf.readInt());
         }
     };
 

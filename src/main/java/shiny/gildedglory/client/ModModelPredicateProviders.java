@@ -16,7 +16,7 @@ public class ModModelPredicateProviders {
         ModelPredicateProviderRegistry.register(
                 ModItems.AURADEUS,
                 GildedGlory.id("pull"),
-                (stack, world, entity, seed) -> entity != null && entity.getActiveItem() == stack ? (stack.getMaxUseTime() - entity.getItemUseTimeLeft()) / 20.0f : 0.0f
+                (stack, world, entity, seed) -> entity != null && entity.getActiveItem() == stack ? (stack.getMaxUseTime(entity) - entity.getItemUseTimeLeft()) / 20.0f : 0.0f
         );
         ModelPredicateProviderRegistry.register(
                 ModItems.GILDED_HORN,
@@ -36,7 +36,7 @@ public class ModModelPredicateProviders {
         ModelPredicateProviderRegistry.register(
                 ModItems.SWORDSPEAR,
                 GildedGlory.id("pull"),
-                (stack, world, entity, seed) -> entity != null && entity.getActiveItem() == stack ? (stack.getMaxUseTime() - entity.getItemUseTimeLeft()) / 20.0f : 0.0f
+                (stack, world, entity, seed) -> entity != null && entity.getActiveItem() == stack ? (stack.getMaxUseTime(entity) - entity.getItemUseTimeLeft()) / 20.0f : 0.0f
         );
         ModelPredicateProviderRegistry.register(
                 ModItems.KATANA,

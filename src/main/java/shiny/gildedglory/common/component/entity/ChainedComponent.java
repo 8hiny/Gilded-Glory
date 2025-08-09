@@ -1,11 +1,12 @@
 package shiny.gildedglory.common.component.entity;
 
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
 import shiny.gildedglory.common.registry.component.ModComponents;
 
 import java.util.UUID;
@@ -117,7 +118,7 @@ public class ChainedComponent implements TimedComponent, CommonTickingComponent,
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
         cooldown = tag.getInt("cooldown");
         progress = tag.getInt("progress");
         remainingTicks = tag.getInt("remainingTicks");
@@ -126,7 +127,7 @@ public class ChainedComponent implements TimedComponent, CommonTickingComponent,
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
         tag.putInt("cooldown", cooldown);
         tag.putInt("progress", progress);
         tag.putInt("remainingTicks", remainingTicks);

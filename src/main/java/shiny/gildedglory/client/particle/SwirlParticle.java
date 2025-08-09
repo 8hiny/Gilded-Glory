@@ -2,7 +2,7 @@ package shiny.gildedglory.client.particle;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.SimpleParticleType;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
 public class SwirlParticle extends SpriteBillboardParticle {
@@ -49,7 +49,7 @@ public class SwirlParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_LIT;
     }
 
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
+    public static class Factory implements ParticleFactory<SimpleParticleType> {
 
         private final SpriteProvider spriteProvider;
 
@@ -57,7 +57,7 @@ public class SwirlParticle extends SpriteBillboardParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(SimpleParticleType type, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
             SwirlParticle swirlParticle = new SwirlParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
             swirlParticle.setSprite(this.spriteProvider);
             return swirlParticle;

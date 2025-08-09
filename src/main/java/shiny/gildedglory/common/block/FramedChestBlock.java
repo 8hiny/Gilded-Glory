@@ -1,5 +1,6 @@
 package shiny.gildedglory.common.block;
 
+import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.*;
@@ -66,6 +67,11 @@ public class FramedChestBlock extends BlockWithEntity implements Waterloggable {
                 .with(CHEST_TYPE, ChestType.SINGLE)
                 .with(WATERLOGGED, false)
         );
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return createCodec(FramedChestBlock::new);
     }
 
     public static DoubleBlockProperties.Type getDoubleBlockType(BlockState state) {
@@ -172,17 +178,6 @@ public class FramedChestBlock extends BlockWithEntity implements Waterloggable {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasCustomName()) {
-
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof FramedChestBlockEntity) {
-                ((FramedChestBlockEntity)blockEntity).setCustomName(itemStack.getName());
-            }
-        }
-    }
-
-    @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
 
@@ -196,7 +191,7 @@ public class FramedChestBlock extends BlockWithEntity implements Waterloggable {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient()) {
             return ActionResult.SUCCESS;
         }

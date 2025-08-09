@@ -19,7 +19,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import shiny.gildedglory.common.block.entity.HeatedAnvilBlockEntity;
 import shiny.gildedglory.common.registry.block.entity.ModBlockEntities;
 import shiny.gildedglory.common.util.GildedGloryUtil;
@@ -43,7 +42,7 @@ public class HeatedAnvilBlock extends BlockWithEntity {
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return checkType(type, ModBlockEntities.HEATED_ANVIL, world.isClient() ? HeatedAnvilBlockEntity::clientTick : HeatedAnvilBlockEntity::serverTick);
     }
 
@@ -79,7 +78,7 @@ public class HeatedAnvilBlock extends BlockWithEntity {
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new HeatedAnvilBlockEntity(pos, state);
     }
 

@@ -9,7 +9,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import org.joml.Vector3f;
-import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
+import shiny.gildedglory.client.particle.effect.TestParticleEffect;
+import shiny.gildedglory.client.particle.effect.oldVectorParticleEffect;
 import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
@@ -60,7 +61,7 @@ public class ChargingParticleS2CPacket implements S2CPacket {
             Entity entity = client.world.getEntityById(this.id);
 
             if (entity != null && (!client.options.getPerspective().isFirstPerson() || player != entity) && !entity.isInvisibleTo(player)) {
-                VectorParticleEffect particle = new VectorParticleEffect(ModParticles.SQUARE, new Vector3f(this.red, this.green, this.blue), GildedGloryUtil.random(0.2f, 0.5f), 40);
+                TestParticleEffect particle = new TestParticleEffect(ModParticles.SQUARE, new Vector3f(this.red, this.green, this.blue), GildedGloryUtil.random(0.2f, 0.5f), 40);
                 client.particleManager.addParticle(particle, this.x, this.y, this.z, this.dx, this.dy, this.dz);
             }
         }

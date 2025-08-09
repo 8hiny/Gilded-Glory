@@ -1,6 +1,5 @@
 package shiny.gildedglory.common.item;
 
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -8,17 +7,18 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class FoolsArmorItem extends ArmorItem {
 
-    public FoolsArmorItem(ArmorMaterial material, Type type, Settings settings) {
+    public FoolsArmorItem(RegistryEntry<ArmorMaterial> material, Type type, Settings settings) {
         super(material, type, settings);
     }
 
@@ -26,7 +26,7 @@ public class FoolsArmorItem extends ArmorItem {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (entity instanceof LivingEntity livingEntity && hasFullSet(entity)) {
+        if (entity instanceof LivingEntity livingEntity && hasFullSet(livingEntity)) {
             livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 2, 0));
             livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 2, 1));
         }
@@ -38,7 +38,7 @@ public class FoolsArmorItem extends ArmorItem {
         return false;
     }
 
-    public static boolean hasFullSet(Entity entity) {
+    public static boolean hasFullSet(LivingEntity entity) {
         for (ItemStack item : entity.getArmorItems()) {
             if (!(item.getItem() instanceof FoolsArmorItem)) return false;
         }
@@ -56,7 +56,7 @@ public class FoolsArmorItem extends ArmorItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("tooltip.gildedglory.fools_armor_0").formatted(Formatting.GRAY));
         tooltip.add(Text.translatable("tooltip.gildedglory.fools_armor_1").formatted(Formatting.BLUE));
     }

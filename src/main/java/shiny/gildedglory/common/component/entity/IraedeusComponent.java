@@ -1,7 +1,5 @@
 package shiny.gildedglory.common.component.entity;
 
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Ownable;
@@ -10,6 +8,9 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.entity.IraedeusEntity;
 import shiny.gildedglory.common.network.ModPackets;
@@ -137,7 +138,7 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
         this.slot = tag.getInt("Slot");
 
         this.stackHolder.setStack(0, ItemStack.fromNbt(tag.getCompound("Item")));
@@ -147,7 +148,7 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
         tag.putInt("Slot", this.slot);
 
         tag.put("Item", this.stackHolder.getStack(0).copy().writeNbt(new NbtCompound()));

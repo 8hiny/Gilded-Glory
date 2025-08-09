@@ -5,7 +5,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.SimpleParticleType;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
 public class SparkleParticle extends AnimatedParticle {
@@ -31,7 +31,7 @@ public class SparkleParticle extends AnimatedParticle {
         this.repositionFromBoundingBox();
     }
 
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
+    public static class Factory implements ParticleFactory<SimpleParticleType> {
 
         private final SpriteProvider spriteProvider;
 
@@ -39,7 +39,7 @@ public class SparkleParticle extends AnimatedParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(SimpleParticleType type, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
             return new SparkleParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

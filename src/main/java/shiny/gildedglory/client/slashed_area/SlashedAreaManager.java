@@ -1,12 +1,10 @@
 package shiny.gildedglory.client.slashed_area;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import shiny.gildedglory.client.render.ModShaders;
 import shiny.gildedglory.client.render.ModRenderLayers;
 
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ public class SlashedAreaManager {
 
         Vec3d camPos = ctx.camera().getPos();
 
-        if (vertexConsumers != null) {
+        if (vertexConsumers != null && matrices != null) {
             manager.render(matrices, vertexConsumers, camPos);
         }
     }
@@ -105,15 +103,13 @@ public class SlashedAreaManager {
 
     public void vertex(MatrixStack matrices, VertexConsumer vertexConsumer, Vec3d point) {
         MatrixStack.Entry entry = matrices.peek();
-        vertexConsumer.vertex(entry.getPositionMatrix(), (float) point.x, (float) point.y, (float) point.z)
-                .next();
+        vertexConsumer.vertex(entry.getPositionMatrix(), (float) point.x, (float) point.y, (float) point.z);
     }
 
     public void vertex(MatrixStack matrices, VertexConsumer vertexConsumer, Vec3d point, float alpha) {
         MatrixStack.Entry entry = matrices.peek();
         vertexConsumer.vertex(entry.getPositionMatrix(), (float) point.x, (float) point.y, (float) point.z)
-                .color(1.0f, 1.0f, 1.0f, alpha)
-                .next();
+                .color(1.0f, 1.0f, 1.0f, alpha);
     }
 
     public void add(Vec3d center, float radius, float width, int amount, int duration) {

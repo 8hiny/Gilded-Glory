@@ -3,7 +3,6 @@ package shiny.gildedglory.common.registry.damage_type;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
 import shiny.gildedglory.GildedGlory;
 
 public class ModDamageTypes {

@@ -17,7 +17,7 @@ public class DirectionalParticle extends SpriteBillboardParticle {
 
     public DirectionalParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, VectorParticleEffect parameters, SpriteProvider spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
-
+        this.setSpriteForAge(spriteProvider);
         this.spriteProvider = spriteProvider;
 
         this.velocityX = velocityX;
@@ -25,10 +25,6 @@ public class DirectionalParticle extends SpriteBillboardParticle {
         this.velocityZ = velocityZ;
 
         this.direction = new Vec3d(parameters.getVector());
-        this.scale = parameters.getScale();
-        this.maxAge = parameters.getDuration();
-
-        this.setSpriteForAge(spriteProvider);
     }
 
     @Override
@@ -52,7 +48,7 @@ public class DirectionalParticle extends SpriteBillboardParticle {
 
         float f = this.getSize(tickDelta);
 
-        Quaternionf quaternion = new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F);
+        Quaternionf quaternion = new Quaternionf(0.0f, 0.0f, 0.0f, 1.0f);
         quaternion.mul(this.rotate(0, yaw, 0));
         quaternion.mul(this.rotate(pitch, 0, 0));
 
@@ -82,16 +78,16 @@ public class DirectionalParticle extends SpriteBillboardParticle {
         int light = this.getBrightness(tickDelta);
 
         //Top quad
-        vertexConsumer.vertex(vecUp[0].x(), vecUp[0].y(), vecUp[0].z()).texture(h, j).color(this.red, this.green, this.blue, this.alpha).light(light).next();
-        vertexConsumer.vertex(vecUp[1].x(), vecUp[1].y(), vecUp[1].z()).texture(h, i).color(this.red, this.green, this.blue, this.alpha).light(light).next();
-        vertexConsumer.vertex(vecUp[2].x(), vecUp[2].y(), vecUp[2].z()).texture(g, i).color(this.red, this.green, this.blue, this.alpha).light(light).next();
-        vertexConsumer.vertex(vecUp[3].x(), vecUp[3].y(), vecUp[3].z()).texture(g, j).color(this.red, this.green, this.blue, this.alpha).light(light).next();
+        vertexConsumer.vertex(vecUp[0].x(), vecUp[0].y(), vecUp[0].z()).texture(h, j).color(this.red, this.green, this.blue, this.alpha).light(light);
+        vertexConsumer.vertex(vecUp[1].x(), vecUp[1].y(), vecUp[1].z()).texture(h, i).color(this.red, this.green, this.blue, this.alpha).light(light);
+        vertexConsumer.vertex(vecUp[2].x(), vecUp[2].y(), vecUp[2].z()).texture(g, i).color(this.red, this.green, this.blue, this.alpha).light(light);
+        vertexConsumer.vertex(vecUp[3].x(), vecUp[3].y(), vecUp[3].z()).texture(g, j).color(this.red, this.green, this.blue, this.alpha).light(light);
 
         //Bottom quad
-        vertexConsumer.vertex(vecUp[3].x(), vecUp[3].y(), vecUp[3].z()).texture(g, j).color(this.red, this.green, this.blue, this.alpha).light(light).next();
-        vertexConsumer.vertex(vecUp[2].x(), vecUp[2].y(), vecUp[2].z()).texture(g, i).color(this.red, this.green, this.blue, this.alpha).light(light).next();
-        vertexConsumer.vertex(vecUp[1].x(), vecUp[1].y(), vecUp[1].z()).texture(h, i).color(this.red, this.green, this.blue, this.alpha).light(light).next();
-        vertexConsumer.vertex(vecUp[0].x(), vecUp[0].y(), vecUp[0].z()).texture(h, j).color(this.red, this.green, this.blue, this.alpha).light(light).next();
+        vertexConsumer.vertex(vecUp[3].x(), vecUp[3].y(), vecUp[3].z()).texture(g, j).color(this.red, this.green, this.blue, this.alpha).light(light);
+        vertexConsumer.vertex(vecUp[2].x(), vecUp[2].y(), vecUp[2].z()).texture(g, i).color(this.red, this.green, this.blue, this.alpha).light(light);
+        vertexConsumer.vertex(vecUp[1].x(), vecUp[1].y(), vecUp[1].z()).texture(h, i).color(this.red, this.green, this.blue, this.alpha).light(light);
+        vertexConsumer.vertex(vecUp[0].x(), vecUp[0].y(), vecUp[0].z()).texture(h, j).color(this.red, this.green, this.blue, this.alpha).light(light);
     }
 
     public Quaternionf rotate(float pX, float pY, float pZ) {

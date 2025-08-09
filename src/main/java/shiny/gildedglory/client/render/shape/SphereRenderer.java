@@ -45,8 +45,7 @@ public class SphereRenderer {
                         .texture(u, v)
                         .overlay(OverlayTexture.DEFAULT_UV)
                         .light(light)
-                        .normal(matrices.peek().getNormalMatrix(), nx, ny, nz)
-                        .next();
+                        .normal(matrices.peek(), nx, ny, nz);
             }
         }
     }
@@ -59,8 +58,7 @@ public class SphereRenderer {
                     .texture(1, 1)
                     .overlay(OverlayTexture.DEFAULT_UV)
                     .light(light)
-                    .normal(matrices.peek().getNormalMatrix(), 0 , 1, 0)
-                    .next();
+                    .normal(matrices.peek(), 0 , 1, 0);
         }
     }
 

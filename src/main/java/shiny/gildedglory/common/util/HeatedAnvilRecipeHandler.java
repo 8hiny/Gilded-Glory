@@ -4,10 +4,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import shiny.gildedglory.common.recipe.ForgeWeldingRecipe;
+import shiny.gildedglory.common.recipe.oldForgeWeldingRecipe;
 import shiny.gildedglory.common.recipe.SimpleRecipeInventory;
 import shiny.gildedglory.common.registry.recipe.ModRecipeTypes;
 
@@ -30,8 +33,8 @@ public class HeatedAnvilRecipeHandler {
             }
 
             if (maxCount > 0) {
-                SimpleRecipeInventory input = new SimpleRecipeInventory(ingredients);
-                ForgeWeldingRecipe recipe = getMatchingRecipe(world, input);
+                CraftingRecipeInput input = CraftingRecipeInput.create()
+                ForgeWeldingRecipe recipe = getMatchingRecipe(world, input).value();
 
                 if (recipe != null) {
                     for (ItemEntity entity : items) {
@@ -57,7 +60,7 @@ public class HeatedAnvilRecipeHandler {
         DefaultedList<ItemEntity> merged = DefaultedList.of();
 
         if (!items.isEmpty()) {
-            for (Iterator<ItemEntity> iterator = items.iterator(); iterator.hasNext(); ) {
+            for (Iterator<ItemEntity> iterator = items.iterator(); iterator.hasNext();) {
                 ItemEntity entity = iterator.next();
 
                 if (!entity.isRemoved() && !entity.getStack().isEmpty()) {
@@ -90,8 +93,8 @@ public class HeatedAnvilRecipeHandler {
         return i;
     }
 
-    public static ForgeWeldingRecipe getMatchingRecipe(World world, RecipeInputInventory inventory) {
-        Optional<ForgeWeldingRecipe> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.FORGE_WELDING, inventory, world);
+    public static RecipeEntry<ForgeWeldingRecipe> getMatchingRecipe(World world, CraftingRecipeInput input) {
+        Optional<RecipeEntry<ForgeWeldingRecipe>> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.FORGE_WELDING, input, world);
         return optional.orElse(null);
     }
 }

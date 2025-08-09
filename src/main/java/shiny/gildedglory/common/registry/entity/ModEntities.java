@@ -1,7 +1,5 @@
 package shiny.gildedglory.common.registry.entity;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
@@ -19,18 +17,18 @@ public class ModEntities {
         SLASH_PROJECTILE = Registry.register(
                 Registries.ENTITY_TYPE,
                 GildedGlory.id("slash"),
-                FabricEntityTypeBuilder.<SlashProjectileEntity>create(SpawnGroup.MISC, SlashProjectileEntity::new)
-                        .dimensions(EntityDimensions.fixed(2.4f, 0.5f))
+                EntityType.Builder.<SlashProjectileEntity>create(SlashProjectileEntity::new, SpawnGroup.MISC)
+                        .dimensions(2.4f, 0.5f)
                         .disableSaving()
-                        .fireImmune()
+                        .makeFireImmune()
                         .build()
         );
         IRAEDEUS = Registry.register(
                 Registries.ENTITY_TYPE,
                 GildedGlory.id("iraedeus"),
-                FabricEntityTypeBuilder.<IraedeusEntity>create(SpawnGroup.MISC, IraedeusEntity::new)
-                        .dimensions(EntityDimensions.fixed(1.0f, 0.5f))
-                        .fireImmune()
+                EntityType.Builder.<IraedeusEntity>create(IraedeusEntity::new, SpawnGroup.MISC)
+                        .dimensions(1.0f, 0.5f)
+                        .makeFireImmune()
                         .build()
         );
     }

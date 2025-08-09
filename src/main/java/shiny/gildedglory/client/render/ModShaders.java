@@ -2,12 +2,6 @@ package shiny.gildedglory.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import ladysnake.satin.api.event.EntitiesPostRenderCallback;
-import ladysnake.satin.api.event.ResolutionChangeCallback;
-import ladysnake.satin.api.event.ShaderEffectRenderCallback;
-import ladysnake.satin.api.managed.ManagedShaderEffect;
-import ladysnake.satin.api.managed.ShaderEffectManager;
-import ladysnake.satin.api.managed.uniform.SamplerUniformV2;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
@@ -15,6 +9,12 @@ import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Frustum;
+import org.ladysnake.satin.api.event.EntitiesPostRenderCallback;
+import org.ladysnake.satin.api.event.ResolutionChangeCallback;
+import org.ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import org.ladysnake.satin.api.managed.ManagedShaderEffect;
+import org.ladysnake.satin.api.managed.ShaderEffectManager;
+import org.ladysnake.satin.api.managed.uniform.SamplerUniformV2;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.slashed_area.SlashedAreaManager;
 

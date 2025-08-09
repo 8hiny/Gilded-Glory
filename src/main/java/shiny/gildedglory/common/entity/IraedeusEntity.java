@@ -26,6 +26,7 @@ import net.minecraft.world.event.PositionSource;
 import net.minecraft.world.event.PositionSourceType;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
+import shiny.gildedglory.client.particle.effect.oldVectorParticleEffect;
 import shiny.gildedglory.common.component.entity.IraedeusComponent;
 import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.registry.component.ModComponents;
@@ -325,7 +326,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         if (from == this) {
             rotation = this.getVelocity().normalize();
         }
-        from.getWorld().addImportantParticle(new VectorParticleEffect(ModParticles.SHOCKWAVE, rotation.toVector3f(), 3.5f, 10),
+        from.getWorld().addImportantParticle(new VectorParticleEffect(ModParticles.SHOCKWAVE, rotation.toVector3f()),
                 true, from.getX(), from.getEyeY(), from.getZ(), 0, 0, 0);
     }
 
