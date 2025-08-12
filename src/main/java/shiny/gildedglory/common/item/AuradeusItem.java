@@ -1,21 +1,22 @@
 package shiny.gildedglory.common.item;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import net.minecraft.block.*;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.component.type.ToolComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -44,33 +45,45 @@ import shiny.gildedglory.common.entity.SlashProjectileEntity;
 import shiny.gildedglory.common.registry.sound.ModSounds;
 
 import java.util.List;
-import java.util.UUID;
 
 public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomEffectsWeapon, SprintUsableItem {
 
-    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
-    protected final float miningSpeed;
-    private final float attackDamage;
+    public AuradeusItem(ToolMaterial material, Settings settings) {
+        super(material, settings.component(DataComponentTypes.TOOL, createToolComponent()));
+    }
 
-    public AuradeusItem(ToolMaterial toolMaterial, float attackDamage, float attackSpeed, Settings settings) {
-        super(toolMaterial, attackDamage, attackSpeed, settings);
+    private static ToolComponent createToolComponent() {
+        return new ToolComponent(
+                List.of(
+                        ToolComponent.Rule.ofAlwaysDropping(List.of(Blocks.COBWEB), 15.0f),
+                        ToolComponent.Rule.of(BlockTags.SWORD_EFFICIENT, 10.0f),
+                        ToolComponent.Rule.of(BlockTags.AXE_MINEABLE, 10.0f)
+                ), 1.0f, 1
+        );
+    }
 
-        this.attackDamage = attackDamage + toolMaterial.getAttackDamage();
-        this.miningSpeed = toolMaterial.getMiningSpeedMultiplier();
-        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(
-                EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", this.attackDamage, EntityAttributeModifier.Operation.ADDITION)
-        );
-        builder.put(
-                EntityAttributes.GENERIC_ATTACK_SPEED,
-                new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION)
-        );
-        builder.put(
-                ReachEntityAttributes.ATTACK_RANGE,
-                new EntityAttributeModifier(UUID.fromString("e7f37295-a925-4b70-ba00-0e25f60ea8f9"), "Weapon modifier", 0.5, EntityAttributeModifier.Operation.ADDITION)
-        );
-        this.attributeModifiers = builder.build();
+    public static AttributeModifiersComponent createAttributeModifiers(ToolMaterial material, float attackDamage, float attackSpeed, float extraRange) {
+        return AttributeModifiersComponent.builder()
+                .add(
+                        EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                        new EntityAttributeModifier(
+                                BASE_ATTACK_DAMAGE_MODIFIER_ID, attackDamage + material.getAttackDamage(), EntityAttributeModifier.Operation.ADD_VALUE
+                        ),
+                        AttributeModifierSlot.MAINHAND
+                )
+                .add(
+                        EntityAttributes.GENERIC_ATTACK_SPEED,
+                        new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, attackSpeed, EntityAttributeModifier.Operation.ADD_VALUE),
+                        AttributeModifierSlot.MAINHAND
+                )
+                .add(
+                        EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE,
+                        new EntityAttributeModifier(
+                                GildedGlory.id("base_attack_range"), extraRange, EntityAttributeModifier.Operation.ADD_VALUE
+                        ),
+                        AttributeModifierSlot.MAINHAND
+                )
+                .build();
     }
 
     @Override
@@ -78,7 +91,7 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
         ItemStack stack = user.getStackInHand(hand);
 
         if (user.getOffHandStack() == stack) {
-            return TypedActionResult.fail(stack);
+            return super.use(world, user, hand);
         }
         else {
             user.setCurrentHand(hand);
@@ -89,16 +102,14 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        boolean bl = this.getMaxUseTime(stack) - remainingUseTicks > 15;
-
-        float f = (float) user.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + 1.5f;
-        float g = EnchantmentHelper.getAttackDamage(stack, user.getGroup());
-        f += g;
+        boolean bl = this.getMaxUseTime(stack, user) - remainingUseTicks > 15;
+        boolean bl1 = EnchantmentHelper.getLevel(world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(ModEnchantments.ENMA), stack) > 0;
 
         if (!world.isClient()) {
             Vec3d pos = GildedGloryUtil.getThrowPos(user, ModEntities.SLASH_PROJECTILE);
-            SlashProjectileEntity slashEntity = new SlashProjectileEntity(world, user, pos.x, pos.y, pos.z, f, bl, EnchantmentHelper.getLevel(ModEnchantments.CHAINED, stack) > 0);
+            SlashProjectileEntity slashEntity = new SlashProjectileEntity(world, user, pos.x, pos.y, pos.z, bl, bl1);
             slashEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, bl ? 3.0f : 2.3f, 0.0f);
+            slashEntity.setItem(stack);
             world.spawnEntity(slashEntity);
 
             float pitch = GildedGloryUtil.random(0.9f, 1.1f);
@@ -110,13 +121,13 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
             playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
         }
 
-        stack.damage(1, user, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+        stack.damage(1, user, EquipmentSlot.MAINHAND);
         user.swingHand(user.getActiveHand());
     }
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (this.getMaxUseTime(stack) - remainingUseTicks == 15) {
+        if (this.getMaxUseTime(stack, user) - remainingUseTicks == 15) {
             Vec3d vec3d = user.getRotationVector();
             world.addImportantParticle(ModParticles.ALERT, true, user.getX() + vec3d.x, user.getEyeY() + vec3d.y, user.getZ() + vec3d.z, 0, 0, 0);
         }
@@ -124,13 +135,13 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damage(1, attacker, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+        stack.damage(1, attacker, EquipmentSlot.MAINHAND);
         return true;
     }
 
     @Override
-    public CustomAttackData onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount) {
-        if (EnchantmentHelper.getLevel(ModEnchantments.CHAINED, stack) > 0 && target instanceof LivingEntity livingEntity) {
+    public AttackContext onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount) {
+        if (EnchantmentHelper.getLevel(attacker.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(ModEnchantments.ENMA), stack) > 0 && target instanceof LivingEntity livingEntity) {
             ChainedComponent attackerComponent = ModComponents.CHAINED.get(attacker);
             ChainedComponent targetComponent = ModComponents.CHAINED.get(target);
 
@@ -144,11 +155,11 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
                 }
             }
         }
-        return new CustomAttackData(stack, attacker, target, source, amount, true);
+        return new AttackContext(stack, attacker, target, source, amount, true);
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack) {
+    public int getMaxUseTime(ItemStack stack, LivingEntity user) {
         return 72000;
     }
 
@@ -158,29 +169,8 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
-    }
-
-    @Override
-    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
-        if (state.isOf(Blocks.COBWEB)) {
-            return 15.0f;
-        }
-        else if (state.isIn(BlockTags.SWORD_EFFICIENT) || state.isIn(BlockTags.AXE_MINEABLE)) {
-            return 10.0f;
-        }
-        return 1.0f;
-    }
-
-    @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
         return !miner.isCreative();
-    }
-
-    @Override
-    public boolean isSuitableFor(BlockState state) {
-        return state.isOf(Blocks.COBWEB) || state.isIn(BlockTags.SWORD_EFFICIENT) || state.isIn(BlockTags.AXE_MINEABLE);
     }
 
     @Override
@@ -189,23 +179,18 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("tooltip.gildedglory.auradeus").formatted(Formatting.GRAY));
     }
 
     @Override
-    public float getAttackDamage() {
-        return this.attackDamage;
-    }
-
-    @Override
-    public DefaultParticleType getAttackParticle(ItemStack stack) {
+    public SimpleParticleType getAttackParticle(ItemStack stack) {
         if (Math.random() <= 0.5) return ModParticles.TWISTEEL_SLASH;
         return ModParticles.GOLD_SLASH;
     }
 
     @Override
-    public DefaultParticleType getCritAttackParticle(ItemStack stack) {
+    public SimpleParticleType getCritAttackParticle(ItemStack stack) {
         if (Math.random() <= 0.5) return ModParticles.TWISTEEL_VERTICAL_SLASH;
         return ModParticles.GOLD_VERTICAL_SLASH;
     }
@@ -223,5 +208,10 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     @Override
     public ArmPose getOffHandPose(LivingEntity holder, ItemStack stack) {
         return holder.getActiveItem() == stack ? CustomArmPoses.SIDEWAYS_CHARGING : CustomEffectsWeapon.super.getOffHandPose(holder, stack);
+    }
+
+    @Override
+    public boolean hideOffHandItem(LivingEntity holder, ItemStack stack) {
+        return holder.isUsing(this);
     }
 }

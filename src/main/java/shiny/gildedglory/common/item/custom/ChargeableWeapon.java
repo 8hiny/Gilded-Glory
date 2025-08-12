@@ -3,6 +3,8 @@ package shiny.gildedglory.common.item.custom;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.MathHelper;
+import shiny.gildedglory.common.registry.data_component.ModComponentTypes;
 
 /**
  * An interface for items which can hold charge.
@@ -22,13 +24,24 @@ public interface ChargeableWeapon {
      */
     boolean offHandUsable();
 
+    /**
+     * Returns whether the weapon gains charge while being used.
+     */
+    boolean chargeWhileUsing();
+
+    /**
+     * Returns whether the weapon's charge value is only set once stopped using.
+     */
+    default boolean chargeSetOnStoppedUsing() {
+        return false;
+    }
+
     static void setCharge(ItemStack stack, int charge) {
         if (stack.getItem() instanceof ChargeableWeapon weapon) {
-            charge = Math.max(weapon.getMinCharge(), Math.min(charge, weapon.getMaxCharge()));
+            charge = MathHelper.clamp(charge, weapon.getMinCharge(), weapon.getMaxCharge());
 
-            NbtCompound tag = stack.getOrCreateNbt();
-            if (charge > weapon.getMinCharge()) tag.putInt("gildedglory:charge", charge);
-            else tag.remove("gildedglory:charge");
+            if (charge > weapon.getMinCharge()) stack.set(ModComponentTypes.CHARGE, charge);
+            else stack.remove(ModComponentTypes.CHARGE);
         }
     }
 
@@ -37,8 +50,8 @@ public interface ChargeableWeapon {
     }
 
     static int getCharge(ItemStack stack) {
-        NbtCompound tag = stack.getNbt();
-        return tag != null ? tag.getInt("gildedglory:charge") : 0;
+        Integer i = stack.get(ModComponentTypes.CHARGE);
+        return i != null ? i : 0;
     }
 
     /**
@@ -71,7 +84,8 @@ public interface ChargeableWeapon {
     }
 
     static boolean hasCharge(LivingEntity holder) {
-        return get(holder) != null && hasCharge(get(holder));
+        ItemStack stack = get(holder);
+        return stack != null && hasCharge(stack);
     }
 
     /**

@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 ///An interface which can be implemented by other Item classes, which allows them to add additional functionality to melee attacks.
 public interface CustomAttackWeapon {
 
-    CustomAttackData onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount);
+    AttackContext onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount);
 
-    record CustomAttackData(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount, boolean successful) {
+    record AttackContext(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount, boolean successful) {
     }
 }

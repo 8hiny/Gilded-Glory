@@ -18,8 +18,8 @@ import shiny.gildedglory.client.particle.*;
 import shiny.gildedglory.client.particle.custom.SimpleColoredParticle;
 import shiny.gildedglory.client.render.ModShaderPrograms;
 import shiny.gildedglory.client.render.entity.IraedeusEntityRenderer;
-import shiny.gildedglory.client.slashed_area.SlashedAreaManager;
 import shiny.gildedglory.client.sound.DynamicSounds;
+import shiny.gildedglory.common.network.ModNetworking;
 import shiny.gildedglory.common.registry.block.ModBlocks;
 import shiny.gildedglory.common.registry.block.entity.ModBlockEntities;
 import shiny.gildedglory.common.registry.entity.ModEntities;
@@ -55,10 +55,14 @@ public class GildedGloryClient implements ClientModInitializer {
        registerModParticles();
        registerModRenderers();
        registerModKeybinds();
-       registerCustomRenderers();
+
+       ClientEvents.registerWorldRenderEvents();
+       ClientEvents.registerHudRenderEvents();
+
        ModShaders.getInstance().init();
        CustomArmPoses.registerCustomArmPoses();
        DynamicSounds.registerDynamicSounds();
+       ModNetworking.registerModClientReceivers();
 
        ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::clientTick);
    }
@@ -76,7 +80,7 @@ public class GildedGloryClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(SHOCKWAVE, ShockwaveParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(SQUARE, SquareParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(SHINE, SimpleColoredParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(SHINE_ANIMATED, EntityShineParticle.Factory::new);
+        //ParticleFactoryRegistry.getInstance().register(SHINE_ANIMATED, EntityShineParticle.Factory::new);
     }
 
     public static void registerModRenderers() {
@@ -100,9 +104,5 @@ public class GildedGloryClient implements ClientModInitializer {
     public static void registerModKeybinds() {
        returnIraedeus = KeyBindingHelper.registerKeyBinding(new KeyBinding("keybind.gildedglory.iraedeus_return", InputUtil.UNKNOWN_KEY.getCode(), "key.categories.gildedglory"));
         targetIraedeus = KeyBindingHelper.registerKeyBinding(new KeyBinding("keybind.gildedglory.iraedeus_target", InputUtil.UNKNOWN_KEY.getCode(), "key.categories.gildedglory"));
-    }
-
-    public static void registerCustomRenderers() {
-       WorldRenderEvents.AFTER_ENTITIES.register(SlashedAreaManager::renderTick);
     }
 }

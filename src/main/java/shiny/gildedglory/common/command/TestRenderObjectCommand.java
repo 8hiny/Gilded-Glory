@@ -2,13 +2,13 @@ package shiny.gildedglory.common.command;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.Vec3ArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import shiny.gildedglory.common.network.ModPackets;
-import shiny.gildedglory.common.network.TestRenderS2CPacket;
+import shiny.gildedglory.common.network.TestRenderPayload;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class TestRenderObjectCommand {
         ServerPlayerEntity player = source.getPlayer();
 
         if (player != null) {
-            ModPackets.GILDED_GLORY_CHANNEL.sendToClient(new TestRenderS2CPacket(pos, false), player);
+            ServerPlayNetworking.send(player, new TestRenderPayload(pos, false));
             return 1;
         }
         return 0;
@@ -50,7 +50,7 @@ public class TestRenderObjectCommand {
         ServerPlayerEntity player = source.getPlayer();
 
         if (player != null) {
-            ModPackets.GILDED_GLORY_CHANNEL.sendToClient(new TestRenderS2CPacket(Vec3d.ZERO, true), player);
+            ServerPlayNetworking.send(player, new TestRenderPayload(Vec3d.ZERO, true));
             return 1;
         }
         return 0;

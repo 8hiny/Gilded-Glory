@@ -1,12 +1,14 @@
 package shiny.gildedglory.common.item;
 
 import net.minecraft.advancement.criterion.Criteria;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -14,7 +16,6 @@ import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.utility.TextUtils;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public class ConsumableItem extends Item {
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack) {
+    public int getMaxUseTime(ItemStack stack, LivingEntity user) {
         return this.maxUseTime;
     }
 
@@ -74,9 +75,12 @@ public class ConsumableItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
         //This currently only works when farmer's delight is installed, if I add compat items from other mods I'll have to write this method myself
-        if (!stack.getItem().getFoodComponent().getStatusEffects().isEmpty()) TextUtils.addFoodEffectTooltip(stack, tooltip, 1.0f);
+        FoodComponent component = stack.getItem().getComponents().get(DataComponentTypes.FOOD);
+        if (component != null && !component.effects().isEmpty()) {
+            TextUtils.addFoodEffectTooltip(stack, tooltip::add, 1.0f, context.getUpdateTickRate());
+        }
     }
 
     public boolean isDrink() {

@@ -20,6 +20,5 @@ public class ModRecipeTypes {
     }
 
     public static void registerModRecipeTypes() {
-
     }
 }

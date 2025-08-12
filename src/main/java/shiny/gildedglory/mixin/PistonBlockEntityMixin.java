@@ -19,7 +19,7 @@ import shiny.gildedglory.common.util.HeatedAnvilRecipeHandler;
 @Mixin(PistonBlockEntity.class)
 public abstract class PistonBlockEntityMixin {
 
-    @Unique private static DefaultedList<ItemEntity> ingredients = DefaultedList.of();
+    @Unique private static final DefaultedList<ItemEntity> ingredients = DefaultedList.of();
 
     @WrapWithCondition(method = "pushEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/PistonBlockEntity;moveEntity(Lnet/minecraft/util/math/Direction;Lnet/minecraft/entity/Entity;DLnet/minecraft/util/math/Direction;)V"))
     private static boolean gildedglory$getIntersectingItems(Direction direction, Entity entity, double distance, Direction movementDirection) {

@@ -37,8 +37,13 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
         if (stack != null) {
             ArmPose mainPose = ((CustomEffectsWeapon) stack.getItem()).getMainHandPose(entity, stack);
             ArmPose otherPose = ((CustomEffectsWeapon) stack.getItem()).getMainHandPose(entity, stack);
-            CustomArmPosing.positionLeftArm(entity, otherPose, this.leftArm, this.head.pitch, this.head.yaw, this.body.pitch, this.body.yaw, entity.getMainArm() == Arm.LEFT);
-            CustomArmPosing.positionRightArm(entity, mainPose, this.rightArm, this.head.pitch, this.head.yaw, this.body.pitch, this.body.yaw, entity.getMainArm() == Arm.LEFT);
+
+            if (mainPose.value() != ArmPose.Value.EMPTY) {
+                CustomArmPosing.positionLeftArm(entity, otherPose, this.leftArm, this.head.pitch, this.head.yaw, this.body.pitch, this.body.yaw, entity.getMainArm() == Arm.LEFT);
+            }
+            if (otherPose.value() != ArmPose.Value.EMPTY) {
+                CustomArmPosing.positionRightArm(entity, mainPose, this.rightArm, this.head.pitch, this.head.yaw, this.body.pitch, this.body.yaw, entity.getMainArm() == Arm.LEFT);
+            }
 
             this.preventLimbSwing = (mainPose instanceof CustomArmPose && ((CustomArmPose) mainPose).preventLimbSwing())
                     || (otherPose instanceof CustomArmPose && ((CustomArmPose) otherPose).preventLimbSwing());

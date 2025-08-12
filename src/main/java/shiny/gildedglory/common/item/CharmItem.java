@@ -1,20 +1,19 @@
 package shiny.gildedglory.common.item;
 
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import shiny.gildedglory.common.registry.data_component.ModComponentTypes;
 import shiny.gildedglory.common.registry.item.ModItems;
 
 import java.util.List;
@@ -23,8 +22,6 @@ import java.util.UUID;
 public class CharmItem extends Item {
 
     //TODO Add more uses for this
-
-    private static final String OWNER_KEY = "gildedglory:owner";
 
     public CharmItem(Settings settings) {
         super(settings);
@@ -39,7 +36,7 @@ public class CharmItem extends Item {
             return TypedActionResult.success(stack);
         }
         else if (!user.isSneaking() && !hasOwner(stack)){
-            setOwner(stack, user.getEntityName(), user.getUuid());
+            setOwner(stack, user);
             return TypedActionResult.success(stack);
         }
         return TypedActionResult.fail(stack);
@@ -57,48 +54,31 @@ public class CharmItem extends Item {
         }
     }
 
-    public static void setOwner(ItemStack stack, String name, UUID uuid) {
-        NbtCompound nbt = stack.getOrCreateNbt();
-        NbtCompound owner = new NbtCompound();
-
-        owner.putString("Name", name);
-        owner.putUuid("Uuid", uuid);
-        nbt.put(OWNER_KEY, owner);
-        stack.setNbt(nbt);
+    public static void setOwner(ItemStack stack, Entity owner) {
+        stack.set(ModComponentTypes.OWNER_NAME, owner.getDisplayName().getString());
+        stack.set(ModComponentTypes.OWNER_UUID, owner.getUuid());
     }
 
     public static void clearOwner(ItemStack stack) {
-        NbtCompound nbt = stack.getNbt();
-        if (nbt != null) {
-            NbtCompound nbtCompound = nbt.getCompound(OWNER_KEY);
-
-            nbtCompound.remove("Name");
-            nbtCompound.remove("Uuid");
-            stack.setNbt(nbtCompound);
-        }
+        stack.remove(ModComponentTypes.OWNER_UUID);
+        stack.remove(ModComponentTypes.OWNER_NAME);
     }
 
     public static boolean hasOwner(ItemStack stack) {
-        return stack.getNbt() != null && stack.getNbt().contains(OWNER_KEY);
+        return stack.contains(ModComponentTypes.OWNER_UUID);
     }
 
     public static boolean isOwner(ItemStack stack, Entity entity) {
-        return stack.getNbt() != null && hasOwner(stack) && getOwnerUUID(stack) != null && entity.getUuid().equals(getOwnerUUID(stack));
-        //if the above stops working again, remove the hasOwner check, but fix the crash it involves
+        return getOwnerUUID(stack) != null && entity.getUuid().equals(getOwnerUUID(stack));
     }
 
     public static UUID getOwnerUUID(ItemStack stack) {
-        if (stack.getNbt() == null || !hasOwner(stack)) return null;
-        return stack.getNbt().getCompound(OWNER_KEY).getUuid("Uuid");
+        return stack.get(ModComponentTypes.OWNER_UUID);
     }
 
     public static String getOwnerName(ItemStack stack) {
-        NbtCompound nbt = stack.getNbt();
-        if (nbt != null) {
-            NbtCompound owner = nbt.getCompound(OWNER_KEY);
-            return owner.getString("Name");
-        }
-        else return "";
+        String name = stack.get(ModComponentTypes.OWNER_NAME);
+        return name != null ? name : "";
     }
 
     public static boolean hasOwnedCharm(PlayerEntity holder) {
@@ -119,7 +99,7 @@ public class CharmItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("tooltip.gildedglory.charm_0").formatted(Formatting.GRAY));
         if (hasOwner(stack)) {
             tooltip.add(Text.translatable("tooltip.gildedglory.charm_1").formatted(Formatting.GRAY).append(Text.literal(getOwnerName(stack)).setStyle(Style.EMPTY.withColor(0xCC495C))));

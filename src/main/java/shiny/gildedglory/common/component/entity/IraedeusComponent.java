@@ -1,5 +1,6 @@
 package shiny.gildedglory.common.component.entity;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Ownable;
@@ -13,9 +14,7 @@ import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.entity.IraedeusEntity;
-import shiny.gildedglory.common.network.ModPackets;
-import shiny.gildedglory.common.network.UpdateTargetingC2SPacket;
-import shiny.gildedglory.common.network.UpdateReturningC2SPacket;
+import shiny.gildedglory.common.network.UpdateIraedeusStatusPayload;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.util.GildedGloryUtil;
@@ -52,11 +51,11 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
             if (component.targetCooldown > 0) component.targetCooldown--;
 
             if (targeting != component.targeting) {
-                ModPackets.GILDED_GLORY_CHANNEL.sendToServer(new UpdateTargetingC2SPacket(targeting));
+                ClientPlayNetworking.send(new UpdateIraedeusStatusPayload(targeting, false));
                 component.targeting = targeting;
             }
             if (returning != component.returning) {
-                ModPackets.GILDED_GLORY_CHANNEL.sendToServer(new UpdateReturningC2SPacket(returning));
+                ClientPlayNetworking.send(new UpdateIraedeusStatusPayload(returning, true));
                 component.returning = returning;
             }
         });
@@ -80,7 +79,7 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
 //                this.summoned = false;
 //                this.setStack(ItemStack.EMPTY);
 //            }
-//            else if (this.returning) {
+//            else if (this.targeting) {
 //                this.returnStack();
 //            }
 //        }
@@ -133,7 +132,7 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
         this.iraedeusId = null;
         this.summoned = false;
         this.targetCooldown = 0;
-        this.stackHolder.removeStack(0);
+        //this.stackHolder.removeStack(0);
         ModComponents.IRAEDEUS.sync(this.provider);
     }
 
@@ -141,7 +140,7 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
     public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
         this.slot = tag.getInt("Slot");
 
-        this.stackHolder.setStack(0, ItemStack.fromNbt(tag.getCompound("Item")));
+        //this.stackHolder.setStack(0, ItemStack.fromNbt(wrapperLookup, tag.getCompound("Item")).orElseGet(this::getStack));
         this.summoned = tag.getBoolean("IsSummoned");
         if (tag.contains("Entity")) this.iraedeusId = tag.getUuid("Entity");
         this.targetCooldown = tag.getInt("TargetCooldown");
@@ -151,12 +150,12 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
     public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
         tag.putInt("Slot", this.slot);
 
-        tag.put("Item", this.stackHolder.getStack(0).copy().writeNbt(new NbtCompound()));
+        //tag.put("Item", this.stackHolder.getStack(0).copy().encode(wrapperLookup));
         tag.putBoolean("IsSummoned", this.summoned);
         if (this.iraedeusId != null) tag.putUuid("Entity", this.iraedeusId);
 
         //GOD THIS STUPID ISSUE (the ItemStack inside this component SOMEHOW decided to DELETE ITSELF FOR NO REASON RIGHT HERE SO I HAVE TO RESET IT TO ITSELF)
-        this.stackHolder.setStack(0, ItemStack.fromNbt(tag.getCompound("Item")));
+        //this.stackHolder.setStack(0, ItemStack.fromNbt(wrapperLookup, tag.getCompound("Item")).orElseGet(this::getStack));
         tag.putInt("TargetCooldown", this.targetCooldown);
     }
 
@@ -190,7 +189,7 @@ public class IraedeusComponent implements AutoSyncedComponent, ServerTickingComp
                 return GildedGloryUtil.raycastSingle(this.provider,
                         livingEntity -> livingEntity != this.provider
                                 && !(livingEntity instanceof Ownable ownable && ownable.getOwner() == this.provider),
-                        this.provider.getRotationVector(), 0.6f, 48, true);
+                        this.provider.getRotationVector(), 0.45f, 48, true);
             }
         }
         return null;

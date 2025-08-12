@@ -29,7 +29,7 @@ public class CustomArmPoses {
             },
             false
     ));
-    public static CustomArmPose FORWARDS_CHARGING = register("forwards_charging", new CustomArmPose(
+    public static CustomArmPose FORWARDS_BLOCKING = register("forwards_blocking", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.pitch = Math.min(ctx.headPitch() + 80.0f, 80.77f);
             },
@@ -37,6 +37,19 @@ public class CustomArmPoses {
                 rightArm.pitch = Math.min(ctx.headPitch() + 80.0f, 80.77f);
             },
             false
+    ));
+    public static CustomArmPose FORWARDS_AIMING = register("forwards_aiming", new CustomArmPose(
+            (leftArm, ctx) -> {
+                leftArm.yaw = 0.4f + ctx.headYaw();
+                leftArm.pitch = (float) (-Math.PI / 2) + ctx.headPitch();
+                leftArm.roll = ctx.headPitch() / 4;
+            },
+            (rightArm, ctx) -> {
+                rightArm.yaw = -0.4f + ctx.headYaw();
+                rightArm.pitch = (float) (-Math.PI / 2) + ctx.headPitch();
+                rightArm.roll = -ctx.headPitch() / 4;
+            },
+            true
     ));
     public static CustomArmPose BACKWARDS_HOLDING = register("backwards_holding", new CustomArmPose(
             (leftArm, ctx) -> {
@@ -50,21 +63,6 @@ public class CustomArmPoses {
                 rightArm.roll = 0.3f;
             },
             false
-    ));
-
-    //TODO Fix the below pose aiming the arms outwards when facing up or down (looks especially bad with the beam cause it's so long)
-    public static CustomArmPose FORWARDS_AIMING = register("forwards_aiming", new CustomArmPose(
-            (leftArm, ctx) -> {
-                leftArm.yaw = 0.4f - ctx.headPitch();
-                leftArm.pitch = (float) (-Math.PI / 2) + ctx.headPitch();
-                leftArm.roll = 0.0f;
-            },
-            (rightArm, ctx) -> {
-                rightArm.yaw = -0.4f - ctx.headPitch();
-                rightArm.pitch = (float) (-Math.PI / 2) + ctx.headPitch();
-                rightArm.roll = 0.0f;
-            },
-            true
     ));
 
     public static CustomArmPose register(String name, CustomArmPose pose) {

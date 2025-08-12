@@ -104,7 +104,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         ItemStack stack = this.getMainHandStack();
 
         if (!target.isInvulnerableTo(source) && this.attackCooldownProgress > 0.8f && stack.getItem() instanceof CustomAttackWeapon weapon) {
-            CustomAttackWeapon.CustomAttackData attack = weapon.onAttack(stack, this, target, source, amount);
+            CustomAttackWeapon.AttackContext attack = weapon.onAttack(stack, this, target, source, amount);
 
             if (attack.successful()) {
                 return original.call(attack.target(), attack.source(), attack.amount());

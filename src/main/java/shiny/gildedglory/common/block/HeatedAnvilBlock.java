@@ -1,5 +1,6 @@
 package shiny.gildedglory.common.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -42,8 +43,13 @@ public class HeatedAnvilBlock extends BlockWithEntity {
     }
 
     @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
+    }
+
+    @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, ModBlockEntities.HEATED_ANVIL, world.isClient() ? HeatedAnvilBlockEntity::clientTick : HeatedAnvilBlockEntity::serverTick);
+        return validateTicker(type, ModBlockEntities.HEATED_ANVIL, world.isClient() ? HeatedAnvilBlockEntity::clientTick : HeatedAnvilBlockEntity::serverTick);
     }
 
     @Override
@@ -91,11 +97,6 @@ public class HeatedAnvilBlock extends BlockWithEntity {
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
-
-    @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-        return false;
     }
 
     @Override

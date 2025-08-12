@@ -27,16 +27,29 @@ public class ModRenderLayers extends RenderLayer {
                 return of("gildedglory:beam", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 256, false, true, multiPhaseParameters);
             }
     );
+    private static final BiFunction<Identifier, Boolean, RenderLayer> ENTITY_TRANSLUCENT_GLOWING = Util.memoize(
+            (texture, affectsOutline) -> {
+                MultiPhaseParameters multiPhaseParameters = MultiPhaseParameters.builder()
+                        .program(ENTITY_TRANSLUCENT_EMISSIVE_PROGRAM)
+                        .texture(new RenderPhase.Texture(texture, false, false))
+                        .transparency(LIGHTNING_TRANSPARENCY)
+                        .cull(DISABLE_CULLING)
+                        .writeMaskState(ALL_MASK)
+                        .overlay(DISABLE_OVERLAY_COLOR)
+                        .build(false);
+                return of("gildedglory:entity_translucent_glowing", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 1536, false, true, multiPhaseParameters);
+            }
+    );
     private static final BiFunction<Identifier, Boolean, RenderLayer> SLASH = Util.memoize(
             (texture, affectsOutline) -> {
                 MultiPhaseParameters multiPhaseParameters = MultiPhaseParameters.builder()
-                        .program(ENTITY_TRANSLUCENT_CULL_PROGRAM)
+                        .program(ENTITY_TRANSLUCENT_EMISSIVE_PROGRAM)
                         .texture(new Texture(texture, false, false))
-                        .transparency(LIGHTNING_TRANSPARENCY)
+                        .transparency(NO_TRANSPARENCY)
                         .cull(DISABLE_CULLING)
-                        .lightmap(ENABLE_LIGHTMAP)
+                        .lightmap(DISABLE_LIGHTMAP)
                         .build(false);
-                return of("gildedglory:slash", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 256, false, true, multiPhaseParameters);
+                return of("gildedglory:slash", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 256, false, false, multiPhaseParameters);
             }
     );
     private static final BiFunction<Identifier, Boolean, RenderLayer> SPHERE_TRANSLUCENT = Util.memoize(
@@ -72,7 +85,7 @@ public class ModRenderLayers extends RenderLayer {
             VertexFormats.POSITION,
             VertexFormat.DrawMode.QUADS,
             256,
-            false, true,
+            false, false,
             MultiPhaseParameters.builder()
                     .lightmap(DISABLE_LIGHTMAP)
                     .program(MIRROR_PROGRAM)
@@ -88,6 +101,10 @@ public class ModRenderLayers extends RenderLayer {
 
     public static RenderLayer getBeam(Identifier texture, boolean inner) {
         return BEAM.apply(texture, inner);
+    }
+
+    public static RenderLayer getEntityTranslucentGlowing(Identifier texture) {
+        return ENTITY_TRANSLUCENT_GLOWING.apply(texture, false);
     }
 
     public static RenderLayer getSlash(Identifier texture) {

@@ -41,8 +41,7 @@ public class ModParticles {
 
 
 
-    public static final ParticleType<oldVectorParticleEffect> SHINE = register("shine", FabricParticleTypes.complex(true, oldVectorParticleEffect.PARAMETERS_FACTORY));
-    public static final ParticleType<ColoredEntityParticleEffect> SHINE_ANIMATED = register("shine_animated", FabricParticleTypes.complex(true, ColoredEntityParticleEffect.PARAMETERS_FACTORY));
+    //public static final ParticleType<ColoredEntityParticleEffect> SHINE_ANIMATED = register("shine_animated", FabricParticleTypes.complex(true, ColoredEntityParticleEffect.PARAMETERS_FACTORY));
 
     private static SimpleParticleType register(String name) {
         return Registry.register(Registries.PARTICLE_TYPE, GildedGlory.id(name), FabricParticleTypes.simple());

@@ -1,33 +1,43 @@
 package shiny.gildedglory.common.registry.item;
 
+import com.google.common.base.Suppliers;
+import net.minecraft.block.Block;
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.Lazy;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 
 import java.util.function.Supplier;
 
 public enum ModToolMaterials implements ToolMaterial {
 
-    TWISTEEL(4, 1800, 9.0f, 4.0f, 15, () -> Ingredient.ofItems(ModItems.TWISTEEL_INGOT)),
-    GLOOMETAL(4, 1600, 10.0f, 4.0f, 18, () -> Ingredient.ofItems(ModItems.GLOOMETAL_INGOT)),
-    FOOLS_GOLD(1, 200, 11.0f, 1.0f, 20, () -> Ingredient.ofItems(ModItems.FOOLS_GOLD_INGOT)),
-    SWORDSPEAR(2, 1400, 12.0f, 4.0f, 22, () -> Ingredient.ofItems(Items.GOLD_INGOT));
+    TWISTEEL(BlockTags.INCORRECT_FOR_NETHERITE_TOOL,1800, 9.0f, 4.0f, 15, () -> Ingredient.ofItems(ModItems.TWISTEEL_INGOT)),
+    GLOOMETAL(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 1600, 10.0f, 4.0f, 18, () -> Ingredient.ofItems(ModItems.GLOOMETAL_INGOT)),
+    FOOLS_GOLD(BlockTags.INCORRECT_FOR_GOLD_TOOL, 200, 11.0f, 1.0f, 20, () -> Ingredient.ofItems(ModItems.FOOLS_GOLD_INGOT)),
+    SWORDSPEAR(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 1400, 12.0f, 4.0f, 22, () -> Ingredient.ofItems(Items.GOLD_INGOT));
 
-    private final int miningLevel;
+    private final TagKey<Block> inverseTag;
     private final int itemDurability;
     private final float miningSpeed;
     private final float attackDamage;
     private final int enchantability;
-    private final Lazy<Ingredient> repairIngredient;
+    private final Supplier<Ingredient> repairIngredient;
 
-    ModToolMaterials(int miningLevel, int itemDurability, float miningSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
-        this.miningLevel = miningLevel;
+    private ModToolMaterials(
+            final TagKey<Block> inverseTag,
+            final int itemDurability,
+            final float miningSpeed,
+            final float attackDamage,
+            final int enchantability,
+            final Supplier<Ingredient> repairIngredient
+    ) {
+        this.inverseTag = inverseTag;
         this.itemDurability = itemDurability;
         this.miningSpeed = miningSpeed;
         this.attackDamage = attackDamage;
         this.enchantability = enchantability;
-        this.repairIngredient = new Lazy<>(repairIngredient);
+        this.repairIngredient = Suppliers.memoize(repairIngredient::get);
     }
 
     @Override
@@ -46,8 +56,8 @@ public enum ModToolMaterials implements ToolMaterial {
     }
 
     @Override
-    public int getMiningLevel() {
-        return this.miningLevel;
+    public TagKey<Block> getInverseTag() {
+        return this.inverseTag;
     }
 
     @Override
@@ -57,6 +67,6 @@ public enum ModToolMaterials implements ToolMaterial {
 
     @Override
     public Ingredient getRepairIngredient() {
-        return this.repairIngredient.get();
+        return (Ingredient)this.repairIngredient.get();
     }
 }

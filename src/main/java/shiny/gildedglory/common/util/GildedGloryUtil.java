@@ -1,12 +1,13 @@
 package shiny.gildedglory.common.util;
 
-import me.pepperbell.simplenetworking.S2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -20,10 +21,10 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.sound.DynamicSounds;
-import shiny.gildedglory.common.network.ChargingParticleS2CPacket;
-import shiny.gildedglory.common.network.ItemUseSoundS2CPacket;
-import shiny.gildedglory.common.network.ModPackets;
+import shiny.gildedglory.common.network.ChargingParticlePayload;
+import shiny.gildedglory.common.network.ItemUseSoundPayload;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,21 +63,21 @@ public class GildedGloryUtil {
     //TODO prevent this method from infinitely accelerating two entities towards eachother (chains bug)
     /**
      * Limits a vector such that it does not point more than a certain amount away from a position.
-     * If the vector's origin position is outside the allowed range, the vector points towards the target position, multiplied by the distance to it.
+     * If the vector's origin position is outside the allowed range, the vector points towards the target position, multiplied by the range to it.
      * @param originPos The position from which the velocity originates
      * @param targetPos The position which is compared to
-     * @param distance The radius from targetPos wherein the velocity may remain unchanged
+     * @param range The radius from targetPos wherein the velocity may remain unchanged
      */
-    public static Vec3d adjustVelocity(Vec3d originPos, Vec3d targetPos, Vec3d velocity, double distance) {
+    public static Vec3d adjustVelocity(Vec3d originPos, Vec3d targetPos, Vec3d velocity, double range) {
         Vec3d nextPos = originPos.add(velocity);
         double nextDist = nextPos.distanceTo(targetPos);
 
-        if (nextDist > distance) {
+        if (nextDist > range) {
             Vec3d direction = nextPos.subtract(targetPos).normalize();
-            Vec3d boundary = targetPos.add(direction.multiply(distance));
+            Vec3d boundary = targetPos.add(direction.multiply(range));
 
             velocity = boundary.subtract(originPos);
-            if (nextDist - distance > 3.0) velocity = velocity.multiply(1 / (nextDist - distance)).normalize();
+            if (nextDist - range > 3.0) velocity = velocity.multiply(1 / (nextDist - range)).normalize();
         }
         return velocity;
     }
@@ -107,10 +108,10 @@ public class GildedGloryUtil {
      */
     public static void playLoopingSound(World world, Entity user, Identifier sound) {
         if (world.isClient() && user instanceof PlayerEntity) {
-            DynamicSoundManager.getInstance().play(DynamicSounds.get(sound, (DynamicSoundSource) user));
+            DynamicSoundManager.getInstance().play(DynamicSounds.get(sound, user));
         }
         else {
-            sendSoundPackets(world, user, user, sound);
+            sendSoundPayload(world, user, user, sound);
         }
     }
 
@@ -119,9 +120,9 @@ public class GildedGloryUtil {
      * @param user The entity from which the sound is played
      * @param sound The looping sound to be played
      */
-    public static void sendSoundPackets(World world, Entity user, Entity exclude, Identifier sound) {
-        ItemUseSoundS2CPacket packet = new ItemUseSoundS2CPacket(user.getId(), sound);
-        sendPackets(packet, world, user, exclude);
+    public static void sendSoundPayload(World world, Entity user, Entity exclude, Identifier sound) {
+        ItemUseSoundPayload payload = new ItemUseSoundPayload(user.getId(), sound);
+        sendPayloadToTracking(payload, world, user, exclude);
     }
 
     /**
@@ -131,31 +132,27 @@ public class GildedGloryUtil {
      * @param dy The velocity of the particle on the y axis
      * @param dz The velocity of the particle on the z axis
      */
-    public static void sendChargingParticlePackets(World world, Entity source, Vector3f color, float dx, float dy, float dz) {
-        ChargingParticleS2CPacket packet = new ChargingParticleS2CPacket(
+    public static void sendChargingParticlePayload(World world, Entity source, Vector3f color, double dx, double dy, double dz) {
+        ChargingParticlePayload payload = new ChargingParticlePayload(
                 source.getId(),
-                color.x,
-                color.y,
-                color.z,
-                (float) source.getParticleX(1.0),
-                (float) source.getRandomBodyY(),
-                (float) source.getParticleZ(1.0),
-                dx, dy, dz
+                new Vec3d(source.getParticleX(1.0), source.getRandomBodyY(), source.getParticleZ(1.0)),
+                new Vec3d(dx, dy, dz),
+                color
         );
-        sendPackets(packet, world, source, null);
+        sendPayloadToTracking(payload, world, source, null);
     }
 
     /**
-     * Sends packets from an entity to any players currently tracking that entity.
-     * @param exclude The entity to exclude from receiving the packet if it is a player
+     * Sends payloads from an entity to any players currently tracking that entity.
+     * @param exclude The player to exclude from receiving the packet
      */
-    public static <T extends S2CPacket> void sendPackets(T packet, World world, Entity sender, @Nullable Entity exclude) {
+    public static <T extends CustomPayload> void sendPayloadToTracking(T payload, World world, Entity sender, @Nullable Entity exclude) {
         if (!world.isClient()) {
             for (ServerPlayerEntity player : PlayerLookup.tracking(sender)) {
-                if (player != exclude) ModPackets.GILDED_GLORY_CHANNEL.sendToClient(packet, player);
+                if (player != exclude) ServerPlayNetworking.send(player, payload);
             }
             if (sender != exclude && sender instanceof ServerPlayerEntity player) {
-                ModPackets.GILDED_GLORY_CHANNEL.sendToClient(packet, player);
+                ServerPlayNetworking.send(player, payload);
             }
         }
     }
@@ -176,7 +173,7 @@ public class GildedGloryUtil {
         Vec3d pos = origin.getEyePos();
         Vec3d ray = direction.multiply(distance);
         Vec3d max = pos.add(ray);
-        Box range = origin.getBoundingBox().stretch(ray).expand(1.0 + margin);
+        Box range = origin.getBoundingBox().stretch(ray).expand(1.0 + margin * 1.5f);
 
         double d = max.squaredDistanceTo(pos);
         if (collision) {
@@ -190,7 +187,12 @@ public class GildedGloryUtil {
 
         for (LivingEntity entity : world.getEntitiesByClass(LivingEntity.class, range, predicate)) {
             if (!entities.contains(entity)) {
-                Box box = entity.getBoundingBox().expand(entity.getTargetingMargin() + margin);
+                float f = margin;
+                if (entity.squaredDistanceTo(pos) >= distance * distance * 0.75) {
+                    f *= 2.5f;
+                }
+
+                Box box = entity.getBoundingBox().expand(entity.getTargetingMargin() + f);
                 Optional<Vec3d> optional = box.raycast(pos, max);
 
                 if (optional.isPresent()) {

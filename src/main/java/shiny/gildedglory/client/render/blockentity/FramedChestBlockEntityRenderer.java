@@ -1,7 +1,9 @@
 package shiny.gildedglory.client.render.blockentity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.block.DoubleBlockProperties;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
@@ -13,7 +15,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.block.entity.LightmapCoordinatesRetriever;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -21,8 +22,8 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.block.FramedChestBlock;
-import shiny.gildedglory.common.registry.block.ModBlocks;
 import shiny.gildedglory.common.block.entity.FramedChestBlockEntity;
+import shiny.gildedglory.common.registry.block.ModBlocks;
 
 public class FramedChestBlockEntityRenderer implements BlockEntityRenderer<FramedChestBlockEntity> {
 
@@ -79,7 +80,7 @@ public class FramedChestBlockEntityRenderer implements BlockEntityRenderer<Frame
         World world = entity.getWorld();
 
         BlockState blockState = world != null ? entity.getCachedState() : ModBlocks.FRAMED_CHEST.getDefaultState().with(FramedChestBlock.FACING, Direction.SOUTH);
-        ChestType chestType = blockState.contains((Property) FramedChestBlock.CHEST_TYPE) ? blockState.get(FramedChestBlock.CHEST_TYPE) : ChestType.SINGLE;
+        ChestType chestType = blockState.contains(ChestBlock.CHEST_TYPE) ? blockState.get(ChestBlock.CHEST_TYPE) : ChestType.SINGLE;
 
         if (chestType.equals(ChestType.LEFT)) return;
         boolean single = chestType.equals(ChestType.SINGLE);
@@ -93,12 +94,12 @@ public class FramedChestBlockEntityRenderer implements BlockEntityRenderer<Frame
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
             matrices.translate(-0.5f, -0.5f, -0.5f);
 
-            DoubleBlockProperties.PropertySource<? extends FramedChestBlockEntity> propertySource;
+            DoubleBlockProperties.PropertySource<? extends ChestBlockEntity> propertySource;
             if (world != null) propertySource = framedChestBlock.getBlockEntitySource(blockState, world, entity.getPos(), true);
             else propertySource = DoubleBlockProperties.PropertyRetriever::getFallback;
 
             float openFactor = 1.0f - propertySource.apply(FramedChestBlock.getAnimationProgressRetriever(entity)).get(tickDelta);
-            openFactor = 1.0F - openFactor * openFactor * openFactor;
+            openFactor = 1.0f - openFactor * openFactor * openFactor;
 
             light = propertySource.apply(new LightmapCoordinatesRetriever<>()).applyAsInt(light);
 

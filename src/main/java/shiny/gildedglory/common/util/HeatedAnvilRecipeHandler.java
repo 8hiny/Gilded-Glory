@@ -2,7 +2,6 @@ package shiny.gildedglory.common.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.input.CraftingRecipeInput;
@@ -10,8 +9,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import shiny.gildedglory.common.recipe.ForgeWeldingRecipe;
-import shiny.gildedglory.common.recipe.oldForgeWeldingRecipe;
-import shiny.gildedglory.common.recipe.SimpleRecipeInventory;
 import shiny.gildedglory.common.registry.recipe.ModRecipeTypes;
 
 import java.util.Iterator;
@@ -33,23 +30,25 @@ public class HeatedAnvilRecipeHandler {
             }
 
             if (maxCount > 0) {
-                CraftingRecipeInput input = CraftingRecipeInput.create()
-                ForgeWeldingRecipe recipe = getMatchingRecipe(world, input).value();
+                CraftingRecipeInput input = CraftingRecipeInput.create(ingredients.size(), 1, ingredients);
+                RecipeEntry<ForgeWeldingRecipe> entry = getMatchingRecipe(world, input);
+                if (entry != null) {
+                    ForgeWeldingRecipe recipe = entry.value();
+                    if (recipe != null) {
+                        for (ItemEntity entity : items) {
+                            ItemStack stack = entity.getStack();
+                            int requiredCount = recipe.requiredCount(stack);
+                            if (requiredCount > 0) maxCount = Math.min(maxCount, stack.getCount() / requiredCount);
+                            int remainder = stack.getCount() - (maxCount * requiredCount);
 
-                if (recipe != null) {
-                    for (ItemEntity entity : items) {
-                        ItemStack stack = entity.getStack();
-                        int requiredCount = recipe.requiredCount(stack);
-                        if (requiredCount > 0)  maxCount = Math.min(maxCount, stack.getCount() / requiredCount);
-                        int remainder = stack.getCount() - (maxCount * requiredCount);
-
-                        stack.setCount(remainder);
-                        entity.setStack(stack);
+                            stack.setCount(remainder);
+                            entity.setStack(stack);
+                        }
+                        ItemEntity result = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), recipe.craft(input, world.getRegistryManager()), 0, 0, 0);
+                        result.getStack().setCount(maxCount);
+                        world.spawnEntity(result);
+                        return true;
                     }
-                    ItemEntity result = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), recipe.craft(input, world.getRegistryManager()), 0, 0, 0);
-                    result.getStack().setCount(maxCount);
-                    world.spawnEntity(result);
-                    return true;
                 }
             }
         }
@@ -80,8 +79,7 @@ public class HeatedAnvilRecipeHandler {
 
         for (ItemEntity entity1 : items) {
 
-
-            if (ItemStack.canCombine(entity.getStack(), entity1.getStack())) {
+            if (ItemStack.areItemsAndComponentsEqual(entity.getStack(), entity1.getStack())) {
                 i += entity.getStack().getCount();
 
                 if (entity != entity1) toRemove.add(entity1);

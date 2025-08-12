@@ -14,29 +14,17 @@ public class AlertParticle extends SpriteBillboardParticle {
         super(world, d, e, f);
 
         this.gravityStrength = 0.0f;
-        this.maxAge = 10;
+        this.maxAge = 8;
         this.scale = 1.75f;
         this.spriteProvider = spriteProvider;
-        this.angle = Random.create().nextBetween(0, 360);
-        this.prevAngle = angle;
 
         this.setSpriteForAge(spriteProvider);
     }
 
     @Override
     public void tick() {
-        this.prevPosX = this.x;
-        this.prevPosY = this.y;
-        this.prevPosZ = this.z;
-
-        this.angle = this.prevAngle + 0.25f;
-        this.prevAngle = angle;
-
-        if (this.age++ >= this.maxAge) {
-            this.markDead();
-        } else {
-            this.setSpriteForAge(this.spriteProvider);
-        }
+        super.tick();
+        this.setSpriteForAge(this.spriteProvider);
     }
 
     @Override

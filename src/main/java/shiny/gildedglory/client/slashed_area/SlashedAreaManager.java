@@ -42,9 +42,9 @@ public class SlashedAreaManager {
         }
     }
 
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d cameraPos) {
+    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Vec3d camPos) {
         matrices.push();
-        matrices.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+        matrices.translate(-camPos.x, -camPos.y, -camPos.z);
 
         if (!this.areas.isEmpty()) {
             for (Iterator<SlashedArea> iterator = this.areas.iterator(); iterator.hasNext();) {
@@ -65,7 +65,7 @@ public class SlashedAreaManager {
                         Vec3d direction = point1.subtract(point);
                         Vec3d midPoint = point.add(direction.multiply(0.5));
 
-                        Vec3d normal = cameraPos.subtract(point).crossProduct(direction).normalize();
+                        Vec3d normal = camPos.subtract(point).crossProduct(direction).normalize();
 
                         Vec3d mid = midPoint.add(normal.multiply(width));
                         Vec3d mid1 = midPoint.subtract(normal.multiply(width));

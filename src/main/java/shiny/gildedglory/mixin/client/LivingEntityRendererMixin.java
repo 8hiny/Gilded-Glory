@@ -1,23 +1,16 @@
 package shiny.gildedglory.mixin.client;
 
 import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import shiny.gildedglory.client.render.custom.ChainRenderer;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.util.GildedGloryUtil;
@@ -27,18 +20,6 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     protected LivingEntityRendererMixin(EntityRendererFactory.Context ctx) {
         super(ctx);
-    }
-
-    @Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "TAIL"))
-    private void gildedglory$injectCustomRenderers(T entity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, CallbackInfo ci) {
-        if (ModComponents.CHAINED.get(entity).getDuration() > 0) {
-            boolean bl = ModComponents.CHAINED.get(entity).isAttacker();
-
-            Entity counterpart = GildedGloryUtil.getEntityClient(ModComponents.CHAINED.get(entity).getCounterpart(), (ClientWorld) entity.getWorld());
-            if (counterpart != null && bl) {
-                ChainRenderer.render(entity.getLerpedPos(tickDelta), counterpart.getLerpedPos(tickDelta), matrixStack, vertexConsumerProvider);
-            }
-        }
     }
 
     @Override

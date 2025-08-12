@@ -46,7 +46,7 @@ public class IraedeusEntityRenderer extends EntityRenderer<IraedeusEntity> {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
 
         //Trail
-        GildedGloryUtil.addTrail(matrices, entity.getTrailPoints(), entity, new Color(74, 98, 106), 1.0f, 1.1f);
+        //GildedGloryUtil.addTrail(matrices, entity.getTrailPoints(), entity, new Color(74, 98, 106), 1.0f, 1.1f);
     }
 
     @Override

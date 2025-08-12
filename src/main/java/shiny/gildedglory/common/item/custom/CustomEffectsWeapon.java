@@ -3,7 +3,7 @@ package shiny.gildedglory.common.item.custom;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import shiny.gildedglory.client.pose.ArmPose;
@@ -43,26 +43,26 @@ public interface CustomEffectsWeapon {
         return false;
     }
 
-    default DefaultParticleType getAttackParticle(ItemStack stack) {
+    default SimpleParticleType getAttackParticle(ItemStack stack) {
         return null;
     }
 
-    default DefaultParticleType getSweepAttackParticle(ItemStack stack) {
+    default SimpleParticleType getSweepAttackParticle(ItemStack stack) {
         return null;
     }
 
-    default DefaultParticleType getCritAttackParticle(ItemStack stack) {
+    default SimpleParticleType getCritAttackParticle(ItemStack stack) {
         return null;
     }
 
     /// Returns the pose for the holder's main hand when this item is held.
     default ArmPose getMainHandPose(LivingEntity holder, ItemStack stack) {
-        return holder.getMainHandStack() == stack ? BipedEntityModel.ArmPose.ITEM : BipedEntityModel.ArmPose.EMPTY;
+        return ArmPose.USE_VANILLA;
     }
 
     /// Returns the pose for the holder's offhand when this item is held.
     default ArmPose getOffHandPose(LivingEntity holder, ItemStack stack) {
-        return holder.getOffHandStack() == stack ? BipedEntityModel.ArmPose.ITEM : BipedEntityModel.ArmPose.EMPTY;
+        return ArmPose.USE_VANILLA;
     }
 
     /// Returns any custom pose which this item might apply to the holder. Prioritizes the main hand.
@@ -73,6 +73,11 @@ public interface CustomEffectsWeapon {
         if (mainPose != null && isCustom(mainPose)) return mainPose;
         else if (otherPose != null && isCustom(otherPose)) return otherPose;
         return null;
+    }
+
+    /// Returns whether any items in the holder's offhand should be hidden while this item is held in the main hand.
+    default boolean hideOffHandItem(LivingEntity holder, ItemStack stack) {
+        return false;
     }
 
     static ArmPose getCustomPose(LivingEntity holder) {
@@ -91,6 +96,6 @@ public interface CustomEffectsWeapon {
     }
 
     static boolean isCustom(ArmPose pose) {
-        return pose.value() != ArmPose.Value.VANILLA || (pose != BipedEntityModel.ArmPose.EMPTY && pose != BipedEntityModel.ArmPose.ITEM);
+        return pose.value() == ArmPose.Value.CUSTOM || (pose != BipedEntityModel.ArmPose.EMPTY && pose != BipedEntityModel.ArmPose.ITEM);
     }
 }

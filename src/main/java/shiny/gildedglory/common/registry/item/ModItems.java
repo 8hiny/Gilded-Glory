@@ -5,10 +5,12 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Unit;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.item.*;
@@ -19,20 +21,68 @@ public class ModItems {
     public static final Item TWISTEEL_INGOT = register("twisteel_ingot", new Item(new Item.Settings().fireproof()));
     public static final Item GLOOMETAL_INGOT = register("gloometal_ingot", new Item(new Item.Settings().fireproof()));
     public static final Item FOOLS_GOLD_INGOT = register("fools_gold_ingot", new Item(new Item.Settings()));
-    public static final Item TWISTEEL_SICKLE = register("twisteel_sickle", new SickleItem(ModToolMaterials.TWISTEEL, 2, -2.3f, new Item.Settings().fireproof()));
     public static final Item TWISTEEL_CHARM = register("twisteel_charm", new CharmItem(new Item.Settings().maxCount(1).fireproof()));
     public static final Item GILDED_HORN = register("gilded_horn", new GildedHornItem(new Item.Settings().maxCount(1)));
     public static final Item KATANA_SHEATH = register("katana_sheath", new Item(new Item.Settings()));
 
-    public static final Item AURADEUS = registerWithGui("auradeus", new AuradeusItem(ModToolMaterials.TWISTEEL, 2.5f, -2.6f, new Item.Settings().fireproof()));
-    public static final Item SWORDSPEAR = registerWithGui("swordspear", new SwordSpearItem(ModToolMaterials.SWORDSPEAR, 4, -2.9f, new Item.Settings()));
-    public static final Item IRAEDEUS = registerWithGui("iraedeus", new IraedeusItem(ModToolMaterials.GLOOMETAL, 3, -2.4f, new Item.Settings()));
-    public static final Item KATANA = registerWithGui("katana", new KatanaItem(ToolMaterials.NETHERITE, 3, -2.7f, new Item.Settings().fireproof()));
+    public static final Item AURADEUS = registerWithGui(
+            "auradeus", new AuradeusItem(ModToolMaterials.TWISTEEL, new Item.Settings()
+                    .fireproof()
+                    .attributeModifiers(AuradeusItem.createAttributeModifiers(ModToolMaterials.TWISTEEL, 3, -2.6f, 0.5f))
+            )
+    );
+    public static final Item SWORDSPEAR = registerWithGui(
+            "swordspear", new SwordSpearItem(ModToolMaterials.SWORDSPEAR, new Item.Settings()
+                    .fireproof()
+                    .attributeModifiers(SwordSpearItem.createAttributeModifiers(ModToolMaterials.SWORDSPEAR, 4, -2.9f, 0.75f))
+            )
+    );
+    public static final Item IRAEDEUS = registerWithGui(
+            "iraedeus", new IraedeusItem(
+                    ModToolMaterials.GLOOMETAL, new Item.Settings()
+                    .fireproof()
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.GLOOMETAL, 3, -2.4f))
+            )
+    );
+    public static final Item TWISTEEL_SICKLE = register(
+            "twisteel_sickle", new SickleItem(
+                    ModToolMaterials.TWISTEEL, new Item.Settings()
+                    .fireproof()
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.TWISTEEL, 2, -2.3f))
+            )
+    );
+    public static final Item KATANA = registerWithGui(
+            "katana", new KatanaItem(
+                    ToolMaterials.NETHERITE, new Item.Settings()
+                    .fireproof()
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ToolMaterials.NETHERITE, 3, -2.7f))
+            )
+    );
 
-    public static final Item FOOLS_GOLD_HELMET = register("fools_gold_helmet", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.HELMET, new Item.Settings()));
-    public static final Item FOOLS_GOLD_CHESTPLATE = register("fools_gold_chestplate", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.CHESTPLATE, new Item.Settings()));
-    public static final Item FOOLS_GOLD_LEGGINGS = register("fools_gold_leggings", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.LEGGINGS, new Item.Settings()));
-    public static final Item FOOLS_GOLD_BOOTS = register("fools_gold_boots", new FoolsArmorItem(ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.BOOTS, new Item.Settings()));
+    public static final Item FOOLS_GOLD_HELMET = register(
+            "fools_gold_helmet", new FoolsArmorItem(
+                    ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.HELMET, new Item.Settings()
+                    .component(EnchantmentEffectComponentTypes.PREVENT_ARMOR_CHANGE, Unit.INSTANCE)
+            )
+    );
+    public static final Item FOOLS_GOLD_CHESTPLATE = register(
+            "fools_gold_chestplate", new FoolsArmorItem(
+                    ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.CHESTPLATE, new Item.Settings()
+                    .component(EnchantmentEffectComponentTypes.PREVENT_ARMOR_CHANGE, Unit.INSTANCE)
+            )
+    );
+    public static final Item FOOLS_GOLD_LEGGINGS = register(
+            "fools_gold_leggings", new FoolsArmorItem(
+                    ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.LEGGINGS, new Item.Settings()
+                    .component(EnchantmentEffectComponentTypes.PREVENT_ARMOR_CHANGE, Unit.INSTANCE)
+            )
+    );
+    public static final Item FOOLS_GOLD_BOOTS = register(
+            "fools_gold_boots", new FoolsArmorItem(
+                    ModArmorMaterials.FOOLS_GOLD, ArmorItem.Type.BOOTS, new Item.Settings()
+                    .component(EnchantmentEffectComponentTypes.PREVENT_ARMOR_CHANGE, Unit.INSTANCE)
+            )
+    );
 
     public static final Item DR_PEPPER = registerWithGui("dr_pepper", new CompatConsumableItem(new Item.Settings().maxCount(16).recipeRemainder(Items.GLASS_BOTTLE)
             .food(FoodValues.DR_PEPPER),

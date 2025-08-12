@@ -10,8 +10,6 @@ import java.awt.*;
 
 public class OverlayRenderer {
 
-    //TODO Move this to the HudRenderCallback
-
     public static final Identifier CROSSHAIR = GildedGlory.id("textures/gui/crosshair.png");
     public static final Identifier CHAINED_OVERLAY = GildedGlory.id("textures/misc/chained_overlay.png");
     public static final Identifier LINES_OVERLAY = GildedGlory.id("textures/misc/lines_vignette.png");
@@ -28,18 +26,18 @@ public class OverlayRenderer {
         int width = context.getScaledWindowWidth();
         int height = context.getScaledWindowHeight();
 
+        RenderSystem.enableBlend();
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ONE);
         context.setShaderColor((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, alpha);
 
         context.drawTexture(texture, 0, 0, 0, 0, width, height, width, height);
 
         RenderSystem.defaultBlendFunc();
-        RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
         context.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
@@ -47,6 +45,7 @@ public class OverlayRenderer {
         int width = context.getScaledWindowWidth();
         int height = context.getScaledWindowHeight();
 
+        RenderSystem.enableBlend();
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         context.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -55,6 +54,7 @@ public class OverlayRenderer {
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
         context.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 }

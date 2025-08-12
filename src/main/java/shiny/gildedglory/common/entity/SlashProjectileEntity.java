@@ -1,6 +1,6 @@
 package shiny.gildedglory.common.entity;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -11,12 +11,11 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.joml.Vector3f;
-import shiny.gildedglory.client.particle.effect.ColoredEntityParticleEffect;
-import shiny.gildedglory.common.registry.particle.ModParticles;
+import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.util.DynamicSoundSource;
 import shiny.gildedglory.common.component.entity.ChainedComponent;
 import shiny.gildedglory.common.item.CharmItem;
@@ -29,24 +28,25 @@ import java.util.List;
 
 public class SlashProjectileEntity extends PersistentProjectileEntity implements DynamicSoundSource {
 
+    private static final TrackedData<ItemStack> ITEM = DataTracker.registerData(SlashProjectileEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
     private static final TrackedData<Boolean> VERTICAL = DataTracker.registerData(SlashProjectileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Boolean> CAN_CHAIN = DataTracker.registerData(SlashProjectileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(SlashProjectileEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final EntityDimensions HORIZONTAL_DIMENSIONS = new EntityDimensions(2.4f, 0.5f, true);
-    private static final EntityDimensions VERTICAL_DIMENSIONS = new EntityDimensions(2.4f, 1.0f, true);
+    private static final EntityDimensions HORIZONTAL_DIMENSIONS = EntityDimensions.fixed(2.4f, 0.5f);
+    private static final EntityDimensions VERTICAL_DIMENSIONS = EntityDimensions.fixed(2.4f, 1.0f);
     public final List<Entity> hitEntities = new ArrayList<>();
-    private float damage = 9.0f;
     private int life = 0;
+    private int textureFrame = 1;
+    private int shineFrame = 0;
 
     public SlashProjectileEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public SlashProjectileEntity(World world, Entity owner, double x, double y, double z, float damage, boolean vertical, boolean canChain) {
+    public SlashProjectileEntity(World world, Entity owner, double x, double y, double z, boolean vertical, boolean canChain) {
         super(ModEntities.SLASH_PROJECTILE, world);
         this.setPosition(x, y, z);
         this.setOwner(owner);
-        this.damage = damage;
 
         this.dataTracker.set(VERTICAL, vertical);
         this.dataTracker.set(CAN_CHAIN, canChain);
@@ -54,11 +54,12 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(VERTICAL, false);
-        this.dataTracker.startTracking(CAN_CHAIN, false);
-        this.dataTracker.startTracking(VARIANT, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(ITEM, ItemStack.EMPTY);
+        builder.add(VERTICAL, false);
+        builder.add(CAN_CHAIN, false);
+        builder.add(VARIANT, 0);
     }
 
     @Override
@@ -71,14 +72,14 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
     public void tick() {
         super.tick();
 
-        if (this.age == 1 && this.getWorld().isClient()) {
-            Vector3f color = this.getVariant() == 0 ? new Vector3f(0.96f, 0.77f, 0.19f) : new Vector3f(0.8f, 0.29f, 0.36f);
-            MinecraftClient.getInstance().particleManager.addParticle(
-                    new ColoredEntityParticleEffect(ModParticles.SHINE_ANIMATED, color, this.getId(), 1.5f, Integer.MAX_VALUE),
-                    this.getX(), this.getY() + this.getHeight() / 2, this.getZ(),
-                    0, 0, 0
-            );
-        }
+//        if (this.age == 1 && this.getWorld().isClient()) {
+//            Vector3f color = this.getVariant() == 0 ? new Vector3f(0.96f, 0.77f, 0.19f) : new Vector3f(0.8f, 0.29f, 0.36f);
+//            MinecraftClient.getInstance().particleManager.addParticle(
+//                    new ColoredEntityParticleEffect(ModParticles.SHINE_ANIMATED, color, this.getId(), 1.5f, Integer.MAX_VALUE),
+//                    this.getX(), this.getY() + this.getHeight() / 2, this.getZ(),
+//                    0, 0, 0
+//            );
+//        }
 
         if (this.inGround || this.age > 20) {
             this.life++;
@@ -88,18 +89,27 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
         LivingEntity owner = (LivingEntity) this.getOwner();
         boolean bl = owner instanceof PlayerEntity player && CharmItem.hasOwnedCharm(player);
 
-        float damage = this.isVertical() ? this.damage : this.damage / 2;
         if (!this.getWorld().isClient()) {
             for (LivingEntity entity : this.getWorld().getEntitiesByClass(LivingEntity.class, getBoundingBox().expand(0.25), this::canHit)) {
                 boolean bl1 = entity instanceof PlayerEntity player && CharmItem.hasOwnedCharm(player);
                 if (!bl || !bl1) {
                     DamageSource damageSource = new DamageSource(this.getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(ModDamageTypes.SLASH), this, owner == null ? this : owner);
+                    float damage = EnchantmentHelper.getDamage((ServerWorld) this.getWorld(), this.getItem(), entity, damageSource, 9.0f);
+                    if (!this.isVertical()) damage /= 2;
 
                     entity.damage(damageSource, damage);
                     if (owner != null && this.canChain()) tryApplyChained(owner, entity, damage);
                     this.hitEntities.add(entity);
                 }
             }
+        }
+        else {
+            if (this.age % 2 == 0) {
+                if (this.textureFrame < 4) this.textureFrame++;
+                else this.textureFrame = 1;
+            }
+            if (this.shineFrame < 6) this.shineFrame++;
+            else this.shineFrame = 0;
         }
     }
 
@@ -139,6 +149,14 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
         return this.dataTracker.get(VARIANT);
     }
 
+    public int getTextureFrame() {
+        return this.textureFrame;
+    }
+
+    public int getShineFrame() {
+        return this.shineFrame;
+    }
+
     @Override
     public Vec3d getPosition() {
         return this.getPos();
@@ -170,8 +188,21 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
         this.dataTracker.set(VARIANT, nbt.getInt("Variant"));
     }
 
+    public ItemStack getItem() {
+        return this.dataTracker.get(ITEM);
+    }
+
+    public void setItem(ItemStack stack) {
+        this.dataTracker.set(ITEM, stack.copyWithCount(1));
+    }
+
     @Override
     protected ItemStack asItemStack() {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    protected ItemStack getDefaultItemStack() {
         return ItemStack.EMPTY;
     }
 
@@ -183,11 +214,6 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
     @Override
     public boolean doesRenderOnFire() {
         return false;
-    }
-
-    @Override
-    public float getBrightnessAtEyes() {
-        return 1.0f;
     }
 
     @Override

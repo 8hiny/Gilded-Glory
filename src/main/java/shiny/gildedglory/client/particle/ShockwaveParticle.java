@@ -15,17 +15,19 @@ public class ShockwaveParticle extends DirectionalParticle {
 
     public ShockwaveParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, VectorParticleEffect parameters, SpriteProvider spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ, parameters, spriteProvider);
+        this.scale = 3.0f;
+        this.maxAge = 10;
         this.maxScale = this.scale;
         this.minScale = this.maxScale * 0.25f;
-        this.scale = this.minScale;
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        this.alpha = 1.0f - (float) this.age / this.maxAge;
-        this.scale = MathHelper.lerp((float) this.age / this.maxAge, this.minScale, this.maxScale);
+        float step = (float) this.age / this.maxAge;
+        this.alpha = 1.0f - step;
+        this.scale = MathHelper.lerp(step, this.minScale, this.maxScale);
     }
 
     public static class Factory implements ParticleFactory<VectorParticleEffect> {
