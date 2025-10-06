@@ -188,5 +188,12 @@
     "sounds": [
       "gildedglory:item/iraedeus/return"
     ]
+  },
+  "item.custom.sheath": {
+    "subtitle": "sounds.gildedglory.custom_item.sheath",
+    "sounds": [
+      "gildedglory:item/custom/sheath_0",
+      "gildedglory:item/custom/sheath_1"
+    ]
   }
 }

@@ -6,8 +6,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
@@ -16,18 +16,13 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import shiny.gildedglory.client.pose.ArmPose;
-import shiny.gildedglory.client.pose.CustomArmPoses;
-import shiny.gildedglory.common.item.custom.CustomEffectsWeapon;
-import shiny.gildedglory.common.item.custom.SprintUsableItem;
 import shiny.gildedglory.common.network.SlashedAreaPayload;
 import shiny.gildedglory.common.registry.damage_type.ModDamageTypes;
+import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
-public class KatanaItem extends SwordItem implements CustomEffectsWeapon, SprintUsableItem {
+public class KatanaItem extends SheathableSwordItem  {
 
-    //TODO Make sheathing mechanic (with sheathing and unsheathing sound & particles)
-    //TODO Make sheathing animation for first & third person
     //TODO Add golden puddles
     //TODO Add different slash types
     //TODO Fix refractive post shader
@@ -40,10 +35,7 @@ public class KatanaItem extends SwordItem implements CustomEffectsWeapon, Sprint
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (user.getOffHandStack() == stack) {
-            return TypedActionResult.fail(stack);
-        }
-        else {
+        if (!user.isSneaking() && this.isSheathed(user, stack) && !this.sheathing) {
             if (!world.isClient()) {
                 Vec3d pos = new Vec3d(user.getX(), user.getBodyY(0.5), user.getZ());
                 GildedGloryUtil.sendPayloadToTracking(new SlashedAreaPayload(pos, 8.5f, 0.1f, 10, 20), world, user, null);
@@ -51,8 +43,9 @@ public class KatanaItem extends SwordItem implements CustomEffectsWeapon, Sprint
                 this.areaAttack((ServerWorld) world, user, stack);
             }
             user.setCurrentHand(hand);
-            return TypedActionResult.consume(stack);
+            return TypedActionResult.success(stack);
         }
+        return super.use(world, user, hand);
     }
 
     public void areaAttack(ServerWorld world, PlayerEntity user, ItemStack stack) {
@@ -69,14 +62,7 @@ public class KatanaItem extends SwordItem implements CustomEffectsWeapon, Sprint
     }
 
     @Override
-    public ArmPose getMainHandPose(LivingEntity holder, ItemStack stack) {
-        if (holder.getOffHandStack() == stack && holder.getMainHandStack().isEmpty()) return CustomArmPoses.BACKWARDS_HOLDING;
-        return CustomEffectsWeapon.super.getMainHandPose(holder, stack);
-    }
-
-    @Override
-    public ArmPose getOffHandPose(LivingEntity holder, ItemStack stack) {
-        if (holder.getOffHandStack() == stack && holder.getMainHandStack().isEmpty()) return CustomArmPoses.BACKWARDS_HOLDING;
-        return CustomEffectsWeapon.super.getOffHandPose(holder, stack);
+    public Item getSheath(ItemStack stack) {
+        return ModItems.KATANA_SHEATH;
     }
 }

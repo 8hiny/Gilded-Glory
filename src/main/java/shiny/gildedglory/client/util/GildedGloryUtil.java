@@ -1,7 +1,6 @@
 package shiny.gildedglory.client.util;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -9,13 +8,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
-import shiny.gildedglory.mixin.client.ClientPlayerEntityAccessor;
 
 import java.awt.*;
 
 public class GildedGloryUtil {
-
-    //private static final RenderLayer TRAIL = LodestoneRenderTypeRegistry.ADDITIVE_TEXTURE_TRIANGLE.apply(RenderTypeToken.createToken(GildedGlory.id("textures/entity/trail.png")));
 
     public static void addPersonalParticles(Entity entity, ParticleEffect parameters, double x, double y, double z, double dx, double dy, double dz) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -24,34 +20,6 @@ public class GildedGloryUtil {
             client.particleManager.addParticle(parameters, x, y, z, dx, dy, dz);
         }
     }
-
-    public static void addPersonalParticles(Entity entity, ParticleEffect parameters, double x, double y, double z, double dx, double dy, double dz, ClientPlayerEntity... viewers) {
-        for (ClientPlayerEntity player : viewers) {
-            MinecraftClient client = ((ClientPlayerEntityAccessor) player).gildedglory$getClient();
-
-            if ((!client.options.getPerspective().isFirstPerson() || player != entity) && !entity.isInvisibleTo(client.player)) {
-                client.particleManager.addParticle(parameters, x, y, z, dx, dy, dz);
-            }
-        }
-    }
-
-//    public static void addTrail(MatrixStack matrices, List<TrailPoint> points, Entity entity, Color color, float alpha, float size) {
-//        matrices.push();
-//        VFXBuilders.WorldVFXBuilder builder = VFXBuilders.createWorld().setRenderType(TRAIL);
-//
-//        Vec3d camPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-//
-//        matrices.translate(-camPos.x, -camPos.y, -camPos.z);
-//        matrices.translate(0.0f, 0.0f, 0.0f);
-//        builder.setColor(color)
-//                .setAlpha(1.0f)
-//                .renderTrail(matrices,
-//                        points,
-//                        f -> MathHelper.sqrt(f) * size,
-//                        f -> builder.setAlpha((float) Math.cbrt(Math.max(0, (alpha * f) - 0.1f)))
-//                );
-//        matrices.pop();
-//    }
 
     /**
      * Draws a quad at the top position matrix of the MatrixStack with an offset, accepts textures with multiple frames stacked above each other.

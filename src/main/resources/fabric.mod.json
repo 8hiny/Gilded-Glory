@@ -31,15 +31,17 @@
 		"fabric-api": "*"
 	},
 	"custom": {
+        "loom:injected_interfaces": {
+          "net/minecraft/class_1297": ["shiny/gildedglory/common/util/DynamicSoundSource"],
+          "net/minecraft/class_2586": ["shiny/gildedglory/common/util/DynamicSoundSource"],
+          "net/minecraft/class_572\u0024class_573": ["shiny/gildedglory/client/pose/ArmPose"],
+          "net/minecraft/class_1839": ["shiny/gildedglory/client/use_action/BaseUseAction"]
+        },
 		"cardinal-components": [
 			"gildedglory:fools_statue",
 			"gildedglory:chained",
-			"gildedglory:iraedeus"
-		],
-		"loom:injected_interfaces": {
-			"net/minecraft/class_1297": ["shiny/gildedglory/common/util/DynamicSoundSource"],
-			"net/minecraft/class_2586": ["shiny/gildedglory/common/util/DynamicSoundSource"],
-			"net/minecraft/class_572\u0024class_573": ["shiny/gildedglory/client/pose/ArmPose"]
-		}
+            "gildedglory:iraedeus",
+			"gildedglory:throwable_wip"
+		]
 	}
 }

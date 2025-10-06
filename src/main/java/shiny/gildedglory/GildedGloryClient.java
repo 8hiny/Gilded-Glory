@@ -25,6 +25,7 @@ import shiny.gildedglory.common.registry.block.entity.ModBlockEntities;
 import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.client.render.blockentity.FramedChestBlockEntityRenderer;
 import shiny.gildedglory.client.render.entity.SlashEntityRenderer;
+import shiny.gildedglory.client.use_action.CustomUseActions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +62,7 @@ public class GildedGloryClient implements ClientModInitializer {
 
        ModShaders.getInstance().init();
        CustomArmPoses.registerCustomArmPoses();
+       CustomUseActions.registerCustomUseActions();
        DynamicSounds.registerDynamicSounds();
        ModNetworking.registerModClientReceivers();
 

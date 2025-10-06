@@ -3,6 +3,7 @@ package shiny.gildedglory.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -100,11 +101,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
-    private boolean gildedglory$handleCustomAttack(Entity target, DamageSource source, float amount, Operation<Boolean> original) {
+    private boolean gildedglory$handleCustomAttack(Entity target, DamageSource source, float amount, Operation<Boolean> original, @Local(ordinal = 2) boolean critical, @Local(ordinal = 3) boolean sweeping) {
         ItemStack stack = this.getMainHandStack();
 
         if (!target.isInvulnerableTo(source) && this.attackCooldownProgress > 0.8f && stack.getItem() instanceof CustomAttackWeapon weapon) {
-            CustomAttackWeapon.AttackContext attack = weapon.onAttack(stack, this, target, source, amount);
+            CustomAttackWeapon.AttackContext attack = weapon.onAttack(stack, this, target, source, amount, critical, sweeping);
 
             if (attack.successful()) {
                 return original.call(attack.target(), attack.source(), attack.amount());

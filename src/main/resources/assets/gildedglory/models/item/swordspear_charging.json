@@ -3,9 +3,6 @@
 	"textures": {
 		"layer0": "gildedglory:item/swordspear"
 	},
-	"overrides": [
-		{"predicate": {"gildedglory:charge": 0.05}, "model": "gildedglory:item/swordspear_firing"}
-	],
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [180, 0, 135],

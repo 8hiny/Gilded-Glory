@@ -13,14 +13,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.client.render.custom.ChainRenderer;
 import shiny.gildedglory.client.render.custom.OverlayRenderer;
 import shiny.gildedglory.client.slashed_area.SlashedAreaManager;
 import shiny.gildedglory.client.util.GildedGloryUtil;
-import shiny.gildedglory.common.component.entity.IraedeusComponent;
+import shiny.gildedglory.common.component.entity.ThrowableSwordComponent;
 import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.item.ModItems;
@@ -34,7 +33,7 @@ public class ClientEvents {
     public static void clientTick(MinecraftClient client) {
         DynamicSoundManager.getInstance().tick();
         SlashedAreaManager.getInstance().tick();
-        IraedeusComponent.clientTick(client);
+        ThrowableSwordComponent.clientTick(client);
         addCosmeticPlayerParticles(client);
     }
 

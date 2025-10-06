@@ -52,6 +52,7 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
         super(material, settings.component(DataComponentTypes.TOOL, createToolComponent()));
     }
 
+    //TODO Fix this
     private static ToolComponent createToolComponent() {
         return new ToolComponent(
                 List.of(
@@ -140,7 +141,7 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     }
 
     @Override
-    public AttackContext onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount) {
+    public AttackContext onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount, boolean critical, boolean sweeping) {
         if (EnchantmentHelper.getLevel(attacker.getRegistryManager().get(RegistryKeys.ENCHANTMENT).entryOf(ModEnchantments.ENMA), stack) > 0 && target instanceof LivingEntity livingEntity) {
             ChainedComponent attackerComponent = ModComponents.CHAINED.get(attacker);
             ChainedComponent targetComponent = ModComponents.CHAINED.get(target);
@@ -174,6 +175,11 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     }
 
     @Override
+    public boolean allowSprinting(PlayerEntity user, ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public Text getName(ItemStack stack) {
         return Text.translatable(this.getTranslationKey(stack)).setStyle(Style.EMPTY.withColor(0xCC495C));
     }
@@ -203,11 +209,6 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     @Override
     public ArmPose getMainHandPose(LivingEntity holder, ItemStack stack) {
         return holder.getActiveItem() == stack ? CustomArmPoses.SIDEWAYS_CHARGING : CustomEffectsWeapon.super.getMainHandPose(holder, stack);
-    }
-
-    @Override
-    public ArmPose getOffHandPose(LivingEntity holder, ItemStack stack) {
-        return holder.getActiveItem() == stack ? CustomArmPoses.SIDEWAYS_CHARGING : CustomEffectsWeapon.super.getOffHandPose(holder, stack);
     }
 
     @Override

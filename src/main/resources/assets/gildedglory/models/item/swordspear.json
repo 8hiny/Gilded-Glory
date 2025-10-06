@@ -12,7 +12,7 @@
 	},
 	{
 		"predicate": {
-			"gildedglory:charge": 0.05
+			"gildedglory:charge_percentage": 0.0001
 		}, 
 		"model": "gildedglory:item/swordspear_firing"
 	}

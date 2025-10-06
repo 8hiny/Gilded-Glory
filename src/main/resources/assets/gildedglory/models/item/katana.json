@@ -5,7 +5,7 @@
 	},
 	"gui_light": "front",
 	"overrides": [
-		{"predicate": {"gildedglory:off_hand": 1}, "model": "gildedglory:item/katana_sheathed"}
+		{"predicate": {"gildedglory:sheathed": 1}, "model": "gildedglory:item/katana_sheathed"}
 	],
 	"display": {
 		"thirdperson_righthand": {

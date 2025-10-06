@@ -10,13 +10,12 @@
     "PistonBlockEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayerEntityMixin",
+    "client.use_action.UseActionMixin",
     "sound.BlockEntityMixin",
     "sound.EntityMixin",
     "sound.LivingEntityMixin"
   ],
   "client": [
-    "client.BipedArmPoseMixin",
-    "client.BipedEntityModelMixin",
     "client.ClientPlayerEntityAccessor",
     "client.ClientPlayerEntityMixin",
     "client.HandledScreenMixin",
@@ -28,7 +27,11 @@
     "client.LivingEntityRendererMixin",
     "client.MinecraftClientMixin",
     "client.ModelLoaderMixin",
-    "client.PlayerEntityRendererMixin"
+    "client.animation.AbstractClientPlayerEntityMixin",
+    "client.pose.BipedArmPoseMixin",
+    "client.pose.BipedEntityModelMixin",
+    "client.pose.PlayerEntityRendererMixin",
+    "client.use_action.HeldItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

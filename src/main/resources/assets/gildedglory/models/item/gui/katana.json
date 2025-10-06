@@ -6,7 +6,7 @@
 	"overrides": [
 	{
 		"predicate": {
-			"gildedglory:off_hand": 1.0
+			"gildedglory:inventory_sheathed": 1.0
 		}, 
 		"model": "gildedglory:item/gui/katana_sheathed"
 	}

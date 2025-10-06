@@ -43,7 +43,7 @@ public abstract class MobEntityMixin extends LivingEntity {
         }
 
         if (!target.isInvulnerableTo(source) && stack.getItem() instanceof CustomAttackWeapon weapon) {
-            CustomAttackWeapon.AttackContext attack = weapon.onAttack(stack, this, target, source, amount);
+            CustomAttackWeapon.AttackContext attack = weapon.onAttack(stack, this, target, source, amount, false, true);
 
             if (attack.successful()) {
                 return original.call(attack.target(), attack.source(), attack.amount());

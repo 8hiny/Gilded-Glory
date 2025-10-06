@@ -14,7 +14,7 @@ public abstract class LivingEntityMixin extends EntityMixin {
         LivingEntity entity = (LivingEntity) (Object) this;
         ItemStack stack = entity.getMainHandStack();
 
-        if (stack.isOf(ModItems.IRAEDEUS)) {
+        if (stack.isOf(ModItems.THROWABLE_WIP)) {
             float delta = ChargeableWeapon.getChargePercentage(entity.getMainHandStack());
             return 1.0f - (delta * delta);
         }

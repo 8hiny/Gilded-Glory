@@ -155,6 +155,11 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
     }
 
     @Override
+    public boolean allowSprinting(PlayerEntity user, ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public boolean offHandUsable() {
         return false;
     }
@@ -216,13 +221,6 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
 
     @Override
     public ArmPose getMainHandPose(LivingEntity holder, ItemStack stack) {
-        if (holder.getActiveItem() == stack) return CustomArmPoses.FORWARDS_BLOCKING;
-        else if (ChargeableWeapon.hasCharge(stack)) return CustomArmPoses.FORWARDS_AIMING;
-        return holder.getMainHandStack() == stack ? CustomArmPoses.TWO_HANDED_HOLDING : ArmPose.USE_VANILLA;
-    }
-
-    @Override
-    public ArmPose getOffHandPose(LivingEntity holder, ItemStack stack) {
         if (holder.getActiveItem() == stack) return CustomArmPoses.FORWARDS_BLOCKING;
         else if (ChargeableWeapon.hasCharge(stack)) return CustomArmPoses.FORWARDS_AIMING;
         return holder.getMainHandStack() == stack ? CustomArmPoses.TWO_HANDED_HOLDING : ArmPose.USE_VANILLA;

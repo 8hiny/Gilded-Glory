@@ -5,7 +5,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import shiny.gildedglory.GildedGlory;
-import shiny.gildedglory.common.entity.IraedeusEntity;
+import shiny.gildedglory.common.entity.ThrowableSwordEntity;
 import shiny.gildedglory.common.registry.ModRegistries;
 import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.registry.sound.ModSounds;
@@ -55,7 +55,7 @@ public class DynamicSounds {
             0.8f, 1.0f,
             0, 100,
             true, false,
-            true, source -> source.getCharge() > 0 && source.isHolding(ModItems.IRAEDEUS, false),
+            true, source -> source.getCharge() > 0 && source.isHolding(ModItems.THROWABLE_WIP, false),
             DynamicSoundManager.getInstance()
     ));
     private static final DynamicSoundInstance IRAEDEUS_SPIN = register("iraedeus_spin", new PredicatedLoopingSoundInstance(
@@ -66,7 +66,7 @@ public class DynamicSounds {
             1.0f, 1.0f,
             0, 4,
             false, false,
-            false, source -> source instanceof IraedeusEntity,
+            false, source -> source instanceof ThrowableSwordEntity,
             DynamicSoundManager.getInstance()
     ));
 

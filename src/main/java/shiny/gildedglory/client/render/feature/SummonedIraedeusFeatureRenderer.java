@@ -18,7 +18,7 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-import shiny.gildedglory.common.component.entity.IraedeusComponent;
+import shiny.gildedglory.common.component.entity.ThrowableSwordComponent;
 import shiny.gildedglory.common.registry.component.ModComponents;
 
 public class SummonedIraedeusFeatureRenderer<T extends LivingEntity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
@@ -37,10 +37,10 @@ public class SummonedIraedeusFeatureRenderer<T extends LivingEntity, M extends E
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity instanceof AbstractClientPlayerEntity player) {
-            IraedeusComponent component = ModComponents.IRAEDEUS.get(player);
+            ThrowableSwordComponent component = ModComponents.THROWABLE_WIP.get(player);
 
             if (component.isSummoned()) {
-                ItemStack stack = ModComponents.IRAEDEUS.get(player).getStack();
+                ItemStack stack = ModComponents.THROWABLE_WIP.get(player).getStack();
 
                 //Y value for idle hovering
                 float y = MathHelper.sin((player.age + tickDelta) * 0.05f) * 0.15f;
@@ -77,10 +77,10 @@ public class SummonedIraedeusFeatureRenderer<T extends LivingEntity, M extends E
 
     public void testRender(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity instanceof AbstractClientPlayerEntity player) {
-            IraedeusComponent component = ModComponents.IRAEDEUS.get(player);
+            ThrowableSwordComponent component = ModComponents.THROWABLE_WIP.get(player);
 
             if (component.isSummoned()) {
-                ItemStack stack = ModComponents.IRAEDEUS.get(player).getStack();
+                ItemStack stack = ModComponents.THROWABLE_WIP.get(player).getStack();
 
                 float y = MathHelper.sin((player.age + tickDelta) * 0.05f) * 0.15f;
 

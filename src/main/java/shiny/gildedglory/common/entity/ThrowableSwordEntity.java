@@ -27,7 +27,7 @@ import net.minecraft.world.event.PositionSource;
 import net.minecraft.world.event.PositionSourceType;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
-import shiny.gildedglory.common.component.entity.IraedeusComponent;
+import shiny.gildedglory.common.component.entity.ThrowableSwordComponent;
 import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.damage_type.ModDamageTypes;
@@ -42,13 +42,13 @@ import shiny.gildedglory.common.util.GildedGloryUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity, DynamicSoundSource {
+public class ThrowableSwordEntity extends ProjectileEntity implements FlyingItemEntity, DynamicSoundSource {
 
-    private static final TrackedData<ItemStack> ITEM = DataTracker.registerData(IraedeusEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
-    private static final TrackedData<Byte> IRAEDEUS_FLAGS = DataTracker.registerData(IraedeusEntity.class, TrackedDataHandlerRegistry.BYTE);
-    private static final TrackedData<Boolean> NO_CLIP = DataTracker.registerData(IraedeusEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Integer> CHARGE = DataTracker.registerData(IraedeusEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<PositionSource> TARGET = DataTracker.registerData(IraedeusEntity.class, ModTrackedDataHandlers.POSITION_SOURCE);
+    private static final TrackedData<ItemStack> ITEM = DataTracker.registerData(ThrowableSwordEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
+    private static final TrackedData<Byte> THROWABLE_SWORD_FLAGS = DataTracker.registerData(ThrowableSwordEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final TrackedData<Boolean> NO_CLIP = DataTracker.registerData(ThrowableSwordEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Integer> CHARGE = DataTracker.registerData(ThrowableSwordEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<PositionSource> TARGET = DataTracker.registerData(ThrowableSwordEntity.class, ModTrackedDataHandlers.POSITION_SOURCE);
     private static final int RETURNING_FLAG = 1;
     private static final int TARGETING_FLAG = 2;
     private static final int PARRIED_FLAG = 4;
@@ -59,12 +59,12 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     protected int inGroundTime;
     private final List<Entity> hitEntities = new ArrayList<>();
 
-    public IraedeusEntity(EntityType<? extends ProjectileEntity> entityType, World world) {
+    public ThrowableSwordEntity(EntityType<? extends ProjectileEntity> entityType, World world) {
         super(entityType, world);
         this.originalSlot = -1;
     }
 
-    public IraedeusEntity(World world, Entity owner, int slot, double x, double y, double z) {
+    public ThrowableSwordEntity(World world, Entity owner, int slot, double x, double y, double z) {
         super(ModEntities.IRAEDEUS, world);
         this.originalSlot = slot;
 
@@ -75,7 +75,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         builder.add(ITEM, ItemStack.EMPTY);
-        builder.add(IRAEDEUS_FLAGS, (byte) 0);
+        builder.add(THROWABLE_SWORD_FLAGS, (byte) 0);
         builder.add(NO_CLIP, false);
         builder.add(CHARGE, 0);
         builder.add(TARGET, new BlockPositionSource(new BlockPos(0, 0, 0)));
@@ -300,7 +300,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         boolean returning = false;
 
         if (this.getOwner() instanceof PlayerEntity player) {
-            IraedeusComponent component = ModComponents.IRAEDEUS.get(player);
+            ThrowableSwordComponent component = ModComponents.THROWABLE_WIP.get(player);
             targeting = component.targeting;
             returning = component.returning;
             if (targeting) component.targetCooldown = 40;
@@ -363,17 +363,17 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     }
 
     public boolean isReturning() {
-        byte b = this.dataTracker.get(IRAEDEUS_FLAGS);
+        byte b = this.dataTracker.get(THROWABLE_SWORD_FLAGS);
         return (b & RETURNING_FLAG) != 0;
     }
 
     public boolean isTargeting() {
-        byte b = this.dataTracker.get(IRAEDEUS_FLAGS);
+        byte b = this.dataTracker.get(THROWABLE_SWORD_FLAGS);
         return (b & TARGETING_FLAG) != 0;
     }
 
     public boolean isParried() {
-        byte b = this.dataTracker.get(IRAEDEUS_FLAGS);
+        byte b = this.dataTracker.get(THROWABLE_SWORD_FLAGS);
         return (b & PARRIED_FLAG) != 0;
     }
 
@@ -397,11 +397,11 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     }
 
     private void setIraedeusFlag(int index, boolean flag) {
-        byte b = this.dataTracker.get(IRAEDEUS_FLAGS);
+        byte b = this.dataTracker.get(THROWABLE_SWORD_FLAGS);
         if (flag) {
-            this.dataTracker.set(IRAEDEUS_FLAGS, (byte) (b | index));
+            this.dataTracker.set(THROWABLE_SWORD_FLAGS, (byte) (b | index));
         } else {
-            this.dataTracker.set(IRAEDEUS_FLAGS, (byte) (b & ~index));
+            this.dataTracker.set(THROWABLE_SWORD_FLAGS, (byte) (b & ~index));
         }
     }
 
@@ -440,8 +440,8 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         }
 
         if (bl) {
-            ModComponents.IRAEDEUS.get(player).reset();
-            player.getItemCooldownManager().set(ModItems.IRAEDEUS, (int) Math.max(20, this.activeTicks * 0.25f));
+            ModComponents.THROWABLE_WIP.get(player).reset();
+            player.getItemCooldownManager().set(ModItems.THROWABLE_WIP, (int) Math.max(20, this.activeTicks * 0.25f));
             if (this.getCharge() > 0) {
                 GildedGloryUtil.sendSoundPayload(player.getWorld(), player, null, GildedGlory.id("iraedeus_hum"));
             }
@@ -453,7 +453,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
     public ItemStack getStack() {
         ItemStack stack = this.getItem();
         ChargeableWeapon.setCharge(stack, this.getCharge());
-        return stack.isEmpty() ? new ItemStack(ModItems.IRAEDEUS) : stack;
+        return stack.isEmpty() ? new ItemStack(ModItems.THROWABLE_WIP) : stack;
     }
 
     @Override
@@ -463,7 +463,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         if (!itemStack.isEmpty()) {
             nbt.put("Item", this.getStack().encode(this.getRegistryManager()));
         }
-        nbt.putByte("Status", this.dataTracker.get(IRAEDEUS_FLAGS));
+        nbt.putByte("Status", this.dataTracker.get(THROWABLE_SWORD_FLAGS));
         nbt.putInt("Charge", this.getCharge());
     }
 
@@ -476,7 +476,7 @@ public class IraedeusEntity extends ProjectileEntity implements FlyingItemEntity
         else {
             this.setItem(this.getStack());
         }
-        this.dataTracker.set(IRAEDEUS_FLAGS, nbt.getByte("Status"));
+        this.dataTracker.set(THROWABLE_SWORD_FLAGS, nbt.getByte("Status"));
         this.setCharge(nbt.getInt("Charge"));
     }
 

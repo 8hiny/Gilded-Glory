@@ -10,12 +10,9 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
-import shiny.gildedglory.client.util.GildedGloryUtil;
-import shiny.gildedglory.common.entity.IraedeusEntity;
+import shiny.gildedglory.common.entity.ThrowableSwordEntity;
 
-import java.awt.*;
-
-public class IraedeusEntityRenderer extends EntityRenderer<IraedeusEntity> {
+public class IraedeusEntityRenderer extends EntityRenderer<ThrowableSwordEntity> {
 
     private final ItemRenderer itemRenderer;
 
@@ -25,7 +22,7 @@ public class IraedeusEntityRenderer extends EntityRenderer<IraedeusEntity> {
     }
 
     @Override
-    public void render(IraedeusEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(ThrowableSwordEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         float rotation = (entity.age + tickDelta) * 75;
 
         matrices.push();
@@ -50,7 +47,7 @@ public class IraedeusEntityRenderer extends EntityRenderer<IraedeusEntity> {
     }
 
     @Override
-    public Identifier getTexture(IraedeusEntity entity) {
+    public Identifier getTexture(ThrowableSwordEntity entity) {
         return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE;
     }
 }

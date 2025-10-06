@@ -6,7 +6,7 @@ import shiny.gildedglory.common.registry.ModRegistries;
 
 public class CustomArmPoses {
 
-    public static CustomArmPose TWO_HANDED_HOLDING = register("two_handed_holding", new CustomArmPose(
+    public static final CustomArmPose TWO_HANDED_HOLDING = register("two_handed_holding", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.yaw = 0.8f;
                 leftArm.pitch = -0.97079635f;
@@ -17,7 +17,7 @@ public class CustomArmPoses {
             },
             false
     ));
-    public static CustomArmPose SIDEWAYS_CHARGING = register("sideways_charging", new CustomArmPose(
+    public static final CustomArmPose SIDEWAYS_CHARGING = register("sideways_charging", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.yaw = -0.55f;
                 leftArm.pitch = ctx.entity().isSneaking() ? -1.1f : -0.7f;
@@ -29,7 +29,7 @@ public class CustomArmPoses {
             },
             false
     ));
-    public static CustomArmPose FORWARDS_BLOCKING = register("forwards_blocking", new CustomArmPose(
+    public static final CustomArmPose FORWARDS_BLOCKING = register("forwards_blocking", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.pitch = Math.min(ctx.headPitch() + 80.0f, 80.77f);
             },
@@ -38,7 +38,7 @@ public class CustomArmPoses {
             },
             false
     ));
-    public static CustomArmPose FORWARDS_AIMING = register("forwards_aiming", new CustomArmPose(
+    public static final CustomArmPose FORWARDS_AIMING = register("forwards_aiming", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.yaw = 0.4f + ctx.headYaw();
                 leftArm.pitch = (float) (-Math.PI / 2) + ctx.headPitch();
@@ -51,7 +51,7 @@ public class CustomArmPoses {
             },
             true
     ));
-    public static CustomArmPose BACKWARDS_HOLDING = register("backwards_holding", new CustomArmPose(
+    public static final CustomArmPose BACKWARDS_HOLDING_LEFT = register("backwards_holding_left", new CustomArmPose(
             (leftArm, ctx) -> {
                 leftArm.yaw = 0.3f;
                 leftArm.pitch = ctx.entity().isSneaking() ? -1.0f : -0.6f;
@@ -60,6 +60,19 @@ public class CustomArmPoses {
             (rightArm, ctx) -> {
                 rightArm.yaw = -1f;
                 rightArm.pitch = ctx.entity().isSneaking() ? -1.9f : -1.5f;
+                rightArm.roll = 0.3f;
+            },
+            false
+    ));
+    public static final CustomArmPose BACKWARDS_HOLDING_RIGHT = register("backwards_holding_right", new CustomArmPose(
+            (leftArm, ctx) -> {
+                leftArm.yaw = 1f;
+                leftArm.pitch = ctx.entity().isSneaking() ? -1.9f : -1.5f;
+                leftArm.roll = -0.3f;
+            },
+            (rightArm, ctx) -> {
+                rightArm.yaw = -0.3f;
+                rightArm.pitch = ctx.entity().isSneaking() ? -1.0f : -0.6f;
                 rightArm.roll = 0.3f;
             },
             false

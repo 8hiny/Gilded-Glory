@@ -1,6 +1,12 @@
 {
 	"parent": "minecraft:item/handheld",
 	"textures": {
-		"layer0": "gildedglory:item/gui/iraedeus"
-	}
+		"layer0": "gildedglory:item/iraedeus/gui/base"
+	},
+    "overrides": [
+      {"predicate": {"gildedglory:charge_percentage": 0.25}, "model": "gildedglory:item/gui/iraedeus/stage_1"},
+      {"predicate": {"gildedglory:charge_percentage": 0.5}, "model": "gildedglory:item/gui/iraedeus/stage_2"},
+      {"predicate": {"gildedglory:charge_percentage": 0.75}, "model": "gildedglory:item/gui/iraedeus/stage_3"},
+      {"predicate": {"gildedglory:inventory_sheathed": 1}, "model": "gildedglory:item/gui/iraedeus/sheathed"}
+    ]
 }

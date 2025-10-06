@@ -1,18 +1,24 @@
 {
 	"parent": "minecraft:item/handheld",
 	"textures": {
-		"layer0": "gildedglory:item/iraedeus"
+		"layer0": "gildedglory:item/iraedeus/base"
 	},
 	"gui_light": "front",
+	"overrides": [
+		{"predicate": {"gildedglory:charge_percentage": 0.25}, "model": "gildedglory:item/iraedeus/stage_1"},
+		{"predicate": {"gildedglory:charge_percentage": 0.5}, "model": "gildedglory:item/iraedeus/stage_2"},
+		{"predicate": {"gildedglory:charge_percentage": 0.75}, "model": "gildedglory:item/iraedeus/stage_3"},
+        {"predicate": {"gildedglory:sheathed": 1}, "model": "gildedglory:item/iraedeus/sheathed"}
+    ],
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [0, -90, 45],
-			"translation": [0, 11.5, 1.75],
+			"translation": [0, 11.5, 2],
 			"scale": [1.9, 1.9, 1.5]
 		},
 		"thirdperson_lefthand": {
 			"rotation": [0, 90, -45],
-			"translation": [0, 11.5, 1.75],
+			"translation": [0, 11.5, 2],
 			"scale": [1.9, 1.9, 1.5]
 		},
 		"firstperson_righthand": {
@@ -26,7 +32,7 @@
 			"scale": [0.9, 0.9, 0.7]
 		},
 		"fixed": {
-			"rotation": [0, 180, 0],
+			"rotation": [0, -180, 0],
 			"scale": [1.2, 1.2, 1]
 		}
 	}

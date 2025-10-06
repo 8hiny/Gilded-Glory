@@ -53,8 +53,8 @@ public class GildedGlory implements ModInitializer {
 		TestRenderObjectCommand.init();
 
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-			ModComponents.IRAEDEUS.get(handler.player).resetEntity();
-			ModComponents.IRAEDEUS.get(handler.player).reset();
+			ModComponents.THROWABLE_WIP.get(handler.player).resetEntity();
+			ModComponents.THROWABLE_WIP.get(handler.player).reset();
 		});
 	}
 

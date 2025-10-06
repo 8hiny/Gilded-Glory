@@ -16,6 +16,7 @@ public class ModComponentTypes {
     public static final ComponentType<Integer> COOLDOWN = register("cooldown", builder -> builder.codec(Codec.INT));
     public static final ComponentType<UUID> OWNER_UUID = register("owner_uuid", builder -> builder.codec(Uuids.CODEC));
     public static final ComponentType<String> OWNER_NAME = register("owner_name", builder -> builder.codec(Codec.STRING));
+    public static final ComponentType<Boolean> SHEATHED = register("sheathed", builder -> builder.codec(Codec.BOOL));
 
     private static <T> ComponentType<T> register(String name, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, GildedGlory.id(name), ((ComponentType.Builder) builderOperator.apply(ComponentType.builder())).build());

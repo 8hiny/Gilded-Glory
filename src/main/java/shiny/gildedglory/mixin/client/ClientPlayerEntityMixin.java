@@ -32,7 +32,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
 
     @WrapOperation(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z"))
     private boolean gildedglory$allowSprintWithItem(ClientPlayerEntity player, Operation<Boolean> original) {
-        return (original.call(player) && !(player.getActiveItem().getItem() instanceof SprintUsableItem));
+        return original.call(player) && !(player.getActiveItem().getItem() instanceof SprintUsableItem item && item.allowSprinting(player, player.getActiveItem()));
     }
 
     @Inject(method = "canStartSprinting", at = @At(value = "RETURN"), cancellable = true)
@@ -40,7 +40,8 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         cir.setReturnValue(cir.getReturnValue() || (!this.isSprinting()
                 && this.isWalking()
                 && this.canSprint()
-                && this.getActiveItem().getItem() instanceof SprintUsableItem
+                && this.getActiveItem().getItem() instanceof SprintUsableItem item
+                && item.allowSprinting(this, this.getActiveItem())
                 && !this.hasStatusEffect(StatusEffects.BLINDNESS)
                 && (!this.hasVehicle() || this.canVehicleSprint(this.getVehicle()))
                 && !this.isFallFlying()));

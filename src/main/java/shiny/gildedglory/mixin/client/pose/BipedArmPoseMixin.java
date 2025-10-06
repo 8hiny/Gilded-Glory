@@ -1,4 +1,4 @@
-package shiny.gildedglory.mixin.client;
+package shiny.gildedglory.mixin.client.pose;
 
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import org.spongepowered.asm.mixin.Mixin;

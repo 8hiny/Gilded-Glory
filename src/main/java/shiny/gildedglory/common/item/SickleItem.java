@@ -61,7 +61,7 @@ public class SickleItem extends SwordItem implements CustomAttackWeapon, CustomE
     }
 
     @Override
-    public AttackContext onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount) {
+    public AttackContext onAttack(ItemStack stack, LivingEntity attacker, Entity target, DamageSource source, float amount, boolean critical, boolean sweeping) {
         boolean bl = Math.random() <= 0.2;
 
         if (bl) {

@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import shiny.gildedglory.common.entity.IraedeusEntity;
+import shiny.gildedglory.common.entity.ThrowableSwordEntity;
 import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.item.FoolsArmorItem;
 import shiny.gildedglory.common.registry.component.ModComponents;
@@ -62,8 +62,8 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (entity instanceof PlayerEntity player) {
             //Return thrown iraedeus's to their owners
-            if (ModComponents.IRAEDEUS.get(player).slot != -1) {
-                for (IraedeusEntity iraedeus : player.getWorld().getEntitiesByClass(IraedeusEntity.class,
+            if (ModComponents.THROWABLE_WIP.get(player).slot != -1) {
+                for (ThrowableSwordEntity iraedeus : player.getWorld().getEntitiesByClass(ThrowableSwordEntity.class,
                         player.getBoundingBox().expand(50.0),
                         iraedeusEntity -> iraedeusEntity.getOwner() != null && iraedeusEntity.getOwner().getUuid() == player.getUuid())
                 ) {

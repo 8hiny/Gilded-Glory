@@ -1,5 +1,10 @@
 package shiny.gildedglory.common.util;
 
+import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
+import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import dev.kosmx.playerAnim.core.util.Ease;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.world.ClientWorld;
@@ -25,6 +30,7 @@ import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.sound.DynamicSounds;
 import shiny.gildedglory.common.network.ChargingParticlePayload;
 import shiny.gildedglory.common.network.ItemUseSoundPayload;
+import shiny.gildedglory.common.network.PlayAnimationPayload;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,6 +146,34 @@ public class GildedGloryUtil {
                 color
         );
         sendPayloadToTracking(payload, world, source, null);
+    }
+
+    /**
+     * Starts an animation for the specified player.
+     * @param id The animation to be started
+     */
+    public static void startPlayerAnimation(World world, PlayerEntity player, @Nullable Identifier id) {
+        if (world.isClient()) {
+            if (player instanceof AnimatablePlayer animatablePlayer) {
+                if (id == null) {
+                    animatablePlayer.gildedglory$getModifierLayer().replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(5, Ease.INOUTSINE), null);
+                }
+                else {
+                    KeyframeAnimation animation = (KeyframeAnimation) PlayerAnimationRegistry.getAnimation(GildedGlory.id("sheathing"));
+                    if (animation != null) {
+                        animatablePlayer.gildedglory$getModifierLayer().setAnimation(new KeyframeAnimationPlayer(animation));
+                    }
+                }
+            }
+        }
+        else {
+            if (id == null) {
+                GildedGloryUtil.sendPayloadToTracking(new PlayAnimationPayload(player.getId(), GildedGlory.id(""), false), world, player, player);
+            }
+            else {
+                GildedGloryUtil.sendPayloadToTracking(new PlayAnimationPayload(player.getId(), id, true), world, player, player);
+            }
+        }
     }
 
     /**

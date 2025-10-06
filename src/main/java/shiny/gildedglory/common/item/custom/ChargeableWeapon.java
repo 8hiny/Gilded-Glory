@@ -50,8 +50,7 @@ public interface ChargeableWeapon {
     }
 
     static int getCharge(ItemStack stack) {
-        Integer i = stack.get(ModComponentTypes.CHARGE);
-        return i != null ? i : 0;
+        return stack.getOrDefault(ModComponentTypes.CHARGE, 0);
     }
 
     /**

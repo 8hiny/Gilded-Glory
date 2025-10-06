@@ -15,6 +15,7 @@ import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.item.*;
 import shiny.gildedglory.common.item.compat.CompatConsumableItem;
+import shiny.gildedglory.common.item.custom.HiddenItem;
 
 public class ModItems {
 
@@ -23,7 +24,6 @@ public class ModItems {
     public static final Item FOOLS_GOLD_INGOT = register("fools_gold_ingot", new Item(new Item.Settings()));
     public static final Item TWISTEEL_CHARM = register("twisteel_charm", new CharmItem(new Item.Settings().maxCount(1).fireproof()));
     public static final Item GILDED_HORN = register("gilded_horn", new GildedHornItem(new Item.Settings().maxCount(1)));
-    public static final Item KATANA_SHEATH = register("katana_sheath", new Item(new Item.Settings()));
 
     public static final Item AURADEUS = registerWithGui(
             "auradeus", new AuradeusItem(ModToolMaterials.TWISTEEL, new Item.Settings()
@@ -41,7 +41,7 @@ public class ModItems {
             "iraedeus", new IraedeusItem(
                     ModToolMaterials.GLOOMETAL, new Item.Settings()
                     .fireproof()
-                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.GLOOMETAL, 3, -2.4f))
+                    .attributeModifiers(SheathableSwordItem.createAttributeModifiers(ModToolMaterials.GLOOMETAL, 3, -2.4f, 0.25f))
             )
     );
     public static final Item TWISTEEL_SICKLE = register(
@@ -49,6 +49,13 @@ public class ModItems {
                     ModToolMaterials.TWISTEEL, new Item.Settings()
                     .fireproof()
                     .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.TWISTEEL, 2, -2.3f))
+            )
+    );
+    public static final Item THROWABLE_WIP = registerWithGui(
+            "throwable_wip", new ThrowableSwordItem(
+                    ModToolMaterials.GLOOMETAL, new Item.Settings()
+                    .fireproof()
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.GLOOMETAL, 3, -2.4f))
             )
     );
     public static final Item KATANA = registerWithGui(
@@ -101,6 +108,12 @@ public class ModItems {
             32 , Items.BOWL
     ));
     public static final Item GOLDEN_BURGER = register("golden_burger", new CompatConsumableItem(new Item.Settings().food(FoodValues.GOLDEN_BURGER)));
+
+    //Hidden items used purely for rendering, I know this seems pretty unecessary
+    //If I can find an easier way to render item models directly that doesn't require substituting a bunch of methods from the ItemRenderer, I will remove these
+    //TODO Find a nice way to directly render item models
+    public static final Item KATANA_SHEATH = register("katana_sheath", new HiddenItem());
+    public static final Item IRAEDEUS_SHEATH = register("iraedeus_sheath", new HiddenItem());
 
 
     private static void addToCombatItemGroup(FabricItemGroupEntries entries) {

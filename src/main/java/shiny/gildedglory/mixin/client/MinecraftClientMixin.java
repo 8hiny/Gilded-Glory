@@ -18,7 +18,7 @@ public class MinecraftClientMixin {
     @ModifyReturnValue(method = "hasOutline", at = @At(value = "RETURN"))
     private boolean gildedglory$highlightIraedeusTarget(boolean original, Entity entity) {
         if (this.player != null) {
-            if (entity == ModComponents.IRAEDEUS.get(this.player).getTargetedEntity()) {
+            if (entity == ModComponents.THROWABLE_WIP.get(this.player).getTargetedEntity()) {
                 return true;
             }
         }

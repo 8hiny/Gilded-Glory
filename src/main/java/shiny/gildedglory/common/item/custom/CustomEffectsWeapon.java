@@ -7,8 +7,9 @@ import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import shiny.gildedglory.client.pose.ArmPose;
+import shiny.gildedglory.client.use_action.BaseUseAction;
 
-///An interface which can be implemented by other Item classes, which allows them to register custom attack sounds, particles, and arm poses.
+///An interface which can be implemented by other Item classes, which allows them to register custom attack sounds, particles, arm poses, and use actions.
 public interface CustomEffectsWeapon {
 
     default SoundEvent getDefaultAttackSound(ItemStack stack) {
@@ -62,7 +63,12 @@ public interface CustomEffectsWeapon {
 
     /// Returns the pose for the holder's offhand when this item is held.
     default ArmPose getOffHandPose(LivingEntity holder, ItemStack stack) {
-        return ArmPose.USE_VANILLA;
+        return this.dualHandPoses() ? this.getMainHandPose(holder, stack) : ArmPose.USE_VANILLA;
+    }
+
+    /// Returns whether to use the main hand's pose for the offhand.
+    default boolean dualHandPoses() {
+        return true;
     }
 
     /// Returns any custom pose which this item might apply to the holder. Prioritizes the main hand.
@@ -73,6 +79,11 @@ public interface CustomEffectsWeapon {
         if (mainPose != null && isCustom(mainPose)) return mainPose;
         else if (otherPose != null && isCustom(otherPose)) return otherPose;
         return null;
+    }
+
+    /// Returns a custom use action for this item. Only used to apply transformations to items in first person.
+    default BaseUseAction getCustomUseAction(LivingEntity holder, ItemStack stack) {
+        return BaseUseAction.USE_VANILLA;
     }
 
     /// Returns whether any items in the holder's offhand should be hidden while this item is held in the main hand.

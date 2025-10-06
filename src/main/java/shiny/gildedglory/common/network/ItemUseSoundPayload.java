@@ -33,7 +33,7 @@ public record ItemUseSoundPayload(int id, Identifier sound) implements CustomPay
         @Override
         public void receive(ItemUseSoundPayload payload, ClientPlayNetworking.Context context) {
             MinecraftClient client = context.client();
-            if (client.world != null && client.world.getEntityById(payload.id) != null) {
+            if (client.world != null) {
                 Entity entity = client.world.getEntityById(payload.id);
 
                 if (entity != null) {
