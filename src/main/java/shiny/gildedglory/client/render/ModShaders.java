@@ -12,6 +12,7 @@ import net.minecraft.client.render.Frustum;
 import org.ladysnake.satin.api.event.EntitiesPostRenderCallback;
 import org.ladysnake.satin.api.event.ResolutionChangeCallback;
 import org.ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import org.ladysnake.satin.api.managed.ManagedFramebuffer;
 import org.ladysnake.satin.api.managed.ManagedShaderEffect;
 import org.ladysnake.satin.api.managed.ShaderEffectManager;
 import org.ladysnake.satin.api.managed.uniform.SamplerUniformV2;
@@ -26,9 +27,11 @@ public class ModShaders implements EntitiesPostRenderCallback, WorldRenderEvents
 
     //Post Shaders
     public ManagedShaderEffect MIRROR = ShaderEffectManager.getInstance().manage(GildedGlory.id("shaders/post/mirror.json"));
+    public static final ManagedShaderEffect GOLDEN_SHINE = ShaderEffectManager.getInstance().manage(GildedGlory.id("shaders/post/golden_shine.json"));
 
     //Frame Buffers
     public Framebuffer mirrorFrameBuffer = MIRROR.getTarget("final").getFramebuffer();
+    public static final ManagedFramebuffer goldenShineBuffer = GOLDEN_SHINE.getTarget("final");
 
     //Uniforms
     public SamplerUniformV2 mirrorSampler = MIRROR.findSampler("MirrorSampler");

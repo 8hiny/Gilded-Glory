@@ -2,7 +2,6 @@ package shiny.gildedglory.common.item;
 
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -24,8 +23,6 @@ import shiny.gildedglory.common.registry.sound.ModSounds;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
 public class SheathableSwordItem extends SwordItem implements CustomEffectsWeapon, SheathableWeapon {
-
-    protected boolean sheathing;
 
     public SheathableSwordItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, settings);
@@ -55,23 +52,17 @@ public class SheathableSwordItem extends SwordItem implements CustomEffectsWeapo
                 .build();
     }
 
+    //Need a more reliable system to detect whether the player just finished sheathing the weapon and is still holding right click
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (this.sheathing && this.isSheathed(user, stack)) {
-            return TypedActionResult.fail(stack);
-        }
-        else if (user.getOffHandStack() == stack) {
+        if (user.getOffHandStack() == stack) {
             return super.use(world, user, hand);
         }
         else {
-            if (this.isSheathed(user, stack)) {
-                user.getItemCooldownManager().set(this, 20);
-                SheathableWeapon.setSheathed(stack, false);
-            }
-            else {
-                this.sheathing = true;
+            if (!this.isSheathed(user, stack)) {
                 world.playSound(user, user.getX(), user.getY(), user.getZ(), ModSounds.SHEATH_WEAPON, user.getSoundCategory(), 1.0f, 1.0f);
                 GildedGloryUtil.startPlayerAnimation(world, user, GildedGlory.id("sheathing"));
             }
@@ -90,21 +81,12 @@ public class SheathableSwordItem extends SwordItem implements CustomEffectsWeapo
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (this.sheathing && !entity.isUsing(this)) {
-            this.sheathing = false;
-        }
-    }
-
-    @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (this.getMaxUseTime(stack, user) - remainingUseTicks < this.sheathTime() - 1) {
+        if (!this.isSheathed(user, stack)) {
             if (user instanceof PlayerEntity player) {
                 GildedGloryUtil.startPlayerAnimation(world, player, null);
             }
-            SheathableWeapon.setSheathed(stack, false);
         }
-        this.sheathing = false;
     }
 
     @Override
@@ -113,8 +95,8 @@ public class SheathableSwordItem extends SwordItem implements CustomEffectsWeapo
     }
 
     @Override
-    public boolean currentlySheathing() {
-        return this.sheathing;
+    public boolean currentlySheathing(LivingEntity holder, ItemStack stack) {
+        return holder.isUsing(this) && holder.getItemUseTime() <= this.sheathTime() + 4;
     }
 
     @Override

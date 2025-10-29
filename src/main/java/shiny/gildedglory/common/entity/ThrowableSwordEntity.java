@@ -321,7 +321,7 @@ public class ThrowableSwordEntity extends ProjectileEntity implements FlyingItem
         if (from == this) {
             rotation = this.getVelocity().normalize();
         }
-        from.getWorld().addImportantParticle(new VectorParticleEffect(ModParticles.SHOCKWAVE, rotation.toVector3f()),
+        from.getWorld().addImportantParticle(new VectorParticleEffect(ModParticles.SHOCKWAVE, rotation.toVector3f(), 0, 0),
                 true, from.getX(), from.getEyeY(), from.getZ(), 0, 0, 0);
     }
 

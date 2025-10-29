@@ -27,6 +27,7 @@
     "client.LivingEntityRendererMixin",
     "client.MinecraftClientMixin",
     "client.ModelLoaderMixin",
+    "client.PlayerEntityRendererMixin",
     "client.animation.AbstractClientPlayerEntityMixin",
     "client.pose.BipedArmPoseMixin",
     "client.pose.BipedEntityModelMixin",

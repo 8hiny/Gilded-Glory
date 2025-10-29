@@ -6,7 +6,7 @@
 	"overrides": [
 	{
 		"predicate": {
-			"gildedglory:pull": 0.05
+			"gildedglory:use_time": 0.05
 		}, 
 		"model": "gildedglory:item/swordspear_charging"
 	},

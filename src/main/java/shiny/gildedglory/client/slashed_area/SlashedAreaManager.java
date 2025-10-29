@@ -78,20 +78,20 @@ public class SlashedAreaManager {
                     matrices.pop();
 
                     //Mirror quads between slashes
-                    matrices.push();
-                    VertexConsumer mirror = vertexConsumers.getBuffer(ModRenderLayers.getMirror());
-                    for (int i = 0; i < count - 2; i++) {
-                        Vec3d a = points.get(i);
-                        Vec3d b = points.get(i + 1);
-                        Vec3d c = points.get(i + 2);
-                        Vec3d d = points.get(i + 3);
-
-                        vertex(matrices, mirror, a);
-                        vertex(matrices, mirror, b);
-                        vertex(matrices, mirror, d);
-                        vertex(matrices, mirror, c);
-                    }
-                    matrices.pop();
+//                    matrices.push();
+//                    VertexConsumer mirror = vertexConsumers.getBuffer(ModRenderLayers.getMirror());
+//                    for (int i = 0; i < count - 2; i++) {
+//                        Vec3d a = points.get(i);
+//                        Vec3d b = points.get(i + 1);
+//                        Vec3d c = points.get(i + 2);
+//                        Vec3d d = points.get(i + 3);
+//
+//                        vertex(matrices, mirror, a);
+//                        vertex(matrices, mirror, b);
+//                        vertex(matrices, mirror, d);
+//                        vertex(matrices, mirror, c);
+//                    }
+//                    matrices.pop();
                 }
                 else {
                     iterator.remove();

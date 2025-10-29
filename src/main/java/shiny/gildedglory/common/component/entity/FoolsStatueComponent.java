@@ -19,40 +19,40 @@ public class FoolsStatueComponent implements TimedComponent, CommonTickingCompon
 
     @Override
     public void tick() {
-        if (remainingTicks > 0) {
-            remainingTicks--;
+        if (this.remainingTicks > 0) {
+            this.remainingTicks--;
 
-            if (!FoolsArmorItem.hasFullSet(provider)) this.disable();
+            if (!FoolsArmorItem.hasFullSet(this.provider)) this.disable();
         }
         else {
             this.disable();
         }
 
-        ModComponents.FOOLS_STATUE.sync(provider);
+        ModComponents.FOOLS_STATUE.sync(this.provider);
     }
 
     @Override
     public void setDuration(int duration) {
-        remainingTicks = duration;
+        this.remainingTicks = duration;
     }
 
     @Override
     public int getDuration() {
-        return remainingTicks;
+        return this.remainingTicks;
     }
 
     @Override
     public void disable() {
-        remainingTicks = 0;
+        this.remainingTicks = 0;
     }
 
     @Override
     public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
-        remainingTicks = tag.getInt("remainingTicks");
+        this.remainingTicks = tag.getInt("remainingTicks");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
-        tag.putInt("remainingTicks", remainingTicks);
+        tag.putInt("remainingTicks", this.remainingTicks);
     }
 }

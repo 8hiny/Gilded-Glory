@@ -13,7 +13,7 @@ public interface SheathableWeapon {
     public boolean isSheathed(LivingEntity holder, ItemStack stack);
 
     /// Returns whether the item is currently being sheathed.
-    public boolean currentlySheathing();
+    public boolean currentlySheathing(LivingEntity holder, ItemStack stack);
 
     /// Returns which item should be rendered in the offhand as the sheath.
     public Item getSheath(ItemStack stack);

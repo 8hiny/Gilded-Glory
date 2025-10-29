@@ -16,6 +16,8 @@ import java.util.Optional;
 
 public class HeatedAnvilRecipeHandler {
 
+    //TODO (Fix this not working for recipes which require multiple of the same item; This happens because item stacks are merged together)
+    //Might have fixed it with my own "old" recipe matching logic
     public static boolean compress(DefaultedList<ItemEntity> items, World world, BlockPos pos) {
         if (!world.isClient()) {
             items = merge(items);

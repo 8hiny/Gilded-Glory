@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 import shiny.gildedglory.GildedGlory;
-import shiny.gildedglory.client.particle.effect.TestParticleEffect;
+import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
@@ -48,7 +48,7 @@ public record ChargingParticlePayload(int id, Vec3d position, Vec3d delta, Vecto
                 Vec3d pos = payload.position;
                 Vec3d delta = payload.delta;
 
-                TestParticleEffect particle = new TestParticleEffect(ModParticles.SQUARE, payload.color, GildedGloryUtil.random(0.2f, 0.5f), 40);
+                VectorParticleEffect particle = new VectorParticleEffect(ModParticles.SQUARE, payload.color, GildedGloryUtil.random(0.2f, 0.5f), 40);
                 client.particleManager.addParticle(particle, pos.x, pos.y, pos.z, delta.x, delta.y, delta.z);
             }
         }

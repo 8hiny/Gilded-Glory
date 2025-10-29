@@ -17,6 +17,7 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.Stats;
@@ -27,7 +28,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
 import shiny.gildedglory.GildedGlory;
+import shiny.gildedglory.client.particle.effect.ColoredEntityParticleEffect;
 import shiny.gildedglory.client.pose.ArmPose;
 import shiny.gildedglory.client.pose.CustomArmPoses;
 import shiny.gildedglory.common.item.custom.ChargeableWeapon;
@@ -111,7 +114,20 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
             float pitch = GildedGloryUtil.random(0.9f, 1.3f);
             world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.SWORDSPEAR_FIRE, SoundCategory.PLAYERS, 1.0f, pitch);
         }
-        if (charge > 4) GildedGloryUtil.playLoopingSound(world, user, GildedGlory.id("swordspear_firing"));
+        if (charge > 4) {
+            GildedGloryUtil.playLoopingSound(world, user, GildedGlory.id("swordspear_firing"));
+
+            if (world instanceof ServerWorld serverWorld) {
+                serverWorld.spawnParticles(new ColoredEntityParticleEffect(
+                        ModParticles.SWORDSPEAR_SHINE,
+                        user.getId(),
+                        user.getRotationVector().multiply(1.4).add(0, user.getHeight() * 0.75, 0).toVector3f(),
+                        new Vector3f(1, 1, 1),
+                        1.75f,
+                        200
+                ), user.getX(), user.getBodyY(0.75), user.getZ(), 0, 0, 0, 0, 0);
+            }
+        }
     }
 
     @Override

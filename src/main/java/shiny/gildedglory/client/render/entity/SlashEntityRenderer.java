@@ -60,7 +60,7 @@ public class SlashEntityRenderer extends EntityRenderer<SlashProjectileEntity> {
         if (entity.getVariant() == 0) vertexConsumer1 = vertexConsumers.getBuffer(ModRenderLayers.getSlash(TEXTURE));
         else vertexConsumer1 = vertexConsumers.getBuffer(ModRenderLayers.getSlash(ALT_TEXTURE));
 
-        GildedGloryUtil.drawQuad(matrices, vertexConsumer1, Vec3d.ZERO, 2.4f, 1.6f, 32, 48, 128, 48, entity.getTextureFrame(), 255, 15728880);
+        GildedGloryUtil.drawQuad(matrices, vertexConsumer1, Vec3d.ZERO, Color.WHITE, 2.4f, 1.6f, 32, 48, 128, 48, entity.getTextureFrame(), 255, 15728880);
         matrices.pop();
 
         matrices.pop();

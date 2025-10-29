@@ -69,6 +69,17 @@ public class DynamicSounds {
             false, source -> source instanceof ThrowableSwordEntity,
             DynamicSoundManager.getInstance()
     ));
+    private static final DynamicSoundInstance IRAEDEUS_CHARGING = register("iraedeus_charging", new PredicatedLoopingSoundInstance(
+            ModSounds.SWORDSPEAR_CHARGE,
+            SoundCategory.PLAYERS,
+            0.5f, 0.75f,
+            0.0f, 0.75f,
+            2.0f, 1.0f,
+            36, 10,
+            false, true,
+            false, source -> source.isUsing(ModItems.IRAEDEUS),
+            DynamicSoundManager.getInstance()
+    ));
 
     public static DynamicSoundInstance register(String name, DynamicSoundInstance sound) {
         return Registry.register(ModRegistries.DYNAMIC_SOUND_INSTANCE, GildedGlory.id(name), sound);

@@ -1,0 +1,21 @@
+{
+  "type": "gildedglory:forge_welding",
+  "ingredients": [
+    {
+      "item": "minecraft:netherite_axe"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:fools_gold_ingot"
+    }
+  ],
+  "result": {
+    "id": "gildedglory:undivine_axe",
+    "count": 1
+  }
+}

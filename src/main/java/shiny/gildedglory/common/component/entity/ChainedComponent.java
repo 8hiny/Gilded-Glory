@@ -26,10 +26,10 @@ public class ChainedComponent implements TimedComponent, CommonTickingComponent,
 
     @Override
     public void tick() {
-        if (cooldown > 0) cooldown--;
-        else if (progress > 0) progress--;
+        if (this.cooldown > 0) this.cooldown--;
+        else if (this.progress > 0) this.progress--;
 
-        if (remainingTicks > 1) remainingTicks--;
+        if (this.remainingTicks > 1) this.remainingTicks--;
     }
 
     @Override
@@ -38,11 +38,11 @@ public class ChainedComponent implements TimedComponent, CommonTickingComponent,
 
         LivingEntity entity = getCounterpartEntity();
         if (entity != null) {
-            if (remainingTicks > 1 && (!entity.isAlive() || !this.provider.isAlive()) && entity instanceof LivingEntity) {
+            if (this.remainingTicks > 1 && (!entity.isAlive() || !this.provider.isAlive()) && entity instanceof LivingEntity) {
                 ModComponents.CHAINED.get(entity).disable();
                 this.disable();
             }
-            else if (remainingTicks == 1) {
+            else if (this.remainingTicks == 1) {
                 ModComponents.CHAINED.get(entity).disable();
                 this.disable();
             }
@@ -51,26 +51,26 @@ public class ChainedComponent implements TimedComponent, CommonTickingComponent,
     }
 
     public UUID getCounterpart() {
-        return counterpart;
+        return this.counterpart;
     }
 
     public LivingEntity getCounterpartEntity() {
-        ServerWorld world = (ServerWorld) provider.getWorld();
+        ServerWorld world = (ServerWorld) this.provider.getWorld();
 
-        if (counterpart != null && world.getEntity(counterpart) != null) {
-            return (LivingEntity) world.getEntity(counterpart);
+        if (this.counterpart != null && world.getEntity(this.counterpart) != null) {
+            return (LivingEntity) world.getEntity(this.counterpart);
         }
         return null;
     }
 
     public void addProgress(LivingEntity entity, int amount) {
-        progress = progress + amount;
-        if (progress >= 100 && entity != null) this.chain(entity, progress * 4);
+        this.progress = this.progress + amount;
+        if (this.progress >= 100 && entity != null) this.chain(entity, this.progress * 4);
         else this.triggerCooldown();
     }
 
     public void chain(LivingEntity entity, int duration) {
-        counterpart = entity.getUuid();
+        this.counterpart = entity.getUuid();
         this.setDuration(duration);
     }
 
@@ -83,22 +83,22 @@ public class ChainedComponent implements TimedComponent, CommonTickingComponent,
     }
 
     public void triggerCooldown() {
-        cooldown = 80;
+        this.cooldown = 80;
     }
 
     @Override
     public void setDuration(int duration) {
-        remainingTicks = duration;
+        this.remainingTicks = duration;
         ModComponents.CHAINED.sync(provider);
     }
 
     @Override
     public int getDuration() {
-        return remainingTicks;
+        return this.remainingTicks;
     }
 
     public void setAttacker(boolean bl) {
-        attacker = bl;
+        this.attacker = bl;
         ModComponents.CHAINED.sync(provider);
     }
 
@@ -108,30 +108,39 @@ public class ChainedComponent implements TimedComponent, CommonTickingComponent,
 
     @Override
     public void disable() {
-        provider.getWorld().playSound(null, provider.getX(), provider.getY(), provider.getZ(), SoundEvents.ENTITY_ITEM_BREAK, provider.getSoundCategory(), 1.0f, 1.0f);
+        this.provider.getWorld().playSound(
+                null,
+                this.provider.getX(),
+                this.provider.getY(),
+                this.provider.getZ(),
+                SoundEvents.ENTITY_ITEM_BREAK,
+                this.provider.getSoundCategory(),
+                1.0f,
+                1.0f
+        );
 
-        counterpart = null;
-        progress = 0;
-        cooldown = 0;
-        remainingTicks = 0;
+        this.counterpart = null;
+        this.progress = 0;
+        this.cooldown = 0;
+        this.remainingTicks = 0;
         ModComponents.CHAINED.sync(provider);
     }
 
     @Override
     public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
-        cooldown = tag.getInt("cooldown");
-        progress = tag.getInt("progress");
-        remainingTicks = tag.getInt("remainingTicks");
-        attacker = tag.getBoolean("isAttacker");
-        if (tag.contains("counterpart")) counterpart = tag.getUuid("counterpart");
+        this.cooldown = tag.getInt("cooldown");
+        this.progress = tag.getInt("progress");
+        this.remainingTicks = tag.getInt("remainingTicks");
+        this.attacker = tag.getBoolean("isAttacker");
+        if (tag.contains("counterpart")) this.counterpart = tag.getUuid("counterpart");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup wrapperLookup) {
-        tag.putInt("cooldown", cooldown);
-        tag.putInt("progress", progress);
-        tag.putInt("remainingTicks", remainingTicks);
-        tag.putBoolean("isAttacker", attacker);
-        if (counterpart != null) tag.putUuid("counterpart", counterpart);
+        tag.putInt("cooldown", this.cooldown);
+        tag.putInt("progress", this.progress);
+        tag.putInt("remainingTicks", this.remainingTicks);
+        tag.putBoolean("isAttacker", this.attacker);
+        if (this.counterpart != null) tag.putUuid("counterpart", this.counterpart);
     }
 }

@@ -12,10 +12,10 @@ import java.util.function.Supplier;
 
 public enum ModToolMaterials implements ToolMaterial {
 
-    TWISTEEL(BlockTags.INCORRECT_FOR_NETHERITE_TOOL,1800, 9.0f, 4.0f, 15, () -> Ingredient.ofItems(ModItems.TWISTEEL_INGOT)),
-    GLOOMETAL(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 1600, 10.0f, 4.0f, 18, () -> Ingredient.ofItems(ModItems.GLOOMETAL_INGOT)),
+    TWISTEEL(BlockTags.INCORRECT_FOR_NETHERITE_TOOL,1400, 9.0f, 4.0f, 15, () -> Ingredient.ofItems(ModItems.TWISTEEL_INGOT)),
+    GLOOMETAL(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 1800, 10.0f, 4.0f, 18, () -> Ingredient.ofItems(ModItems.GLOOMETAL_INGOT)),
     FOOLS_GOLD(BlockTags.INCORRECT_FOR_GOLD_TOOL, 200, 11.0f, 1.0f, 20, () -> Ingredient.ofItems(ModItems.FOOLS_GOLD_INGOT)),
-    SWORDSPEAR(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 1400, 12.0f, 4.0f, 22, () -> Ingredient.ofItems(Items.GOLD_INGOT));
+    SWORDSPEAR(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 1200, 12.0f, 4.0f, 22, () -> Ingredient.ofItems(Items.GOLD_INGOT));
 
     private final TagKey<Block> inverseTag;
     private final int itemDurability;

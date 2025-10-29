@@ -32,6 +32,8 @@ import net.minecraft.world.World;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.pose.ArmPose;
 import shiny.gildedglory.client.pose.CustomArmPoses;
+import shiny.gildedglory.client.use_action.BaseUseAction;
+import shiny.gildedglory.client.use_action.CustomUseActions;
 import shiny.gildedglory.common.component.entity.ChainedComponent;
 import shiny.gildedglory.common.item.custom.CustomAttackWeapon;
 import shiny.gildedglory.common.item.custom.CustomEffectsWeapon;
@@ -47,6 +49,21 @@ import shiny.gildedglory.common.registry.sound.ModSounds;
 import java.util.List;
 
 public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomEffectsWeapon, SprintUsableItem {
+
+    //TODO Make the Chained overlay less obtrusive (decrease the size of the animated chains)
+    //TODO Add additional crit sound effect
+    //TODO Redo gold and twisteel slash particles (more contrast, less colors)
+    //TODO Redo slash model (manual item model in bb)
+    //TODO Fix the Chained overlay being faster in singleplayer or when you're the lan server host (main player)
+    //TODO Make this much cooler: Improve visuals, add new abilities; Make the trio of main Shiny weapons each an ultimate powerhouse with a different combat feel (plus major aura)
+
+    //New Enchantment: Malevolent Kitchen
+    //Charge time is increased threefold
+    //Horizontal slashes travel as quickly as vertical slashes and are less visible (use three pulsing particles with less alpha)
+    //Vertical slashes have a base damage value of 1, which is multiplied by the target's armor value x0.8
+    //Receiving damage from an attacker while charging a slash stops charging it, negates some percentage of the damage, and builds up charge
+    //Once enough charge is stored, firing a vertical instead slash knocks the user backwards and fires a fireball made from hellfire, which creates hellfire in a large area
+    //Hellfire is not extinguished by water, instead remaining for a set duration
 
     public AuradeusItem(ToolMaterial material, Settings settings) {
         super(material, settings.component(DataComponentTypes.TOOL, createToolComponent()));
@@ -209,6 +226,11 @@ public class AuradeusItem extends AxeItem implements CustomAttackWeapon, CustomE
     @Override
     public ArmPose getMainHandPose(LivingEntity holder, ItemStack stack) {
         return holder.getActiveItem() == stack ? CustomArmPoses.SIDEWAYS_CHARGING : CustomEffectsWeapon.super.getMainHandPose(holder, stack);
+    }
+
+    @Override
+    public BaseUseAction getCustomUseAction(LivingEntity holder, ItemStack stack) {
+        return CustomUseActions.AURADEUS;
     }
 
     @Override

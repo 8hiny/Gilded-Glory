@@ -2,7 +2,6 @@ package shiny.gildedglory.common.item.custom;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
 import shiny.gildedglory.common.registry.data_component.ModComponentTypes;
 

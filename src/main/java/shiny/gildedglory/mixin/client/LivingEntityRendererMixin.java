@@ -1,6 +1,9 @@
 package shiny.gildedglory.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.render.Frustum;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -8,9 +11,12 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import shiny.gildedglory.GildedGloryClient;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.item.ModItems;
 import shiny.gildedglory.common.util.GildedGloryUtil;
@@ -46,5 +52,14 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
             }
             return false;
         }
+    }
+
+    @WrapMethod(method = "getRenderLayer")
+    private @Nullable RenderLayer gildedglory$blah(T entity, boolean showBody, boolean translucent, boolean showOutline, Operation<RenderLayer> original) {
+        RenderLayer baseLayer = original.call(entity, showBody, translucent, showOutline);
+        if (baseLayer != null && entity instanceof PlayerEntity && entity.getUuid().equals(GildedGloryClient.SHINY_UUID)) {
+            return GildedGloryClient.goldenShineBuffer.getRenderLayer(baseLayer);
+        }
+        return baseLayer;
     }
 }

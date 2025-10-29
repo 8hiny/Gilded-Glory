@@ -9,9 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -29,7 +27,6 @@ import shiny.gildedglory.common.item.custom.CustomEffectsWeapon;
 import shiny.gildedglory.common.registry.component.ModComponents;
 import shiny.gildedglory.common.registry.data_component.ModComponentTypes;
 import shiny.gildedglory.common.registry.entity.ModEntities;
-import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.registry.sound.ModSounds;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
@@ -37,8 +34,8 @@ import java.util.List;
 
 public class ThrowableSwordItem extends SwordItem implements CustomAttackWeapon, CustomEffectsWeapon, ChargeableWeapon {
 
-    //Weapon color: #4a626a
-    //Saturated weapon color: #19596e
+    //Weapon vector: #4a626a
+    //Saturated weapon vector: #19596e
 
     public ThrowableSwordItem(ToolMaterial toolMaterial, Settings settings) {
         super(toolMaterial, settings);

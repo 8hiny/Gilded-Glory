@@ -1,9 +1,7 @@
 package shiny.gildedglory.client.render;
 
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
@@ -12,6 +10,7 @@ import java.util.function.BiFunction;
 public class ModRenderLayers extends RenderLayer {
 
     //Shader Programs
+    //Unused
     public static final RenderPhase.ShaderProgram MIRROR_PROGRAM = new ShaderProgram(ModShaderPrograms::getMirror);
 
     //RenderLayers
@@ -31,7 +30,7 @@ public class ModRenderLayers extends RenderLayer {
             (texture, affectsOutline) -> {
                 MultiPhaseParameters multiPhaseParameters = MultiPhaseParameters.builder()
                         .program(ENTITY_TRANSLUCENT_EMISSIVE_PROGRAM)
-                        .texture(new RenderPhase.Texture(texture, false, false))
+                        .texture(new Texture(texture, false, false))
                         .transparency(LIGHTNING_TRANSPARENCY)
                         .cull(DISABLE_CULLING)
                         .writeMaskState(ALL_MASK)
@@ -94,6 +93,19 @@ public class ModRenderLayers extends RenderLayer {
                     .target(ModRenderPhase.MIRROR_TARGET)
                     .build(false)
     );
+    private static final RenderLayer GLOWING_PARTICLE = of(
+            "gildedglory:glowing_particle",
+            VertexFormats.POSITION_COLOR_TEXTURE_LIGHT,
+            VertexFormat.DrawMode.QUADS,
+            1536,
+            false, true,
+            MultiPhaseParameters.builder()
+                    .program(new ShaderProgram(GameRenderer::getParticleProgram))
+                    .texture(new Texture(SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE, false, false))
+                    .writeMaskState(DEPTH_MASK)
+                    .transparency(LIGHTNING_TRANSPARENCY)
+                    .build(false)
+    );
 
     public ModRenderLayers(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
         super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
@@ -121,5 +133,9 @@ public class ModRenderLayers extends RenderLayer {
 
     public static RenderLayer getMirror() {
         return MIRROR;
+    }
+
+    public static RenderLayer getGlowingParticle() {
+        return GLOWING_PARTICLE;
     }
 }

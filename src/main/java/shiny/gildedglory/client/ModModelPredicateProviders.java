@@ -14,8 +14,7 @@ public class ModModelPredicateProviders {
 
     public static void registerModelPredicateProviders() {
         ModelPredicateProviderRegistry.register(
-                ModItems.AURADEUS,
-                GildedGlory.id("pull"),
+                GildedGlory.id("use_time"),
                 (stack, world, entity, seed) -> entity != null && entity.getActiveItem() == stack ? (stack.getMaxUseTime(entity) - entity.getItemUseTimeLeft()) / 20.0f : 0.0f
         );
         ModelPredicateProviderRegistry.register(
@@ -31,11 +30,6 @@ public class ModModelPredicateProviders {
         ModelPredicateProviderRegistry.register(
                 GildedGlory.id("charge_percentage"),
                 (stack, world, entity, seed) -> ChargeableWeapon.getChargePercentage(stack)
-        );
-        ModelPredicateProviderRegistry.register(
-                ModItems.SWORDSPEAR,
-                GildedGlory.id("pull"),
-                (stack, world, entity, seed) -> entity != null && entity.getActiveItem() == stack ? (stack.getMaxUseTime(entity) - entity.getItemUseTimeLeft()) / 20.0f : 0.0f
         );
         ModelPredicateProviderRegistry.register(
                 GildedGlory.id("sheathed"),
@@ -70,6 +64,22 @@ public class ModModelPredicateProviders {
                         return 0.0f;
                     }
                     return 1.0f;
+                }
+        );
+        ModelPredicateProviderRegistry.register(
+                GildedGlory.id("sheathed_use_time"),
+                (stack, world, entity, seed) -> {
+                    if (entity != null && entity.getActiveItem() == stack && stack.getItem() instanceof SheathableWeapon weapon && weapon.isSheathed(entity, stack)) {
+                        float f = stack.getMaxUseTime(entity) - entity.getItemUseTimeLeft();
+                        if (weapon.currentlySheathing(entity, stack)) {
+                            f -= weapon.sheathTime();
+                        }
+                        return f / 20.0f;
+                    }
+                    else if (entity == null) {
+                        return 1.0f;
+                    }
+                    return 0.0f;
                 }
         );
     }

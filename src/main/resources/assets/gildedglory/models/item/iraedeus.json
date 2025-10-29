@@ -8,7 +8,8 @@
 		{"predicate": {"gildedglory:charge_percentage": 0.25}, "model": "gildedglory:item/iraedeus/stage_1"},
 		{"predicate": {"gildedglory:charge_percentage": 0.5}, "model": "gildedglory:item/iraedeus/stage_2"},
 		{"predicate": {"gildedglory:charge_percentage": 0.75}, "model": "gildedglory:item/iraedeus/stage_3"},
-        {"predicate": {"gildedglory:sheathed": 1}, "model": "gildedglory:item/iraedeus/sheathed"}
+        {"predicate": {"gildedglory:sheathed": 1}, "model": "gildedglory:item/iraedeus/sheathed"},
+        {"predicate": {"gildedglory:sheathed_use_time": 0.05}, "model": "gildedglory:item/iraedeus/charging"}
     ],
 	"display": {
 		"thirdperson_righthand": {

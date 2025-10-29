@@ -3,13 +3,13 @@ package shiny.gildedglory.client.particle.custom;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import org.joml.Vector3f;
-import shiny.gildedglory.client.particle.effect.TestParticleEffect;
+import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 
 public class SimpleColoredParticle extends SpriteBillboardParticle {
 
     private final SpriteProvider spriteProvider;
 
-    public SimpleColoredParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, TestParticleEffect parameters, SpriteProvider spriteProvider) {
+    public SimpleColoredParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, VectorParticleEffect parameters, SpriteProvider spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
         this.spriteProvider = spriteProvider;
 
@@ -35,12 +35,6 @@ public class SimpleColoredParticle extends SpriteBillboardParticle {
     }
 
     @Override
-    public void move(double dx, double dy, double dz) {
-        this.setBoundingBox(this.getBoundingBox().offset(dx, dy, dz));
-        this.repositionFromBoundingBox();
-    }
-
-    @Override
     public int getBrightness(float tint) {
         return 15728880;
     }
@@ -50,7 +44,7 @@ public class SimpleColoredParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class Factory implements ParticleFactory<TestParticleEffect> {
+    public static class Factory implements ParticleFactory<VectorParticleEffect> {
 
         private final SpriteProvider spriteProvider;
 
@@ -58,7 +52,7 @@ public class SimpleColoredParticle extends SpriteBillboardParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(TestParticleEffect parameters, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(VectorParticleEffect parameters, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
             return new SimpleColoredParticle(clientWorld, d, e, f, g, h, i, parameters, this.spriteProvider);
         }
     }

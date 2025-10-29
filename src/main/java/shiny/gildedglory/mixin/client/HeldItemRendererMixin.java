@@ -15,6 +15,8 @@ import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.item.custom.CustomEffectsWeapon;
 import shiny.gildedglory.common.registry.item.ModItems;
 
+import java.awt.*;
+
 @Mixin(HeldItemRenderer.class)
 public abstract class HeldItemRendererMixin {
 
@@ -29,7 +31,7 @@ public abstract class HeldItemRendererMixin {
     @Inject(method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "TAIL"))
     private void gildedglory$renderBeam(LivingEntity entity, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
         if (!entity.isUsingItem() && stack.isOf(ModItems.SWORDSPEAR) && ChargeableWeapon.getCharge(stack) > 0) {
-            BeamRenderer.render(entity, matrices, vertexConsumers, light, renderMode.isFirstPerson());
+            BeamRenderer.renderGold(entity.getWorld(), matrices, vertexConsumers, 40.0f, 0.5f, light, renderMode.isFirstPerson(), true);
         }
     }
 }

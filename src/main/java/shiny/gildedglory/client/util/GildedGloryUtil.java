@@ -35,6 +35,7 @@ public class GildedGloryUtil {
             MatrixStack matrices,
             VertexConsumer vertexConsumer,
             Vec3d position,
+            Color color,
             float width, float height,
             int frameHeight, int frameWidth,
             int textureHeight, int textureWidth,
@@ -53,25 +54,25 @@ public class GildedGloryUtil {
 
         //Vertices in clockwise order, starting at top left
         vertexConsumer.vertex(positionMatrix,  (float) (position.x - xOffset), (float) position.y, (float) (position.z - zOffset))
-                .color(255, 255, 255, alpha)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), alpha)
                 .texture(0, vOffset * (frame - 1))
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(light)
                 .normal(entry, 0, 1, 0);
         vertexConsumer.vertex(positionMatrix,(float) (position.x + xOffset), (float) position.y, (float) (position.z - zOffset))
-                .color(255, 255, 255, alpha)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), alpha)
                 .texture(uOffset, vOffset * (frame - 1))
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(light)
                 .normal(entry, 0, 1, 0);
         vertexConsumer.vertex(positionMatrix,(float) (position.x + xOffset), (float) position.y,(float) (position.z + zOffset))
-                .color(255, 255, 255, alpha)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), alpha)
                 .texture(uOffset, vOffset * frame)
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(light)
                 .normal(entry, 0, 1, 0);
         vertexConsumer.vertex(positionMatrix, (float) (position.x - xOffset),  (float) position.y, (float) (position.z + zOffset))
-                .color(255, 255, 255, alpha)
+                .color(color.getRed(), color.getGreen(), color.getBlue(), alpha)
                 .texture(0, vOffset * frame)
                 .overlay(OverlayTexture.DEFAULT_UV)
                 .light(light)

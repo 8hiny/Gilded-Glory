@@ -35,7 +35,7 @@ public class KatanaItem extends SheathableSwordItem  {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (!user.isSneaking() && this.isSheathed(user, stack) && !this.sheathing) {
+        if (!user.isSneaking() && this.isSheathed(user, stack) && !this.currentlySheathing(user, stack)) {
             if (!world.isClient()) {
                 Vec3d pos = new Vec3d(user.getX(), user.getBodyY(0.5), user.getZ());
                 GildedGloryUtil.sendPayloadToTracking(new SlashedAreaPayload(pos, 8.5f, 0.1f, 10, 20), world, user, null);

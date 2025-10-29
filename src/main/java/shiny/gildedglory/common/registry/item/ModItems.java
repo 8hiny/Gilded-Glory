@@ -44,6 +44,13 @@ public class ModItems {
                     .attributeModifiers(SheathableSwordItem.createAttributeModifiers(ModToolMaterials.GLOOMETAL, 3, -2.4f, 0.25f))
             )
     );
+    public static final Item UNDIVINE_AXE = register(
+            "undivine_axe", new AxeItem(
+                    ModToolMaterials.GLOOMETAL, new Item.Settings()
+                    .fireproof()
+                    .attributeModifiers(AxeItem.createAttributeModifiers(ModToolMaterials.GLOOMETAL, 5.0f, -3.0f))
+            )
+    );
     public static final Item TWISTEEL_SICKLE = register(
             "twisteel_sickle", new SickleItem(
                     ModToolMaterials.TWISTEEL, new Item.Settings()

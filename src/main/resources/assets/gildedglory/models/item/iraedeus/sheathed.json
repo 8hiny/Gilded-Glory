@@ -1,5 +1,4 @@
 {
-	"format_version": "1.21.6",
 	"parent": "minecraft:item/handheld",
 	"textures": {
 		"layer0": "gildedglory:item/iraedeus/sheathed"

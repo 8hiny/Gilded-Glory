@@ -73,9 +73,9 @@ public class SlashProjectileEntity extends PersistentProjectileEntity implements
         super.tick();
 
 //        if (this.age == 1 && this.getWorld().isClient()) {
-//            Vector3f color = this.getVariant() == 0 ? new Vector3f(0.96f, 0.77f, 0.19f) : new Vector3f(0.8f, 0.29f, 0.36f);
+//            Vector3f vector = this.getVariant() == 0 ? new Vector3f(0.96f, 0.77f, 0.19f) : new Vector3f(0.8f, 0.29f, 0.36f);
 //            MinecraftClient.getInstance().particleManager.addParticle(
-//                    new ColoredEntityParticleEffect(ModParticles.SHINE_ANIMATED, color, this.getId(), 1.5f, Integer.MAX_VALUE),
+//                    new ColoredEntityParticleEffect(ModParticles.SHINE_ANIMATED, vector, this.getId(), 1.5f, Integer.MAX_VALUE),
 //                    this.getX(), this.getY() + this.getHeight() / 2, this.getZ(),
 //                    0, 0, 0
 //            );

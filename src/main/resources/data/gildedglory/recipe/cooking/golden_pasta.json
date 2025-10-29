@@ -21,9 +21,10 @@
   ],
   "recipe_book_tab": "meals",
   "container": {
-    "item": "minecraft:bowl"
+    "id": "minecraft:bowl"
   },
   "result": {
-    "item": "gildedglory:golden_pasta"
+    "id": "gildedglory:golden_pasta",
+    "count": 1
   }
 }

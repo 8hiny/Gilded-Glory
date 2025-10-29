@@ -12,9 +12,10 @@
   ],
   "recipe_book_tab": "meals",
   "container": {
-    "item": "minecraft:glass_bottle"
+    "id": "minecraft:glass_bottle"
   },
   "result": {
-    "item": "gildedglory:dr_pepper"
+    "id": "gildedglory:dr_pepper",
+    "count": 1
   }
 }

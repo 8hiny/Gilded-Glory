@@ -3,6 +3,7 @@ package shiny.gildedglory.client.particle.custom;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -24,7 +25,7 @@ public class DirectionalParticle extends SpriteBillboardParticle {
         this.velocityY = velocityY;
         this.velocityZ = velocityZ;
 
-        this.direction = new Vec3d(parameters.getVector());
+        this.direction = new Vec3d(parameters.vector());
     }
 
     @Override
@@ -35,22 +36,30 @@ public class DirectionalParticle extends SpriteBillboardParticle {
 
     @Override
     public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
-        Vec3d vec3 = camera.getPos();
+        this.render(vertexConsumer, camera, tickDelta);
+    }
+
+    protected void applyRotations(Quaternionf quaternion) {
+    }
+
+    private void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
+        Vec3d camPos = camera.getPos();
 
         float yRot = ((float) (MathHelper.atan2(this.direction.x, this.direction.z) * (double) (180f / (float) Math.PI)));
         float xRot = ((float) (MathHelper.atan2(this.direction.y, this.direction.horizontalLength()) * (double) (180f / (float) Math.PI)));
         float yaw = (float) Math.toRadians(yRot);
         float pitch = (float) Math.toRadians(-xRot);
 
-        float x = (float) (MathHelper.lerp(tickDelta, this.prevPosX, this.x) - vec3.getX());
-        float y = (float) (MathHelper.lerp(tickDelta, this.prevPosY, this.y) - vec3.getY());
-        float z = (float) (MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - vec3.getZ());
+        float x = (float) (MathHelper.lerp(tickDelta, this.prevPosX, this.x) - camPos.getX());
+        float y = (float) (MathHelper.lerp(tickDelta, this.prevPosY, this.y) - camPos.getY());
+        float z = (float) (MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - camPos.getZ());
 
         float f = this.getSize(tickDelta);
 
         Quaternionf quaternion = new Quaternionf(0.0f, 0.0f, 0.0f, 1.0f);
         quaternion.mul(this.rotate(0, yaw, 0));
         quaternion.mul(this.rotate(pitch, 0, 0));
+        this.applyRotations(quaternion);
 
         if (this.angle != 0) {
             quaternion.rotateZ(MathHelper.lerp(tickDelta, this.prevAngle, this.angle));

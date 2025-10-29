@@ -30,6 +30,11 @@ public class ClientEvents {
 
     private static int chainedTick = 0;
 
+    public static void clientInit() {
+        registerWorldRenderEvents();
+        registerHudRenderEvents();
+    }
+
     public static void clientTick(MinecraftClient client) {
         DynamicSoundManager.getInstance().tick();
         SlashedAreaManager.getInstance().tick();
@@ -89,6 +94,7 @@ public class ClientEvents {
         });
     }
 
+    //TODO Hide extra hud elements when in f1
     public static void registerHudRenderEvents() {
         MinecraftClient client = MinecraftClient.getInstance();
         HudRenderCallback.EVENT.register((context, renderTickCounter) -> {

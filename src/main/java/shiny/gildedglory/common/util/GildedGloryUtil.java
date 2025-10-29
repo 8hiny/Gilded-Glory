@@ -133,7 +133,7 @@ public class GildedGloryUtil {
 
     /**
      * Displays square charging particles to nearby players.
-     * @param color The color of the particle in rgb
+     * @param color The vector of the particle in rgb
      * @param dx The velocity of the particle on the x axis
      * @param dy The velocity of the particle on the y axis
      * @param dz The velocity of the particle on the z axis

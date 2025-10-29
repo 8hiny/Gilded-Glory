@@ -26,6 +26,8 @@ import java.util.List;
 
 public class ForgeWeldingRecipe implements CraftingRecipe {
 
+    //TODO Add a REI & JEI Plugin for Recipes
+
     private final DefaultedList<Ingredient> ingredients;
     private final ItemStack result;
 
@@ -41,23 +43,19 @@ public class ForgeWeldingRecipe implements CraftingRecipe {
 
     @Override
     public boolean matches(CraftingRecipeInput input, World world) {
-        if (input.getStackCount() != this.ingredients.size()) {
-            return false;
-        }
-        else {
-            return input.getSize() == 1 && this.ingredients.size() == 1
-                    ? this.ingredients.get(0).test(input.getStackInSlot(0))
-                    : input.getRecipeMatcher().match(this, null);
-        }
+        //return input.getSize() == 1 && this.ingredients.size() == 1
+                //? this.ingredients.get(0).test(input.getStackInSlot(0))
+                //: input.getRecipeMatcher().match(this, null);
+        return this.match(input);
     }
 
     //From old version, use this if above method does not work
-    public boolean match(RecipeInputInventory input) {
+    public boolean match(CraftingRecipeInput input) {
         boolean bl = false;
         int matches = 0;
 
         List<Ingredient> list = new ArrayList<>(this.ingredients);
-        List<ItemStack> list1 = new ArrayList<>(input.getHeldStacks());
+        List<ItemStack> list1 = new ArrayList<>(input.getStacks());
 
         if (!list.isEmpty()) {
             for (Iterator<Ingredient> iterator = list.iterator(); iterator.hasNext();) {
@@ -159,9 +157,7 @@ public class ForgeWeldingRecipe implements CraftingRecipe {
                                                     if (ingredients2.length == 0) {
                                                         return DataResult.error(() -> "No ingredients for forge welding recipe");
                                                     } else {
-                                                        return ingredients2.length > 9
-                                                                ? DataResult.error(() -> "Too many ingredients for forge welding recipe")
-                                                                : DataResult.success(DefaultedList.copyOf(Ingredient.EMPTY, ingredients2));
+                                                        return DataResult.success(DefaultedList.copyOf(Ingredient.EMPTY, ingredients2));
                                                     }
                                                 },
                                                 DataResult::success

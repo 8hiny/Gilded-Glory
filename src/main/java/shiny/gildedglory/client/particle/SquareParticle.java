@@ -3,11 +3,11 @@ package shiny.gildedglory.client.particle;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import shiny.gildedglory.client.particle.custom.SimpleColoredParticle;
-import shiny.gildedglory.client.particle.effect.TestParticleEffect;
+import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
 
 public class SquareParticle extends SimpleColoredParticle {
 
-    public SquareParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, TestParticleEffect parameters, SpriteProvider spriteProvider) {
+    public SquareParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, VectorParticleEffect parameters, SpriteProvider spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ, parameters, spriteProvider);
     }
 
@@ -16,7 +16,7 @@ public class SquareParticle extends SimpleColoredParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_LIT;
     }
 
-    public static class Factory implements ParticleFactory<TestParticleEffect> {
+    public static class Factory implements ParticleFactory<VectorParticleEffect> {
 
         private final SpriteProvider spriteProvider;
 
@@ -24,7 +24,7 @@ public class SquareParticle extends SimpleColoredParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(TestParticleEffect parameters, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(VectorParticleEffect parameters, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
             return new SquareParticle(clientWorld, d, e, f, g, h, i, parameters, this.spriteProvider);
         }
     }

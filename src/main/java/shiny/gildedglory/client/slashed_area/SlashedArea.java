@@ -2,7 +2,6 @@ package shiny.gildedglory.client.slashed_area;
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
 import java.util.ArrayList;

@@ -26,17 +26,29 @@ public class ModParticles {
     public static final SimpleParticleType TWISTEEL_VERTICAL_SLASH = register("twisteel_vertical_slash");
     public static final SimpleParticleType IRAEDEUS_VERTICAL_SLASH = register("iraedeus_vertical_slash");
 
-    public static final ParticleType<TestParticleEffect> SQUARE = register("square",
-            type -> TestParticleEffect.CODEC,
-            type -> TestParticleEffect.PACKET_CODEC
-    );
-    public static final ParticleType<TestParticleEffect> SHINE = register("shine",
-            type -> TestParticleEffect.CODEC,
-            type -> TestParticleEffect.PACKET_CODEC
-    );
     public static final ParticleType<VectorParticleEffect> SHOCKWAVE = register("shockwave",
-            VectorParticleEffect::createCodec,
-            VectorParticleEffect::createPacketCodec
+            type -> VectorParticleEffect.CODEC,
+            type -> VectorParticleEffect.PACKET_CODEC
+    );
+    public static final ParticleType<VectorParticleEffect> LARGE_IRAEDEUS_SLASH = register("large_iraedeus_slash",
+            type -> VectorParticleEffect.CODEC,
+            type -> VectorParticleEffect.PACKET_CODEC
+    );
+    public static final ParticleType<VectorParticleEffect> SQUARE = register("square",
+            type -> VectorParticleEffect.CODEC,
+            type -> VectorParticleEffect.PACKET_CODEC
+    );
+    public static final ParticleType<VectorParticleEffect> SHINE = register("shine",
+            type -> VectorParticleEffect.CODEC,
+            type -> VectorParticleEffect.PACKET_CODEC
+    );
+    public static final ParticleType<ColoredEntityParticleEffect> SHINE_ANIMATED = register("shine_animated",
+            type -> ColoredEntityParticleEffect.CODEC,
+            type -> ColoredEntityParticleEffect.PACKET_CODEC
+    );
+    public static final ParticleType<ColoredEntityParticleEffect> SWORDSPEAR_SHINE = register("swordspear_shine",
+            type -> ColoredEntityParticleEffect.CODEC,
+            type -> ColoredEntityParticleEffect.PACKET_CODEC
     );
 
 

@@ -1,12 +1,11 @@
 {
-	"format_version": "1.21.6",
 	"parent": "minecraft:item/handheld",
 	"textures": {
 		"layer0": "gildedglory:item/auradeus"
 	},
 	"gui_light": "front",
 	"overrides": [
-		{"predicate": {"gildedglory:pull": 0.1}, "model": "gildedglory:item/auradeus_charging"}
+		{"predicate": {"gildedglory:use_time": 0.05}, "model": "gildedglory:item/auradeus_charging"}
 	],
 	"display": {
 		"thirdperson_righthand": {
@@ -21,12 +20,12 @@
 		},
 		"firstperson_righthand": {
 			"rotation": [-30, -90, 0],
-			"translation": [1.13, 4.7, 1.63],
+			"translation": [1.13, 4, 1.63],
 			"scale": [0.9, 0.9, 0.7]
 		},
 		"firstperson_lefthand": {
 			"rotation": [-30, 90, 0],
-			"translation": [1.13, 4.7, 1.63],
+			"translation": [1.13, 4, 1.63],
 			"scale": [0.9, 0.9, 0.7]
 		},
 		"fixed": {

@@ -6,6 +6,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.common.item.custom.SheathableWeapon;
@@ -47,6 +48,26 @@ public class CustomUseActions {
                         matrices.pop();
                     }
                 }
+                return stack;
+            },
+            false
+    ));
+    public static final CustomUseAction AURADEUS = register("auradeus", new CustomUseAction(
+            context -> {
+                AbstractClientPlayerEntity player = context.player();
+                ItemStack stack = context.stack();
+                MatrixStack matrices = context.matrices();
+
+                float f = (float) stack.getMaxUseTime(player) - ((float) player.getItemUseTimeLeft() - context.tickDelta() + 1.0f);
+                float g = f / 15.0f;
+                g = Math.min(1.0f, (g * g + g * 2.0f) / 3.0f);
+
+                if (g > 0.1f) {
+                    float h = MathHelper.sin((f - 0.1f) * 1.3f) * g - 0.1f;
+                    matrices.translate(h * 0.0f, h * 0.004f, h * 0.0f);
+                }
+                matrices.translate(0.0f, g * 0.04f, 0.0f);
+
                 return stack;
             },
             false

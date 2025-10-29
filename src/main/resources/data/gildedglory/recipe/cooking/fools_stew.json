@@ -15,9 +15,10 @@
   ],
   "recipe_book_tab": "meals",
   "container": {
-    "item": "minecraft:bowl"
+    "id": "minecraft:bowl"
   },
   "result": {
-    "item": "gildedglory:fools_stew"
+    "id": "gildedglory:fools_stew",
+    "count": 1
   }
 }
