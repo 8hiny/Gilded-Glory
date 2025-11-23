@@ -1,6 +1,5 @@
 package shiny.gildedglory.client.particle;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;

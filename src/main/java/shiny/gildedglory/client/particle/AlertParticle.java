@@ -30,11 +30,6 @@ public class AlertParticle extends EntityAttachedParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_LIT;
     }
 
-    @Override
-    public int getBrightness(float tint) {
-        return 15728880;
-    }
-
     public static class Factory implements ParticleFactory<ColoredEntityParticleEffect> {
         private final SpriteProvider spriteProvider;
 

@@ -29,7 +29,6 @@ import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.client.render.blockentity.FramedChestBlockEntityRenderer;
 import shiny.gildedglory.client.render.entity.SlashEntityRenderer;
 import shiny.gildedglory.client.use_action.CustomUseActions;
-import shiny.gildedglory.common.registry.particle.ModParticles;
 
 import java.util.HashMap;
 import java.util.Map;

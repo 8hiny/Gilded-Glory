@@ -7,7 +7,6 @@ import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import shiny.gildedglory.GildedGlory;
 
 @Mixin(PostEffectProcessor.class)
 public class EvilAhhMixin {
