@@ -27,10 +27,13 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import shiny.gildedglory.GildedGlory;
+import shiny.gildedglory.client.particle.effect.ColoredEntityParticleEffect;
 import shiny.gildedglory.client.sound.DynamicSounds;
+import shiny.gildedglory.client.util.GildedGloryClientUtil;
 import shiny.gildedglory.common.network.ChargingParticlePayload;
 import shiny.gildedglory.common.network.ItemUseSoundPayload;
 import shiny.gildedglory.common.network.PlayAnimationPayload;
+import shiny.gildedglory.common.registry.particle.ModParticles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,6 +192,21 @@ public class GildedGloryUtil {
                 ServerPlayNetworking.send(player, payload);
             }
         }
+    }
+
+    public static void spawnAlertParticle(World world, Entity entity) {
+        if (world.isClient() && !GildedGloryClientUtil.notFirstPersonOrOtherEntity(entity)) {
+            return;
+        }
+        Vec3d offset = entity.getRotationVector().multiply(0.5).add(0, entity.getEyeHeight(entity.getPose()), 0);
+        world.addImportantParticle(
+                new ColoredEntityParticleEffect(ModParticles.ALERT, entity.getId(), offset.toVector3f()),
+                true,
+                entity.getX() + offset.x,
+                entity.getY() + offset.y,
+                entity.getZ() + offset.z,
+                0, 0, 0
+        );
     }
 
     /**

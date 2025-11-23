@@ -44,7 +44,7 @@ public class ModItems {
                     .attributeModifiers(SheathableSwordItem.createAttributeModifiers(ModToolMaterials.GLOOMETAL, 3, -2.4f, 0.25f))
             )
     );
-    public static final Item UNDIVINE_AXE = register(
+    public static final Item UNDIVINE_AXE = registerWithGui(
             "undivine_axe", new AxeItem(
                     ModToolMaterials.GLOOMETAL, new Item.Settings()
                     .fireproof()

@@ -76,9 +76,6 @@ public class ModModelPredicateProviders {
                         }
                         return f / 20.0f;
                     }
-                    else if (entity == null) {
-                        return 1.0f;
-                    }
                     return 0.0f;
                 }
         );

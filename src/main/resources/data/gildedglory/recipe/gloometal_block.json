@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    },
+    {
+      "item": "gildedglory:gloometal_ingot"
+    }
+  ],
+  "result": {
+    "id": "gildedglory:gloometal_block",
+    "count": 1
+  }
+}

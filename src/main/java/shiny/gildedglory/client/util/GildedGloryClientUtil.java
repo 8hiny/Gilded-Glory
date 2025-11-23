@@ -11,12 +11,19 @@ import org.joml.Matrix4f;
 
 import java.awt.*;
 
-public class GildedGloryUtil {
+public class GildedGloryClientUtil {
+
+    /** Returns whether the given entity is the client's player and the client is in first person.
+     * Mainly used to create visual effects without obstructing the player's view.
+     */
+    public static boolean notFirstPersonOrOtherEntity(Entity entity) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        return !(entity == client.player && client.options.getPerspective().isFirstPerson());
+    }
 
     public static void addPersonalParticles(Entity entity, ParticleEffect parameters, double x, double y, double z, double dx, double dy, double dz) {
         MinecraftClient client = MinecraftClient.getInstance();
-
-        if ((!client.options.getPerspective().isFirstPerson() || client.player != entity) && !entity.isInvisibleTo(client.player)) {
+        if (notFirstPersonOrOtherEntity(entity) && !entity.isInvisibleTo(client.player)) {
             client.particleManager.addParticle(parameters, x, y, z, dx, dy, dz);
         }
     }

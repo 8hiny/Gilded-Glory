@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#c:storage_blocks/twisteel"
+    "#c:storage_blocks/twisteel",
+    "#c:storage_blocks/gloometal"
   ]
 }

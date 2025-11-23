@@ -1,29 +1,25 @@
 package shiny.gildedglory;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.Item;
-import org.ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import net.minecraft.particle.ParticleEffect;
+import org.jetbrains.annotations.Nullable;
 import org.ladysnake.satin.api.managed.ManagedFramebuffer;
 import org.ladysnake.satin.api.managed.ManagedShaderEffect;
 import org.ladysnake.satin.api.managed.ShaderEffectManager;
+import org.ladysnake.satin.api.managed.uniform.Uniform1f;
 import shiny.gildedglory.client.ModModelPredicateProviders;
 import shiny.gildedglory.client.pose.CustomArmPoses;
-import shiny.gildedglory.client.render.ModShaders;
 import shiny.gildedglory.client.event.ClientEvents;
 import shiny.gildedglory.client.particle.*;
 import shiny.gildedglory.client.particle.custom.SimpleColoredParticle;
-import shiny.gildedglory.client.render.ModShaderPrograms;
 import shiny.gildedglory.client.render.entity.IraedeusEntityRenderer;
 import shiny.gildedglory.client.sound.DynamicSounds;
 import shiny.gildedglory.common.network.ModNetworking;
@@ -33,9 +29,11 @@ import shiny.gildedglory.common.registry.entity.ModEntities;
 import shiny.gildedglory.client.render.blockentity.FramedChestBlockEntityRenderer;
 import shiny.gildedglory.client.render.entity.SlashEntityRenderer;
 import shiny.gildedglory.client.use_action.CustomUseActions;
+import shiny.gildedglory.common.registry.particle.ModParticles;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static shiny.gildedglory.common.registry.particle.ModParticles.*;
@@ -49,17 +47,20 @@ public class GildedGloryClient implements ClientModInitializer {
     public static KeyBinding returnIraedeus;
     public static KeyBinding targetIraedeus;
 
-    //UUID'S for cosmetic particle spawning
+    //Map of players to grant client-side particles
+    public static final Map<UUID, ParticleEffect> playerParticles = new HashMap<>();
+
+    //Me!
     public static final UUID SHINY_UUID = UUID.fromString("a9bcfe9b-bb80-463d-848e-11e0b03f2b6e");
 
-    //Post shader
+    //Post shader stuff
     public static final ManagedShaderEffect GOLDEN_SHINE = ShaderEffectManager.getInstance().manage(GildedGlory.id("shaders/post/golden_shine.json"));
-    public static final ManagedFramebuffer goldenShineBuffer = GOLDEN_SHINE.getTarget("final");
+    public static final ManagedFramebuffer SHINE_BUFFER = GOLDEN_SHINE.getTarget("final");
+    public static final Uniform1f WORLD_TIME = GOLDEN_SHINE.findUniform1f("WorldTime");
 
    @Override
    public void onInitializeClient() {
        ModModelPredicateProviders.registerModelPredicateProviders();
-       ModShaderPrograms.registerModShaderPrograms();
 
        EntityModelLayerRegistry.registerModelLayer(FramedChestBlockEntityRenderer.SINGLE_MODEL_LAYER, FramedChestBlockEntityRenderer::getSingleTexturedModelData);
        EntityModelLayerRegistry.registerModelLayer(FramedChestBlockEntityRenderer.DOUBLE_MODEL_LAYER, FramedChestBlockEntityRenderer::getDoubleTexturedModelData);
@@ -70,25 +71,12 @@ public class GildedGloryClient implements ClientModInitializer {
 
        ClientEvents.clientInit();
 
-       ModShaders.getInstance().init();
        CustomArmPoses.registerCustomArmPoses();
        CustomUseActions.registerCustomUseActions();
        DynamicSounds.registerDynamicSounds();
        ModNetworking.registerModClientReceivers();
 
-       ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::clientTick);
-
-       //Golden Shine rendering
-       ShaderEffectRenderCallback.EVENT.register(tickDelta -> {
-           MinecraftClient client = MinecraftClient.getInstance();
-           RenderSystem.enableBlend();
-           RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
-           goldenShineBuffer.draw(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight(), false);
-           GOLDEN_SHINE.render(tickDelta);
-           goldenShineBuffer.clear();
-           RenderSystem.disableBlend();
-           client.getFramebuffer().beginWrite(true);
-       });
+       registerPlayerParticles();
    }
 
     public static void registerModParticles() {
@@ -130,5 +118,17 @@ public class GildedGloryClient implements ClientModInitializer {
     public static void registerModKeybinds() {
        returnIraedeus = KeyBindingHelper.registerKeyBinding(new KeyBinding("keybind.gildedglory.iraedeus_return", InputUtil.UNKNOWN_KEY.getCode(), "key.categories.gildedglory"));
         targetIraedeus = KeyBindingHelper.registerKeyBinding(new KeyBinding("keybind.gildedglory.iraedeus_target", InputUtil.UNKNOWN_KEY.getCode(), "key.categories.gildedglory"));
+    }
+
+    public static void registerPlayerParticles() {
+       playerParticles.putIfAbsent(SHINY_UUID, SPARKLE);
+    }
+
+    public static Set<UUID> getPlayersWithParticles() {
+       return playerParticles.keySet();
+    }
+
+    public static @Nullable ParticleEffect getPlayerParticle(UUID uuid) {
+       return playerParticles.getOrDefault(uuid, null);
     }
 }

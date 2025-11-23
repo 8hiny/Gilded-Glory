@@ -1,9 +1,21 @@
 {
   "targets": [
     "swap",
+    "sparkle",
     "final"
   ],
   "passes": [
+    {
+      "name": "gildedglory:sparkle",
+      "intarget": "minecraft:main",
+      "auxtargets": [
+        {
+          "id": "final",
+          "name": "EntitySampler"
+        }
+      ],
+      "outtarget": "sparkle"
+    },
     {
       "name": "gildedglory:golden_shine",
       "intarget": "minecraft:main",
@@ -22,6 +34,10 @@
         {
           "id": "swap",
           "name": "EntitySampler"
+        },
+        {
+          "id": "sparkle",
+          "name": "SparkleSampler"
         }
       ],
       "outtarget": "final"

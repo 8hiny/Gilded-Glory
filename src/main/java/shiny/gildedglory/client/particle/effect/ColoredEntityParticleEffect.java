@@ -14,6 +14,10 @@ import org.joml.Vector3f;
 
 public record ColoredEntityParticleEffect(ParticleType<ColoredEntityParticleEffect> type, int entityId, Vector3f offset, Vector3f color, float scale, int duration) implements ParticleEffect {
 
+    public ColoredEntityParticleEffect(ParticleType<ColoredEntityParticleEffect> type, int entityId, Vector3f offset) {
+        this(type, entityId, offset, new Vector3f(1.0f, 1.0f, 1.0f), 1.0f, 10);
+    }
+
     public static final MapCodec<ColoredEntityParticleEffect> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                     Registries.PARTICLE_TYPE.getCodec().fieldOf("type").forGetter(ColoredEntityParticleEffect::type),

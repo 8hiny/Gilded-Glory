@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import org.joml.Vector3f;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.particle.effect.VectorParticleEffect;
+import shiny.gildedglory.client.util.GildedGloryClientUtil;
 import shiny.gildedglory.common.registry.particle.ModParticles;
 import shiny.gildedglory.common.util.GildedGloryUtil;
 
@@ -44,7 +45,7 @@ public record ChargingParticlePayload(int id, Vec3d position, Vec3d delta, Vecto
             World world = player.getWorld();
             Entity entity = world.getEntityById(payload.id);
 
-            if (entity != null && (!client.options.getPerspective().isFirstPerson() || player != entity) && !entity.isInvisibleTo(player)) {
+            if (entity != null && GildedGloryClientUtil.notFirstPersonOrOtherEntity(entity) && !entity.isInvisibleTo(player)) {
                 Vec3d pos = payload.position;
                 Vec3d delta = payload.delta;
 

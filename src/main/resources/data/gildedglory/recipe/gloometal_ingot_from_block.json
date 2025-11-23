@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "gildedglory:gloometal_block"
+    }
+  ],
+  "result": {
+    "id": "gildedglory:gloometal_ingot",
+    "count": 9
+  }
+}

@@ -9,10 +9,6 @@ import java.util.function.BiFunction;
 
 public class ModRenderLayers extends RenderLayer {
 
-    //Shader Programs
-    //Unused
-    public static final RenderPhase.ShaderProgram MIRROR_PROGRAM = new ShaderProgram(ModShaderPrograms::getMirror);
-
     //RenderLayers
     private static final BiFunction<Identifier, Boolean, RenderLayer> BEAM = Util.memoize(
             (texture, affectsOutline) -> {
@@ -79,20 +75,6 @@ public class ModRenderLayers extends RenderLayer {
                     .cull(DISABLE_CULLING)
                     .build(false)
     );
-    private static final RenderLayer MIRROR = of(
-            "gildedglory:mirror",
-            VertexFormats.POSITION,
-            VertexFormat.DrawMode.QUADS,
-            256,
-            false, false,
-            MultiPhaseParameters.builder()
-                    .lightmap(DISABLE_LIGHTMAP)
-                    .program(MIRROR_PROGRAM)
-                    .transparency(TRANSLUCENT_TRANSPARENCY)
-                    .depthTest(ALWAYS_DEPTH_TEST)
-                    .target(ModRenderPhase.MIRROR_TARGET)
-                    .build(false)
-    );
     private static final RenderLayer GLOWING_PARTICLE = of(
             "gildedglory:glowing_particle",
             VertexFormats.POSITION_COLOR_TEXTURE_LIGHT,
@@ -129,10 +111,6 @@ public class ModRenderLayers extends RenderLayer {
 
     public static RenderLayer getSlashedArea() {
         return SLASHED_AREA;
-    }
-
-    public static RenderLayer getMirror() {
-        return MIRROR;
     }
 
     public static RenderLayer getGlowingParticle() {

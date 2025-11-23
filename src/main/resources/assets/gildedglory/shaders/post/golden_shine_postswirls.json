@@ -1,0 +1,58 @@
+{
+  "targets": [
+    "swap",
+    "shine",
+    "final"
+  ],
+  "passes": [
+    {
+      "name": "gildedglory:golden_shine",
+      "intarget": "minecraft:main",
+      "outtarget": "shine",
+      "auxtargets": [
+        {
+          "id": "final",
+          "name": "EntitySampler"
+        }
+      ]
+    },
+    {
+      "name": "gildedglory:swirls",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "auxtargets": [
+        {
+          "id": "final",
+          "name": "EntitySampler"
+        },
+        {
+          "id": "noise2",
+          "name": "NoiseSampler",
+          "height": 512,
+          "width": 512,
+          "bilinear": false
+        }
+      ]
+    },
+    {
+      "name": "gildedglory:combine",
+      "intarget": "minecraft:main",
+      "outtarget": "final",
+      "auxtargets": [
+        {
+          "id": "swap",
+          "name": "EntitySampler"
+        },
+        {
+          "id": "shine",
+          "name": "ShineSampler"
+        }
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget": "final",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

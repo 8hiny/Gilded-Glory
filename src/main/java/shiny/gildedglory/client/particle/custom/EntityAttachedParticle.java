@@ -16,11 +16,9 @@ public class EntityAttachedParticle extends AnimatedParticle {
         super(world, x, y, z, spriteProvider, 0);
 
         this.entity = world.getEntityById(parameters.entityId());
-        this.velocityX = 0.0;
-        this.velocityY = 0.0;
-        this.velocityZ = 0.0;
-
         this.offset = parameters.offset();
+        this.updateStatus();
+
         this.red = parameters.color().x();
         this.green = parameters.color().y();
         this.blue = parameters.color().z();
@@ -34,7 +32,13 @@ public class EntityAttachedParticle extends AnimatedParticle {
     @Override
     public void tick() {
         super.tick();
+        this.updateStatus();
+        if (this.entity == null) {
+            this.markDead();
+        }
+    }
 
+    public void updateStatus() {
         if (this.entity != null) {
             if (!this.dead && !this.entity.isAlive()) {
                 this.markDead();
@@ -48,9 +52,6 @@ public class EntityAttachedParticle extends AnimatedParticle {
             this.velocityX = velocity.x;
             this.velocityY = velocity.y;
             this.velocityZ = velocity.z;
-        }
-        else {
-            this.markDead();
         }
     }
 

@@ -34,7 +34,9 @@ public class ModItemGroups {
                         entries.add(ModItems.GOLDEN_PASTA);
                         entries.add(ModItems.DR_PEPPER);
                         entries.add(ModItems.GLOOMETAL_INGOT);
+                        entries.add(ModBlocks.GLOOMETAL_BLOCK.asItem());
                         entries.add(ModItems.IRAEDEUS);
+                        entries.add(ModItems.UNDIVINE_AXE);
                         entries.add(ModItems.KATANA);
 
             }).build());

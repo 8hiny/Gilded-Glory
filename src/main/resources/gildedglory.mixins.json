@@ -27,7 +27,7 @@
     "client.LivingEntityRendererMixin",
     "client.MinecraftClientMixin",
     "client.ModelLoaderMixin",
-    "client.PlayerEntityRendererMixin",
+    "client.accessibility.EvilAhhMixin",
     "client.animation.AbstractClientPlayerEntityMixin",
     "client.pose.BipedArmPoseMixin",
     "client.pose.BipedEntityModelMixin",

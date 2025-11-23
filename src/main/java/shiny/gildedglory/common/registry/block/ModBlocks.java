@@ -19,22 +19,26 @@ public class ModBlocks {
     public static final Block TWISTEEL_BLOCK = registerBlock("twisteel_block", new Block(AbstractBlock.Settings.create()
             .mapColor(MapColor.DARK_CRIMSON)
             .sounds(BlockSoundGroup.NETHERITE)
-            .instrument(NoteBlockInstrument.IRON_XYLOPHONE)
+            .instrument(NoteBlockInstrument.BELL)
             .strength(5.0f, 6.0f)
             .requiresTool()
             .pistonBehavior(PistonBehavior.PUSH_ONLY)),
             true
     );
-
     public static final Block FOOLS_GOLD_BLOCK = registerBlock("fools_gold_block", new Block(AbstractBlock.Settings.create()
             .mapColor(MapColor.STONE_GRAY)
             .sounds(BlockSoundGroup.METAL)
-            .instrument(NoteBlockInstrument.IRON_XYLOPHONE)
-            .strength(5.0f, 6.0f)
+            .strength(3.0f, 6.0f)
             .requiresTool()),
             true
     );
-
+    public static final Block GLOOMETAL_BLOCK = registerBlock("gloometal_block", new Block(AbstractBlock.Settings.create()
+                    .mapColor(MapColor.LIGHT_BLUE_GRAY)
+                    .sounds(BlockSoundGroup.NETHERITE)
+                    .strength(5.0f, 6.0f)
+                    .requiresTool()),
+            true
+    );
     public static final Block FRAMED_CHEST = registerBlock("framed_chest", new FramedChestBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.OAK_TAN)
             .sounds(BlockSoundGroup.WOOD)
@@ -43,7 +47,6 @@ public class ModBlocks {
             .burnable()),
             true
     );
-
     public static final Block HEATED_ANVIL = registerBlock("heated_anvil", new HeatedAnvilBlock(AbstractBlock.Settings.create()
             .mapColor(MapColor.BRIGHT_RED)
             .sounds(BlockSoundGroup.ANVIL)

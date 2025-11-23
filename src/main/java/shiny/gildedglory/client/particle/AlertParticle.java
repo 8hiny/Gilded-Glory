@@ -2,29 +2,27 @@ package shiny.gildedglory.client.particle;
 
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.util.math.MathHelper;
+import shiny.gildedglory.client.particle.custom.EntityAttachedParticle;
+import shiny.gildedglory.client.particle.effect.ColoredEntityParticleEffect;
 
-public class AlertParticle extends SpriteBillboardParticle {
+public class AlertParticle extends EntityAttachedParticle {
 
     private final SpriteProvider spriteProvider;
 
-    protected AlertParticle(ClientWorld world, double d, double e, double f, SpriteProvider spriteProvider) {
-        super(world, d, e, f);
-
-        this.gravityStrength = 0.0f;
-        this.maxAge = 8;
-        this.scale = 3f;
+    protected AlertParticle(ClientWorld world, double x, double y, double z, ColoredEntityParticleEffect parameters, SpriteProvider spriteProvider) {
+        super(world, x, y, z, parameters, spriteProvider);
         this.spriteProvider = spriteProvider;
-
-        this.setSpriteForAge(spriteProvider);
+        this.gravityStrength = 0.0f;
+        this.maxAge = 5;
+        this.scale = 1.5f;
     }
 
     @Override
     public void tick() {
         super.tick();
         this.setSpriteForAge(this.spriteProvider);
-        this.scale = MathHelper.lerp((float) this.age / this.maxAge, 3f, 4.5f);
+        if (this.age > 1 && this.age < 4) this.scale = MathHelper.lerp((float) (this.age - 1) / 3, 1.5f, 2.5f);
     }
 
     @Override
@@ -37,15 +35,15 @@ public class AlertParticle extends SpriteBillboardParticle {
         return 15728880;
     }
 
-    public static class Factory implements ParticleFactory<SimpleParticleType> {
+    public static class Factory implements ParticleFactory<ColoredEntityParticleEffect> {
         private final SpriteProvider spriteProvider;
 
         public Factory(SpriteProvider spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(SimpleParticleType type, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            return new AlertParticle(clientWorld, d, e, f, this.spriteProvider);
+        public Particle createParticle(ColoredEntityParticleEffect parameters, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+            return new AlertParticle(clientWorld, d, e, f, parameters, this.spriteProvider);
         }
     }
 }

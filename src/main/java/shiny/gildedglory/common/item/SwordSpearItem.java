@@ -91,8 +91,7 @@ public class SwordSpearItem extends SwordItem implements ChargeableWeapon, Custo
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (this.getMaxUseTime(stack, user) - remainingUseTicks == this.getMaxCharge()) {
-            Vec3d vec3d = user.getRotationVector();
-            world.addImportantParticle(ModParticles.ALERT, true, user.getX() + vec3d.x, user.getEyeY() + vec3d.y, user.getZ() + vec3d.z, 0, 0, 0);
+            GildedGloryUtil.spawnAlertParticle(world, user);
         }
     }
 

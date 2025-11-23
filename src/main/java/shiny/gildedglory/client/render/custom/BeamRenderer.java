@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import shiny.gildedglory.GildedGlory;
 import shiny.gildedglory.client.render.ModRenderLayers;
-import shiny.gildedglory.client.util.GildedGloryUtil;
+import shiny.gildedglory.client.util.GildedGloryClientUtil;
 
 import java.awt.*;
 
@@ -100,19 +100,19 @@ public class BeamRenderer {
 
         //Bottom quad
         matrices.translate(0, -size / 2, 0);
-        GildedGloryUtil.drawQuad(matrices, vertexConsumer, offset, color, size, size, 16, 16, 16, 16, 1, alpha, light);
+        GildedGloryClientUtil.drawQuad(matrices, vertexConsumer, offset, color, size, size, 16, 16, 16, 16, 1, alpha, light);
         //Top quad
         matrices.translate(0, size, 0);
-        GildedGloryUtil.drawQuad(matrices, vertexConsumer, offset, color, size, size, 16, 16, 16, 16, 1, alpha, light);
+        GildedGloryClientUtil.drawQuad(matrices, vertexConsumer, offset, color, size, size, 16, 16, 16, 16, 1, alpha, light);
 
         matrices.multiply(RotationAxis.POSITIVE_Z.rotation(rightAngle));
 
         //Right vertical quad
         matrices.translate(-size / 2, size / 2, 0);
-        GildedGloryUtil.drawQuad(matrices, vertexConsumer, offset, color, size, size, 16, 16, 16, 16, 1, alpha, light);
+        GildedGloryClientUtil.drawQuad(matrices, vertexConsumer, offset, color, size, size, 16, 16, 16, 16, 1, alpha, light);
         //Left vertical quad
         matrices.translate(0, -size, 0);
-        GildedGloryUtil.drawQuad(matrices, vertexConsumer, offset, color, size, size, 16, 16, 16, 16, 1, alpha, light);
+        GildedGloryClientUtil.drawQuad(matrices, vertexConsumer, offset, color, size, size, 16, 16, 16, 16, 1, alpha, light);
 
         matrices.multiply(RotationAxis.POSITIVE_Z.rotation(-rightAngle));
         matrices.translate(-size / 2, 0, 0);

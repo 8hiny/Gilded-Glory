@@ -5,15 +5,17 @@
     "dstrgb": "1-srcalpha"
   },
   "vertex": "sobel",
-  "fragment": "gildedglory:golden_shine",
+  "fragment": "gildedglory:swirls",
   "attributes": [ "Position" ],
   "samplers": [
     { "name": "DiffuseSampler" },
-    { "name": "EntitySampler" }
+    { "name": "EntitySampler" },
+    { "name": "NoiseSampler" }
   ],
   "uniforms": [
     { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
     { "name": "InSize", "type": "float", "count": 2,  "values": [ 1.0, 1.0 ] },
-    { "name": "OutSize", "type": "float", "count": 2,  "values": [ 1.0, 1.0 ] }
+    { "name": "OutSize", "type": "float", "count": 2,  "values": [ 1.0, 1.0 ] },
+    { "name": "WorldTime", "type": "float", "count": 1, "values": [ 1.0 ] }
   ]
 }

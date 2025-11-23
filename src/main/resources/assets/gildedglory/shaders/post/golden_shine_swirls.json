@@ -1,12 +1,31 @@
 {
   "targets": [
     "swap",
+    "share",
     "final"
   ],
   "passes": [
     {
-      "name": "gildedglory:golden_shine",
+      "name": "gildedglory:swirls",
       "intarget": "minecraft:main",
+      "auxtargets": [
+        {
+          "id": "final",
+          "name": "EntitySampler"
+        },
+        {
+          "id": "gildedglory:noise2",
+          "name": "NoiseSampler",
+          "height": 512,
+          "width": 512,
+          "bilinear": false
+        }
+      ],
+      "outtarget": "share"
+    },
+    {
+      "name": "gildedglory:golden_shine",
+      "intarget": "share",
       "auxtargets": [
         {
           "id": "final",
@@ -16,19 +35,8 @@
       "outtarget": "swap"
     },
     {
-      "name": "gildedglory:combine",
-      "intarget": "minecraft:main",
-      "auxtargets": [
-        {
-          "id": "swap",
-          "name": "EntitySampler"
-        }
-      ],
-      "outtarget": "final"
-    },
-    {
       "name": "blit",
-      "intarget": "final",
+      "intarget": "swap",
       "outtarget": "minecraft:main"
     }
   ]

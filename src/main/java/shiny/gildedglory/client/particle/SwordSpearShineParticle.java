@@ -10,6 +10,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import shiny.gildedglory.client.particle.effect.ColoredEntityParticleEffect;
+import shiny.gildedglory.client.util.GildedGloryClientUtil;
 import shiny.gildedglory.common.item.custom.ChargeableWeapon;
 import shiny.gildedglory.common.registry.item.ModItems;
 
@@ -38,7 +39,7 @@ public class SwordSpearShineParticle extends EntityShineParticle {
 
     @Override
     public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
-        if (this.entity != MinecraftClient.getInstance().player || !MinecraftClient.getInstance().options.getPerspective().isFirstPerson()) {
+        if (GildedGloryClientUtil.notFirstPersonOrOtherEntity(this.entity)) {
             super.buildGeometry(vertexConsumer, camera, tickDelta);
         }
     }

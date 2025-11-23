@@ -18,7 +18,6 @@ public class ModParticles {
 
     public static final SimpleParticleType SPARKLE = register("sparkle");
     public static final SimpleParticleType SWIRL = register("swirl");
-    public static final SimpleParticleType ALERT = register("alert");
     public static final SimpleParticleType GOLD_SLASH = register("gold_slash");
     public static final SimpleParticleType TWISTEEL_SLASH = register("twisteel_slash");
     public static final SimpleParticleType IRAEDEUS_SLASH = register("iraedeus_slash");
@@ -47,6 +46,10 @@ public class ModParticles {
             type -> ColoredEntityParticleEffect.PACKET_CODEC
     );
     public static final ParticleType<ColoredEntityParticleEffect> SWORDSPEAR_SHINE = register("swordspear_shine",
+            type -> ColoredEntityParticleEffect.CODEC,
+            type -> ColoredEntityParticleEffect.PACKET_CODEC
+    );
+    public static final ParticleType<ColoredEntityParticleEffect> ALERT = register("alert",
             type -> ColoredEntityParticleEffect.CODEC,
             type -> ColoredEntityParticleEffect.PACKET_CODEC
     );

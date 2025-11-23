@@ -5,7 +5,7 @@
     "dstrgb": "1-srcalpha"
   },
   "vertex": "sobel",
-  "fragment": "gildedglory:golden_shine",
+  "fragment": "gildedglory:sparkle",
   "attributes": [ "Position" ],
   "samplers": [
     { "name": "DiffuseSampler" },

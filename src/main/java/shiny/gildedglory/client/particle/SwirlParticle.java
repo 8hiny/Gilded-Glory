@@ -23,30 +23,20 @@ public class SwirlParticle extends SpriteBillboardParticle {
         this.velocityY += h * 0.4;
         this.velocityZ += i * 0.4;
 
-        this.scale = GildedGloryUtil.random(0.2f, 0.5f);
-        this.maxAge = (int) GildedGloryUtil.random(20f, 30f);
-        this.red = 1.0f;
-        this.green = 1.0f;
-        this.blue = 1.0f;
-
-        this.collidesWithWorld = false;
+        this.scale = GildedGloryUtil.random(0.3f, 0.6f);
+        this.maxAge = 10 + this.random.nextInt(12);
         this.setSpriteForAge(spriteProvider);
     }
 
     @Override
-    public int getBrightness(float tint) {
-        return 15728880;
-    }
-
-    @Override
     public void tick() {
-        if (!(this.age++ >= this.maxAge)) this.setSpriteForAge(this.spriteProvider);
         super.tick();
+        this.setSpriteForAge(this.spriteProvider);
     }
 
     @Override
     public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_LIT;
+        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
     }
 
     public static class Factory implements ParticleFactory<SimpleParticleType> {
@@ -58,9 +48,7 @@ public class SwirlParticle extends SpriteBillboardParticle {
         }
 
         public Particle createParticle(SimpleParticleType type, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            SwirlParticle swirlParticle = new SwirlParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
-            swirlParticle.setSprite(this.spriteProvider);
-            return swirlParticle;
+            return new SwirlParticle(clientWorld, d, e, f, g, h, i, spriteProvider);
         }
     }
 }
